@@ -1,0 +1,24 @@
+<div class="flex h-screen bg-[var(--color-background)]">
+
+  <!-- Sidebar -->
+  <aside class="w-52 shrink-0 border-r border-[var(--color-border)] px-4 py-6 overflow-y-auto">
+    <p class="mb-4 px-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-muted-foreground)]">
+      Atoms
+    </p>
+    <nav class="flex flex-col gap-0.5">
+      <a
+        routerLink="/atoms/button"
+        routerLinkActive="bg-[var(--color-accent)] text-[var(--color-accent-foreground)] font-medium"
+        class="inline-flex items-center rounded-[var(--radius)] px-3 h-8 text-sm text-[var(--color-foreground)] hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)] transition-all cursor-pointer"
+      >
+        Button
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <main class="flex-1 overflow-y-auto">
+    <router-outlet />
+  </main>
+
+</div>

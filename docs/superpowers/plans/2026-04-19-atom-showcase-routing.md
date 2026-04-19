@@ -1,4 +1,81 @@
-<div class="text-[var(--color-foreground)] p-8 font-sans antialiased">
+# Atom Showcase Routing Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Mover el showcase del Button a su propia página routable en `/atoms/button`, dejando el App root como shell vacío con `<router-outlet>`.
+
+**Architecture:** Se crea `ButtonPage` como standalone component en `src/app/pages/atoms/button/`. El contenido actual de `app.html` se mueve íntegro a `button.page.html`. El `App` root queda solo con `<router-outlet>`. Las rutas se registran en `app.routes.ts` con un redirect de `/` a `atoms/button`.
+
+**Tech Stack:** Angular 21 standalone components, Angular Router, Vitest + TestBed
+
+---
+
+### Task 1: Crear ButtonPage
+
+**Files:**
+- Create: `src/app/pages/atoms/button/button.page.ts`
+- Create: `src/app/pages/atoms/button/button.page.html`
+- Create: `src/app/pages/atoms/button/button.page.spec.ts`
+
+- [ ] **Step 1: Escribir el test primero**
+
+Crear `src/app/pages/atoms/button/button.page.spec.ts`:
+
+```ts
+import { TestBed } from '@angular/core/testing';
+import { ButtonPage } from './button.page';
+
+describe('ButtonPage', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ButtonPage],
+    }).compileComponents();
+  });
+
+  it('should create', () => {
+    const fixture = TestBed.createComponent(ButtonPage);
+    expect(fixture.componentInstance).toBeTruthy();
+  });
+
+  it('should render button heading', async () => {
+    const fixture = TestBed.createComponent(ButtonPage);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('h1')?.textContent).toContain('highstack-ui');
+  });
+});
+```
+
+- [ ] **Step 2: Verificar que el test falla**
+
+```bash
+npm test -- --reporter=verbose 2>&1 | grep -A5 "ButtonPage"
+```
+
+Resultado esperado: error de importación — `ButtonPage` no existe aún.
+
+- [ ] **Step 3: Crear button.page.ts**
+
+Crear `src/app/pages/atoms/button/button.page.ts`:
+
+```ts
+import { Component } from '@angular/core';
+import { ButtonComponent } from '../../../../components/atoms/button/button.component';
+
+@Component({
+  selector: 'app-button-page',
+  imports: [ButtonComponent],
+  templateUrl: './button.page.html',
+})
+export class ButtonPage {}
+```
+
+- [ ] **Step 4: Crear button.page.html**
+
+Mover el contenido de `src/app/app.html` a `src/app/pages/atoms/button/button.page.html` (copiar el contenido completo tal cual):
+
+```html
+<div class="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] p-8 font-sans antialiased">
   <header class="mb-16 max-w-3xl mx-auto">
     <h1 class="text-2xl font-semibold tracking-tight">
       highstack-ui
@@ -207,3 +284,145 @@
 
   </main>
 </div>
+```
+
+- [ ] **Step 5: Correr los tests y verificar que pasan**
+
+```bash
+npm test -- --reporter=verbose 2>&1 | grep -A3 "ButtonPage"
+```
+
+Resultado esperado: 2 tests passing para `ButtonPage`.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/app/pages/atoms/button/
+git commit -m "feat: add ButtonPage standalone component at atoms/button"
+```
+
+---
+
+### Task 2: Actualizar App root como shell vacío
+
+**Files:**
+- Modify: `src/app/app.ts`
+- Modify: `src/app/app.html`
+- Modify: `src/app/app.spec.ts`
+
+- [ ] **Step 1: Actualizar el test de App**
+
+Reemplazar el contenido de `src/app/app.spec.ts`:
+
+```ts
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { App } from './app';
+import { routes } from './app.routes';
+
+describe('App', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideRouter(routes)],
+    }).compileComponents();
+  });
+
+  it('should create the app', () => {
+    const fixture = TestBed.createComponent(App);
+    expect(fixture.componentInstance).toBeTruthy();
+  });
+});
+```
+
+- [ ] **Step 2: Verificar que el test falla**
+
+```bash
+npm test -- --reporter=verbose 2>&1 | grep -A5 "App"
+```
+
+Resultado esperado: el test `should render title` falla porque `h1` ya no está en el App root.
+
+- [ ] **Step 3: Actualizar app.ts**
+
+Reemplazar `src/app/app.ts`:
+
+```ts
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet],
+  templateUrl: './app.html',
+  styleUrl: './app.css',
+})
+export class App {}
+```
+
+- [ ] **Step 4: Actualizar app.html**
+
+Reemplazar el contenido completo de `src/app/app.html`:
+
+```html
+<router-outlet />
+```
+
+- [ ] **Step 5: Correr los tests y verificar que pasan**
+
+```bash
+npm test -- --reporter=verbose 2>&1 | grep -E "(PASS|FAIL|App)"
+```
+
+Resultado esperado: `App > should create the app` passing.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/app/app.ts src/app/app.html src/app/app.spec.ts
+git commit -m "refactor: convert App root to router-outlet shell"
+```
+
+---
+
+### Task 3: Registrar rutas en app.routes.ts
+
+**Files:**
+- Modify: `src/app/app.routes.ts`
+
+- [ ] **Step 1: Actualizar app.routes.ts**
+
+Reemplazar el contenido de `src/app/app.routes.ts`:
+
+```ts
+import { Routes } from '@angular/router';
+import { ButtonPage } from './pages/atoms/button/button.page';
+
+export const routes: Routes = [
+  { path: '',             redirectTo: 'atoms/button', pathMatch: 'full' },
+  { path: 'atoms/button', component: ButtonPage },
+];
+```
+
+- [ ] **Step 2: Correr todos los tests**
+
+```bash
+npm test -- --reporter=verbose
+```
+
+Resultado esperado: todos los tests pasan (App + ButtonPage).
+
+- [ ] **Step 3: Verificar en el browser**
+
+```bash
+npm start
+```
+
+Navegar a `http://localhost:4200` — debe redirigir a `http://localhost:4200/atoms/button` y mostrar el showcase del Button.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/app/app.routes.ts
+git commit -m "feat: register atoms/button route with redirect from /"
+```
