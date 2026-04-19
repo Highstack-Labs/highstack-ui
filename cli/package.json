@@ -1,0 +1,12 @@
+{
+  "name": "highstack-ui",
+  "version": "0.1.0",
+  "description": "Copy-paste Angular component library inspired by shadcn",
+  "type": "module",
+  "bin": {
+    "highstack-ui": "./bin/index.mjs"
+  },
+  "files": ["bin/", "src/", "templates/"],
+  "keywords": ["angular", "components", "ui", "tailwind", "shadcn"],
+  "license": "MIT"
+}
