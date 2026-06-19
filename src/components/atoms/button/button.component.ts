@@ -8,7 +8,9 @@ export type ButtonVariant =
   | 'link'
   | 'secondary'
   | 'gradient'
-  | 'glass';
+  | 'glass'
+  | 'success'
+  | 'warning';
 export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
 
 @Component({
@@ -21,41 +23,55 @@ export class ButtonComponent {
   readonly disabled = input<boolean>(false);
   readonly loading = input<boolean>(false);
   readonly type = input<'button' | 'submit' | 'reset'>('button');
+  readonly pill = input<boolean>(false);
+  readonly full = input<boolean>(false);
 
   protected readonly isDisabled = computed(() => this.disabled() || this.loading());
 
   protected readonly hostClasses = computed(() => {
     const base = [
-      'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[var(--radius)]',
-      'text-sm font-medium transition-all',
+      'inline-flex items-center justify-center gap-2 whitespace-nowrap',
+      this.pill() ? 'rounded-full' : 'rounded-[var(--radius)]',
+      this.full() ? 'w-full' : '',
+      'font-semibold transition-all duration-150',
       'outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--color-ring)]/50',
-      'disabled:pointer-events-none disabled:opacity-50',
+      'disabled:pointer-events-none disabled:opacity-50 disabled:transform-none disabled:shadow-none',
       'cursor-pointer',
-    ].join(' ');
+    ].filter(Boolean).join(' ');
 
     const variantMap: Record<ButtonVariant, string> = {
       default:
-        'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] shadow-xs hover:bg-[var(--color-primary)]/90',
+        'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] shadow-sm hover:bg-[var(--color-primary)]/95 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
       destructive:
-        'bg-[var(--color-destructive)] text-[var(--color-destructive-foreground)] shadow-xs hover:bg-[var(--color-destructive)]/90 focus-visible:ring-[var(--color-destructive)]/20',
+        'bg-[var(--color-destructive)] text-[var(--color-destructive-foreground)] shadow-sm hover:bg-[var(--color-destructive)]/95 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-[var(--color-destructive)]/20',
       outline:
-        'border border-[var(--color-input)] bg-[var(--color-background)] shadow-xs hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)]',
+        'border border-[var(--color-input)] bg-[var(--color-background)] shadow-sm hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)] hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
       secondary:
-        'bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] shadow-xs hover:bg-[var(--color-secondary)]/80',
+        'bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] shadow-sm hover:bg-[var(--color-secondary)]/90 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
       ghost:
-        'hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)]',
+        'hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)] active:scale-[0.98]',
       link: 'text-[var(--color-primary)] underline-offset-4 hover:underline',
       gradient:
-        'bg-gradient-to-r from-zinc-900 to-zinc-700 text-white shadow-xs hover:from-zinc-800 hover:to-zinc-600',
+        'text-[var(--color-primary-foreground)] ' +
+        'bg-[linear-gradient(135deg,var(--color-primary)_0%,var(--color-primary-gradient)_50%,var(--color-primary)_100%)] ' +
+        'bg-[length:200%_100%] bg-left ' +
+        'shadow-[0_1px_2px_0_rgb(0_0_0/0.10),inset_0_1px_0_0_rgb(255_255_255/0.22)] ' +
+        'transition-[background-position,transform,box-shadow] duration-300 ease-out ' +
+        'hover:bg-right hover:-translate-y-[1px] hover:shadow-[0_6px_16px_-4px_rgb(0_0_0/0.30),inset_0_1px_0_0_rgb(255_255_255/0.28)] ' +
+        'active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
       glass:
-        'backdrop-blur-2xl bg-white/10 border border-white/15 text-white/90 shadow-[0_1px_2px_rgba(0,0,0,0.1)] hover:bg-white/[0.18] active:bg-white/[0.12]',
+        'backdrop-blur-2xl bg-white/10 border border-white/15 text-white/90 shadow-sm hover:bg-white/[0.18] hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
+      success:
+        'bg-emerald-500 text-white shadow-sm hover:bg-emerald-600 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-emerald-500/20',
+      warning:
+        'bg-amber-500 text-white shadow-sm hover:bg-amber-600 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-amber-500/20',
     };
 
     const sizeMap: Record<ButtonSize, string> = {
-      sm: 'h-8 px-3 gap-1.5',
-      md: 'h-9 px-4 py-2',
-      lg: 'h-10 px-6',
-      icon: 'size-9',
+      sm: 'h-8 px-3.5 gap-1.5 text-xs',
+      md: 'h-10 px-5 gap-2 text-sm',
+      lg: 'h-12 px-6.5 gap-2.5 text-base',
+      icon: 'size-10',
     };
 
     return [base, variantMap[this.variant()], sizeMap[this.size()]].join(' ');

@@ -3,6 +3,7 @@
   --color-foreground: oklch(0.145 0.005 285.82);
 
   --color-primary: oklch(0.205 0.006 285.82);
+  --color-primary-gradient: oklch(0.35 0.01 285.82);
   --color-primary-foreground: oklch(0.985 0 0);
 
   --color-destructive: oklch(0.577 0.245 27.33);
@@ -21,5 +22,36 @@
   --color-input: oklch(0.922 0.005 285.82);
   --color-ring: oklch(0.705 0.015 285.82);
 
-  --radius: 0.625rem;
+  --radius: 0.75rem; /* Redondez suavizada de 12px para estilo premium */
+}
+
+/* Paletas balanceadas: chroma reducido para no verse tan vivos ni apagados.
+   El gradiente usa un color destino con el TONO desplazado (hue shift)
+   para lograr un degradado bicolor moderno, no solo claro/oscuro. */
+.theme-indigo {
+  --color-primary: oklch(0.50 0.17 277);
+  --color-primary-gradient: oklch(0.60 0.16 305); /* → violeta */
+  --color-primary-foreground: var(--color-white);
+  --color-ring: oklch(0.66 0.12 277);
+}
+
+.theme-teal {
+  --color-primary: oklch(0.58 0.085 185);
+  --color-primary-gradient: oklch(0.70 0.12 162); /* → verde */
+  --color-primary-foreground: var(--color-white);
+  --color-ring: oklch(0.70 0.10 183);
+}
+
+.theme-violet {
+  --color-primary: oklch(0.53 0.18 293);
+  --color-primary-gradient: oklch(0.62 0.17 333); /* → fucsia */
+  --color-primary-foreground: var(--color-white);
+  --color-ring: oklch(0.69 0.13 293);
+}
+
+.theme-rose {
+  --color-primary: oklch(0.57 0.17 18);
+  --color-primary-gradient: oklch(0.69 0.15 45); /* → ámbar */
+  --color-primary-foreground: var(--color-white);
+  --color-ring: oklch(0.70 0.13 14);
 }
