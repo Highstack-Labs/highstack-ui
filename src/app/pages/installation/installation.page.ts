@@ -5,10 +5,10 @@ import { Component, signal } from '@angular/core';
   templateUrl: './installation.page.html',
 })
 export class InstallationPage {
-  readonly npmInstallCmd = 'npm install @diegopolancodev/highstack-ui';
-  
+  readonly npmInstallCmd = 'npm install @highstacklabs/ui';
+
   readonly importExample = `import { Component } from '@angular/core';
-import { ButtonComponent } from '@diegopolancodev/highstack-ui';
+import { ButtonComponent } from '@highstacklabs/ui';
 
 @Component({
   selector: 'app-mi-componente',
@@ -16,6 +16,27 @@ import { ButtonComponent } from '@diegopolancodev/highstack-ui';
   template: \`<ui-button variant="gradient">Mi Botón</ui-button>\`
 })
 export class MiComponente {}`;
+
+  readonly usageExample = `<!-- Variantes -->
+<ui-button variant="default">Default</ui-button>
+<ui-button variant="secondary">Secondary</ui-button>
+<ui-button variant="destructive">Destructive</ui-button>
+<ui-button variant="outline">Outline</ui-button>
+<ui-button variant="ghost">Ghost</ui-button>
+<ui-button variant="link">Link</ui-button>
+<ui-button variant="gradient">Gradient</ui-button>
+<ui-button variant="glass">Glass</ui-button>
+
+<!-- Tamaños -->
+<ui-button size="sm">Small</ui-button>
+<ui-button size="md">Medium</ui-button>
+<ui-button size="lg">Large</ui-button>
+<ui-button size="icon">★</ui-button>
+
+<!-- Estados -->
+<ui-button [disabled]="true">Disabled</ui-button>
+<ui-button [loading]="true">Loading</ui-button>
+<ui-button type="submit">Submit</ui-button>`;
 
   readonly stylesExample = `@import "tailwindcss";
 
