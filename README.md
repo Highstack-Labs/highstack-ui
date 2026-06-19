@@ -30,7 +30,10 @@ npm run build:lib
 
 ## Publicar
 
+Consulta la guía completa del proceso de release en **[PUBLISHING.md](./PUBLISHING.md)**.
+
 ```bash
+npm run build:lib
 npm publish dist/highstack/ui --access public
 ```
 
