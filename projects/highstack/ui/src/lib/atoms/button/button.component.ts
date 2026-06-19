@@ -11,7 +11,7 @@ export type ButtonVariant =
   | 'glass'
   | 'success'
   | 'warning';
-export type ButtonSize = 'sm' | 'md' | 'lg' | 'icon';
+export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'icon';
 
 @Component({
   selector: 'ui-button',
@@ -68,10 +68,11 @@ export class ButtonComponent {
     };
 
     const sizeMap: Record<ButtonSize, string> = {
-      sm: 'h-8 px-3.5 gap-1.5 text-xs',
-      md: 'h-10 px-5 gap-2 text-sm',
-      lg: 'h-12 px-6.5 gap-2.5 text-base',
-      icon: 'size-10',
+      xs: 'h-7 px-2.5 gap-1 text-xs',
+      sm: 'h-8 px-3 gap-1.5 text-xs',
+      md: 'h-9 px-4 gap-2 text-sm',
+      lg: 'h-11 px-6 gap-2 text-base',
+      icon: 'size-9',
     };
 
     return [base, variantMap[this.variant()], sizeMap[this.size()]].join(' ');
