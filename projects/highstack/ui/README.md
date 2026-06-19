@@ -19,37 +19,29 @@ Requiere Angular 22+:
 
 ## Configuración de estilos
 
-Añade las variables (tokens) de color y bordes en tu archivo global de estilos (`styles.css`), después de importar Tailwind v4:
+La librería ya incluye su propio CSS precompilado con todas las utilidades que usan los componentes **y** los tokens de tema por defecto. Solo tienes que importarlo una vez en tu archivo global de estilos:
 
 ```css
-@import "tailwindcss";
+@import '@highstacklabs/ui/styles.css';
+```
+
+No necesitas Tailwind en tu app, ni añadir `@source` apuntando a `node_modules`. El CSS **no incluye preflight** (el reset global de Tailwind), así que no pisa los estilos base de tu aplicación.
+
+### Re-tematizar
+
+Los tokens vienen con valores por defecto. Para cambiar la apariencia, redefine las variables CSS **después** del import:
+
+```css
+@import '@highstacklabs/ui/styles.css';
 
 :root {
-  --color-background: oklch(1 0 0);
-  --color-foreground: oklch(0.145 0.005 285.82);
-
-  --color-primary: oklch(0.205 0.006 285.82);
+  --color-primary: oklch(0.55 0.2 264);        /* tu color de marca */
   --color-primary-foreground: oklch(0.985 0 0);
-
-  --color-destructive: oklch(0.577 0.245 27.33);
-  --color-destructive-foreground: oklch(0.985 0 0);
-
-  --color-secondary: oklch(0.965 0.003 285.82);
-  --color-secondary-foreground: oklch(0.205 0.006 285.82);
-
-  --color-accent: oklch(0.965 0.003 285.82);
-  --color-accent-foreground: oklch(0.205 0.006 285.82);
-
-  --color-muted: oklch(0.965 0.003 285.82);
-  --color-muted-foreground: oklch(0.556 0.015 285.82);
-
-  --color-border: oklch(0.922 0.005 285.82);
-  --color-input: oklch(0.922 0.005 285.82);
-  --color-ring: oklch(0.705 0.015 285.82);
-
-  --radius: 0.625rem;
+  --radius: 0.5rem;
 }
 ```
+
+Tokens disponibles: `--color-background`, `--color-foreground`, `--color-primary(-foreground)`, `--color-destructive(-foreground)`, `--color-secondary(-foreground)`, `--color-accent(-foreground)`, `--color-muted(-foreground)`, `--color-border`, `--color-input`, `--color-ring`, `--radius`.
 
 ## Uso
 
@@ -105,10 +97,10 @@ export class MiComponente {}
 ### Build de la librería
 
 ```bash
-ng build @highstacklabs/ui
+npm run build:lib
 ```
 
-Los artefactos quedan en `dist/highstack/ui`.
+Esto compila la librería con ng-packagr **y** genera `styles.css` (vía Tailwind) dentro del paquete. Los artefactos quedan en `dist/highstack/ui`.
 
 ### Publicar
 
