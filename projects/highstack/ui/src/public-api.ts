@@ -3,3 +3,5 @@
  */
 
 export * from './lib/atoms/button/button.component';
+export * from './lib/providers';
+
