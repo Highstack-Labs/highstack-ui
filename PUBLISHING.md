@@ -1,8 +1,8 @@
-# Publicar `@highstacklabs/ui`
+# Publicar `@highstacklabs2026/ui`
 
 Guía del proceso de release. Sigue estos pasos **cada vez** que quieras publicar una versión nueva del paquete a npm.
 
-> El paquete en npm se llama **`@highstacklabs/ui`**. El nombre del proyecto en `angular.json` es **`@highstack/ui`** (se usa solo para `ng build`). No los confundas.
+> El paquete en npm se llama **`@highstacklabs2026/ui`**. El nombre del proyecto en `angular.json` es **`@highstack/ui`** (se usa solo para `ng build`). No los confundas.
 
 ---
 
@@ -15,7 +15,7 @@ npm run build:lib
 # 3. Verifica el contenido (opcional)
 npm pack dist/highstack/ui --dry-run
 # 4. Confirma sesión
-npm whoami            # => diegopolancodev
+npm whoami            # => highstacklabs2026
 # 5. Publica
 npm publish dist/highstack/ui --access public
 # 6. Versiona en git
@@ -65,13 +65,13 @@ Confirma que aparezcan `styles.css`, `fesm2022/`, `types/`, `package.json` y `RE
 npm whoami
 ```
 
-Debe imprimir **`diegopolancodev`** (el dueño del paquete). Si da `401 Unauthorized`:
+Debe imprimir **`highstacklabs2026`** (el dueño del paquete). Si da `401 Unauthorized`:
 
 ```bash
 npm login
 ```
 
-> 💡 Si al publicar ves un error **`404 Not Found`** sobre `@highstacklabs/ui`, **no es un problema del nombre ni de la versión**: npm usa el `404` para ocultar errores de autenticación (`401`, token caducado) o de permisos (`403`, token sin permiso de escritura). Solución: vuelve a iniciar sesión o genera un token con permiso de *write* en https://www.npmjs.com/settings/diegopolancodev/tokens
+> 💡 Si al publicar ves un error **`404 Not Found`** sobre `@highstacklabs2026/ui`, **no es un problema del nombre ni de la versión**: npm usa el `404` para ocultar errores de autenticación (`401`, token caducado) o de permisos (`403`, token sin permiso de escritura). Solución: vuelve a iniciar sesión o genera un token con permiso de *write* en https://www.npmjs.com/settings/highstacklabs2026/tokens
 
 ## 5. Publica
 
@@ -110,6 +110,6 @@ git push && git push --tags
 
 - [ ] Versión subida en `projects/highstack/ui/package.json`
 - [ ] `npm run build:lib` sin errores
-- [ ] `npm whoami` → `diegopolancodev`
+- [ ] `npm whoami` → `highstacklabs2026`
 - [ ] `npm publish dist/highstack/ui --access public`
 - [ ] `git tag vX.Y.Z && git push --tags`

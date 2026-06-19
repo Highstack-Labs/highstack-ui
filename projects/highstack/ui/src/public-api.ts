@@ -1,5 +1,5 @@
 /*
- * Public API Surface of @highstacklabs/ui
+ * Public API Surface of @highstacklabs2026/ui
  */
 
 export * from './lib/atoms/button/button.component';

@@ -5,10 +5,10 @@ import { Component, signal } from '@angular/core';
   templateUrl: './installation.page.html',
 })
 export class InstallationPage {
-  readonly npmInstallCmd = 'npm install @highstacklabs/ui';
+  readonly npmInstallCmd = 'npm install @highstacklabs2026/ui';
 
   readonly importExample = `import { Component } from '@angular/core';
-import { ButtonComponent } from '@highstacklabs/ui';
+import { ButtonComponent } from '@highstacklabs2026/ui';
 
 @Component({
   selector: 'app-mi-componente',
@@ -39,7 +39,7 @@ export class MiComponente {}`;
 <ui-button type="submit">Submit</ui-button>`;
 
   readonly stylesExample = `/* En tu archivo global de estilos (p. ej. styles.css) */
-@import '@highstacklabs/ui/styles.css';
+@import '@highstacklabs2026/ui/styles.css';
 
 /* (Opcional) Re-tematiza redefiniendo los tokens DESPUÉS del import */
 :root {

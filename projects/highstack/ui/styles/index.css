@@ -1,5 +1,5 @@
 /*
- * Precompiled stylesheet for @highstacklabs/ui.
+ * Precompiled stylesheet for @highstacklabs2026/ui.
  *
  * Contains:
  *   - The default theme tokens (CSS variables) the components rely on.
@@ -9,7 +9,7 @@
  * Preflight (Tailwind's global reset) is intentionally NOT included so this
  * file can be imported into any host app without clobbering its base styles.
  *
- * Consumers just do:  @import '@highstacklabs/ui/styles.css';
+ * Consumers just do:  @import '@highstacklabs2026/ui/styles.css';
  * and can override any token by redefining the CSS variable.
  */
 

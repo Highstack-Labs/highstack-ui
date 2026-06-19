@@ -2,7 +2,7 @@
 
 Monorepo de **HighStack UI**: una librería de componentes premium para **Angular 21/22** + una app de showcase/documentación.
 
-- **Librería** — [`@highstacklabs/ui`](./projects/highstack/ui/README.md) (`projects/highstack/ui`). Componentes standalone con **Angular Signals**, diseñados para **Tailwind CSS v4**. Publicada en npm.
+- **Librería** — [`@highstacklabs2026/ui`](./projects/highstack/ui/README.md) (`projects/highstack/ui`). Componentes standalone con **Angular Signals**, diseñados para **Tailwind CSS v4**. Publicada en npm.
 - **App de showcase** — la aplicación raíz (`src/`) que documenta y muestra los componentes en vivo (incluye la página de instalación).
 
 ## Requisitos
@@ -37,8 +37,8 @@ npm run build:lib
 npm publish dist/highstack/ui --access public
 ```
 
-> El nombre del paquete en npm es `@highstacklabs/ui` (definido en `projects/highstack/ui/package.json`). Recuerda subir la versión antes de publicar.
+> El nombre del paquete en npm es `@highstacklabs2026/ui` (definido en `projects/highstack/ui/package.json`). Recuerda subir la versión antes de publicar.
 
 ## Documentación de la librería
 
-Consulta el [README de `@highstacklabs/ui`](./projects/highstack/ui/README.md) para instalación, configuración de estilos, re-tematización y la API de componentes.
+Consulta el [README de `@highstacklabs2026/ui`](./projects/highstack/ui/README.md) para instalación, configuración de estilos, re-tematización y la API de componentes.
