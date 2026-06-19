@@ -37,4 +37,99 @@
     <router-outlet />
   </main>
 
+  <!-- Right Sidebar (Customizer) -->
+  <aside class="w-60 shrink-0 border-l border-[var(--color-border)] px-4 py-6 overflow-y-auto flex flex-col gap-6">
+    <div>
+      <p class="mb-4 text-xs font-semibold uppercase tracking-widest text-[var(--color-muted-foreground)]">
+        Configurador
+      </p>
+      
+      <!-- Theme Presets Selector -->
+      <div class="space-y-2.5">
+        <label class="text-[11px] font-medium text-[var(--color-muted-foreground)] tracking-widest uppercase block mb-1">Paleta de Colores</label>
+        <div class="flex flex-col gap-1.5">
+          <!-- Zinc -->
+          <button 
+            (click)="changeTheme('default')" 
+            class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-[var(--radius)] border text-left text-sm transition-all cursor-pointer hover:bg-[var(--color-accent)]/50 group"
+            [class.border-[var(--color-primary)]]="currentTheme() === 'default'"
+            [class.bg-[var(--color-accent)]]="currentTheme() === 'default'"
+            [class.border-[var(--color-border)]]="currentTheme() !== 'default'"
+          >
+            <span class="size-4 rounded-full bg-zinc-900 border border-zinc-800 shrink-0 shadow-sm flex items-center justify-center">
+              @if (currentTheme() === 'default') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="20 6 9 17 4 12"/></svg>
+              }
+            </span>
+            <span class="text-xs font-medium tracking-tight text-[var(--color-foreground)]">Zinc (Default)</span>
+          </button>
+
+          <!-- Indigo -->
+          <button 
+            (click)="changeTheme('indigo')" 
+            class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-[var(--radius)] border text-left text-sm transition-all cursor-pointer hover:bg-[var(--color-accent)]/50 group"
+            [class.border-indigo-500]="currentTheme() === 'indigo'"
+            [class.bg-indigo-500/10]="currentTheme() === 'indigo'"
+            [class.border-[var(--color-border)]]="currentTheme() !== 'indigo'"
+          >
+            <span class="size-4 rounded-full bg-indigo-600 border border-indigo-500 shrink-0 shadow-sm flex items-center justify-center">
+              @if (currentTheme() === 'indigo') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="20 6 9 17 4 12"/></svg>
+              }
+            </span>
+            <span class="text-xs font-medium tracking-tight text-[var(--color-foreground)]">Indigo</span>
+          </button>
+
+          <!-- Teal -->
+          <button 
+            (click)="changeTheme('teal')" 
+            class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-[var(--radius)] border text-left text-sm transition-all cursor-pointer hover:bg-[var(--color-accent)]/50 group"
+            [class.border-teal-500]="currentTheme() === 'teal'"
+            [class.bg-teal-500/10]="currentTheme() === 'teal'"
+            [class.border-[var(--color-border)]]="currentTheme() !== 'teal'"
+          >
+            <span class="size-4 rounded-full bg-teal-600 border border-teal-500 shrink-0 shadow-sm flex items-center justify-center">
+              @if (currentTheme() === 'teal') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="20 6 9 17 4 12"/></svg>
+              }
+            </span>
+            <span class="text-xs font-medium tracking-tight text-[var(--color-foreground)]">Teal</span>
+          </button>
+
+          <!-- Violet -->
+          <button 
+            (click)="changeTheme('violet')" 
+            class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-[var(--radius)] border text-left text-sm transition-all cursor-pointer hover:bg-[var(--color-accent)]/50 group"
+            [class.border-violet-500]="currentTheme() === 'violet'"
+            [class.bg-violet-500/10]="currentTheme() === 'violet'"
+            [class.border-[var(--color-border)]]="currentTheme() !== 'violet'"
+          >
+            <span class="size-4 rounded-full bg-violet-600 border border-violet-500 shrink-0 shadow-sm flex items-center justify-center">
+              @if (currentTheme() === 'violet') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="20 6 9 17 4 12"/></svg>
+              }
+            </span>
+            <span class="text-xs font-medium tracking-tight text-[var(--color-foreground)]">Violet</span>
+          </button>
+
+          <!-- Rose -->
+          <button 
+            (click)="changeTheme('rose')" 
+            class="w-full flex items-center gap-2.5 px-2.5 py-1.5 rounded-[var(--radius)] border text-left text-sm transition-all cursor-pointer hover:bg-[var(--color-accent)]/50 group"
+            [class.border-rose-500]="currentTheme() === 'rose'"
+            [class.bg-rose-500/10]="currentTheme() === 'rose'"
+            [class.border-[var(--color-border)]]="currentTheme() !== 'rose'"
+          >
+            <span class="size-4 rounded-full bg-rose-600 border border-rose-500 shrink-0 shadow-sm flex items-center justify-center">
+              @if (currentTheme() === 'rose') {
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="20 6 9 17 4 12"/></svg>
+              }
+            </span>
+            <span class="text-xs font-medium tracking-tight text-[var(--color-foreground)]">Rose</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
 </div>
