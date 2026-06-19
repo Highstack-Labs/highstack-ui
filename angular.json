@@ -68,6 +68,32 @@
           "builder": "@angular/build:unit-test"
         }
       }
+    },
+    "@highstack/ui": {
+      "projectType": "library",
+      "root": "projects/highstack/ui",
+      "sourceRoot": "projects/highstack/ui/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:ng-packagr",
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/highstack/ui/tsconfig.lib.prod.json"
+            },
+            "development": {
+              "tsConfig": "projects/highstack/ui/tsconfig.lib.json"
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "test": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/highstack/ui/tsconfig.spec.json"
+          }
+        }
+      }
     }
   }
 }
