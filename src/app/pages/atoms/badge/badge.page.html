@@ -1,0 +1,172 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <!-- Header fijo -->
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Badge</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Etiqueta compacta para estados, tags y contadores.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el componente en tu archivo TypeScript:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Estilos -->
+        <app-demo-block id="styles" title="Estilos" [code]="stylesCode" class="block scroll-mt-28">
+          <ui-badge variant="solid">Solid</ui-badge>
+          <ui-badge variant="soft">Soft</ui-badge>
+          <ui-badge variant="outline">Outline</ui-badge>
+        </app-demo-block>
+
+        <!-- Colores -->
+        <app-demo-block id="colors" title="Colores" [code]="colorsCode" class="block scroll-mt-28">
+          <div class="flex flex-col gap-4">
+            <div class="flex flex-wrap items-center gap-2">
+              <ui-badge variant="solid" color="primary">Primary</ui-badge>
+              <ui-badge variant="solid" color="secondary">Secondary</ui-badge>
+              <ui-badge variant="solid" color="success">Success</ui-badge>
+              <ui-badge variant="solid" color="warning">Warning</ui-badge>
+              <ui-badge variant="solid" color="destructive">Destructive</ui-badge>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <ui-badge variant="soft" color="primary">Primary</ui-badge>
+              <ui-badge variant="soft" color="secondary">Secondary</ui-badge>
+              <ui-badge variant="soft" color="success">Success</ui-badge>
+              <ui-badge variant="soft" color="warning">Warning</ui-badge>
+              <ui-badge variant="soft" color="destructive">Destructive</ui-badge>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <ui-badge variant="outline" color="primary">Primary</ui-badge>
+              <ui-badge variant="outline" color="secondary">Secondary</ui-badge>
+              <ui-badge variant="outline" color="success">Success</ui-badge>
+              <ui-badge variant="outline" color="warning">Warning</ui-badge>
+              <ui-badge variant="outline" color="destructive">Destructive</ui-badge>
+            </div>
+          </div>
+        </app-demo-block>
+
+        <!-- Con punto -->
+        <app-demo-block id="dot" title="Con punto" [code]="dotCode" class="block scroll-mt-28">
+          <ui-badge color="success" [dot]="true">Activo</ui-badge>
+          <ui-badge color="warning" [dot]="true">Pendiente</ui-badge>
+          <ui-badge color="destructive" [dot]="true">Offline</ui-badge>
+          <ui-badge color="secondary" [dot]="true">Borrador</ui-badge>
+        </app-demo-block>
+
+        <!-- Con ícono -->
+        <app-demo-block id="icon" title="Con ícono" [code]="iconCode" class="block scroll-mt-28">
+          <ui-badge color="success" variant="soft">
+            <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+            Verificado
+          </ui-badge>
+          <ui-badge color="primary" variant="soft">
+            <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" /></svg>
+            Destacado
+          </ui-badge>
+          <ui-badge color="warning" variant="soft">
+            <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+            Pendiente
+          </ui-badge>
+        </app-demo-block>
+
+        <!-- Removible -->
+        <app-demo-block id="removable" title="Removible" [code]="removableCode" class="block scroll-mt-28">
+          <div class="flex flex-col gap-4">
+            <div class="flex flex-wrap items-center gap-2 min-h-6">
+              @for (tag of tags(); track tag) {
+                <ui-badge variant="soft" color="primary" [removable]="true" (remove)="removeTag(tag)">
+                  {{ tag }}
+                </ui-badge>
+              } @empty {
+                <span class="text-xs text-[var(--color-muted-foreground)]">Sin tags.</span>
+              }
+            </div>
+            <button
+              type="button"
+              (click)="resetTags()"
+              class="text-xs text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] underline underline-offset-2 cursor-pointer w-fit"
+            >
+              Restablecer
+            </button>
+          </div>
+        </app-demo-block>
+
+        <!-- Tamaños -->
+        <app-demo-block id="sizes" title="Tamaños" [code]="sizesCode" class="block scroll-mt-28">
+          <ui-badge size="sm">Small</ui-badge>
+          <ui-badge size="md">Medium</ui-badge>
+        </app-demo-block>
+
+        <!-- API Reference -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">variant</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'solid' | 'soft' | 'outline'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'soft'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">color</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'primary' | 'secondary' | 'success' | 'warning' | 'destructive'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'primary'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">dot</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">removable</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">(remove)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">EventEmitter&lt;void&gt;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">[slot=icon]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">content projection (ícono)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
