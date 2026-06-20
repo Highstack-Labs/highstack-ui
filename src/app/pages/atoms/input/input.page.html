@@ -36,7 +36,12 @@
         </app-demo-block>
 
         <!-- Label y ayuda -->
-        <app-demo-block id="label-hint" title="Label y ayuda" [code]="labelCode" class="block scroll-mt-28">
+        <app-demo-block
+          id="label-hint"
+          title="Label y ayuda"
+          [code]="labelCode"
+          class="block scroll-mt-28"
+        >
           <div class="w-full max-w-sm">
             <ui-input
               label="Email"
@@ -51,10 +56,38 @@
         <app-demo-block id="icons" title="Con íconos" [code]="iconsCode" class="block scroll-mt-28">
           <div class="w-full max-w-sm space-y-4">
             <ui-input placeholder="Buscar...">
-              <svg slot="prefix" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+              <svg
+                slot="prefix"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
             </ui-input>
             <ui-input type="email" placeholder="tu@correo.com" value="hola@correo.com">
-              <svg slot="suffix" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><polyline points="20 6 9 17 4 12" /></svg>
+              <svg
+                slot="suffix"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="text-emerald-500"
+              >
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
             </ui-input>
           </div>
         </app-demo-block>
@@ -78,7 +111,12 @@
         </app-demo-block>
 
         <!-- Password -->
-        <app-demo-block id="password" title="Password" [code]="passwordCode" class="block scroll-mt-28">
+        <app-demo-block
+          id="password"
+          title="Password"
+          [code]="passwordCode"
+          class="block scroll-mt-28"
+        >
           <div class="w-full max-w-sm space-y-4">
             <ui-input label="Con ojito (default)" type="password" placeholder="••••••••" />
             <ui-input
@@ -95,15 +133,25 @@
           <div>
             <h2 class="text-lg font-medium text-[var(--color-foreground)]">Signal Forms</h2>
             <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
-              Vincula con <code class="font-mono text-xs">[formField]</code> de Angular 22.
-              Los errores aparecen al salir del campo (touch).
+              Vincula con <code class="font-mono text-xs">[formField]</code> de Angular 22. Los
+              errores aparecen al salir del campo (touch).
             </p>
           </div>
 
           <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
             <div class="w-full max-w-sm space-y-4">
-              <ui-input [formField]="signalForm.email" label="Email" type="email" placeholder="tu@correo.com" />
-              <ui-input [formField]="signalForm.password" label="Contraseña" type="password" placeholder="••••••••" />
+              <ui-input
+                [formField]="signalForm.email"
+                label="Email"
+                type="email"
+                placeholder="tu@correo.com"
+              />
+              <ui-input
+                [formField]="signalForm.password"
+                label="Contraseña"
+                type="password"
+                placeholder="••••••••"
+              />
               <p class="text-xs text-[var(--color-muted-foreground)]">
                 Form válido:
                 <span class="font-mono">{{ signalForm().valid() }}</span>
@@ -111,8 +159,10 @@
             </div>
           </div>
 
-          <app-code-block [code]="signalFormsCode" lang="typescript" />
-          <app-code-block [code]="signalFormsTemplate" lang="html" />
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="signalFormsCode" lang="typescript" />
+            <app-code-block [code]="signalFormsTemplate" lang="html" />
+          </div>
         </section>
 
         <!-- Reactive Forms -->
@@ -138,13 +188,17 @@
             </form>
           </div>
 
-          <app-code-block [code]="reactiveFormsCode" lang="typescript" />
-          <app-code-block [code]="reactiveFormsTemplate" lang="html" />
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="reactiveFormsCode" lang="typescript" />
+            <app-code-block [code]="reactiveFormsTemplate" lang="html" />
+          </div>
         </section>
 
         <!-- API Reference -->
         <section id="api" class="space-y-3 scroll-mt-28">
-          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">
+            Propiedades (API Reference)
+          </h2>
           <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
             <table class="w-full text-left text-sm">
               <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
@@ -157,52 +211,72 @@
               <tbody class="text-[var(--color-foreground)]">
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">value</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (model)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    string (model)
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">''</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">type</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url'
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">'text'</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">size</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md' | 'lg'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    'sm' | 'md' | 'lg'
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">label</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    string
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">—</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">hint</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    string
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">—</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">error</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    string
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">—</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">disabled</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    boolean
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">false</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">readonly</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    boolean
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">false</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">required</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    boolean
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">false</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">[slot=prefix] / [slot=suffix]</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">content projection (íconos)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    content projection (íconos)
+                  </td>
                   <td class="px-4 py-2.5 font-mono text-xs">—</td>
                 </tr>
               </tbody>
