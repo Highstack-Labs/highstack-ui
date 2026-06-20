@@ -53,6 +53,38 @@
           </button>
         }
       </div>
+
+      <!-- Cómo aplicar el tema en tu app -->
+      <div class="space-y-6 pt-6">
+        <div>
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">
+            Aplicar el tema en tu aplicación
+          </h2>
+          <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+            El selector de arriba solo cambia esta demo. En tu proyecto, el tema se
+            configura una vez así:
+          </p>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm font-medium text-[var(--color-foreground)]">
+            1. Importa los estilos
+          </p>
+          <app-code-block [code]="stylesExample" lang="css" />
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm font-medium text-[var(--color-foreground)]">
+            2. Configura el tema con <code class="font-mono text-xs">provideHighstack</code>
+          </p>
+          <app-code-block [code]="providerExample" lang="typescript" />
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-sm font-medium text-[var(--color-foreground)]">Alternativa manual</p>
+          <app-code-block [code]="manualExample" lang="html" />
+        </div>
+      </div>
     </div>
   </div>
 </div>
