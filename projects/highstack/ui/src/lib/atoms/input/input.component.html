@@ -1,0 +1,47 @@
+@if (label()) {
+  <label
+    [for]="id()"
+    class="block mb-1.5 text-sm font-medium text-[var(--color-foreground)]"
+  >
+    {{ label() }}
+    @if (required()) {
+      <span class="text-[var(--color-destructive)]">*</span>
+    }
+  </label>
+}
+
+<div [class]="wrapperClasses()">
+  <span class="shrink-0 flex items-center text-[var(--color-muted-foreground)]">
+    <ng-content select="[slot=prefix]" />
+  </span>
+
+  <input
+    [id]="id()"
+    [type]="type()"
+    [name]="name()"
+    [placeholder]="placeholder()"
+    [readonly]="readonly()"
+    [disabled]="isDisabled()"
+    [required]="required()"
+    [value]="value()"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+    [attr.aria-invalid]="hasError() || null"
+    [attr.aria-describedby]="describedById()"
+    class="w-full min-w-0 bg-transparent border-0 p-0 outline-none text-[var(--color-foreground)] placeholder:text-[var(--color-muted-foreground)] disabled:cursor-not-allowed"
+  />
+
+  <span class="shrink-0 flex items-center text-[var(--color-muted-foreground)]">
+    <ng-content select="[slot=suffix]" />
+  </span>
+</div>
+
+@if (hasError()) {
+  <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-destructive)]">
+    {{ errorMessage() }}
+  </p>
+} @else if (hint()) {
+  <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-muted-foreground)]">
+    {{ hint() }}
+  </p>
+}
