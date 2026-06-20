@@ -31,9 +31,9 @@ export class ButtonComponent {
   protected readonly hostClasses = computed(() => {
     const base = [
       'inline-flex items-center justify-center gap-2 whitespace-nowrap',
-      this.pill() ? 'rounded-full' : 'rounded-[var(--radius)]',
+      this.pill() ? 'rounded-full' : '',
       this.full() ? 'w-full' : '',
-      'font-semibold transition-all duration-150',
+      'font-medium transition-all duration-150',
       'outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--color-ring)]/50',
       'disabled:pointer-events-none disabled:opacity-50 disabled:transform-none disabled:shadow-none',
       'cursor-pointer',
@@ -67,12 +67,14 @@ export class ButtonComponent {
         'bg-amber-500 text-white shadow-sm hover:bg-amber-600 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-amber-500/20',
     };
 
+    // Radio ligado al tamaño: menos alto → menos redondez (estilo shadcn).
+    const pill = this.pill();
     const sizeMap: Record<ButtonSize, string> = {
-      xs: 'h-7 px-2.5 gap-1 text-xs',
-      sm: 'h-8 px-3 gap-1.5 text-xs',
-      md: 'h-9 px-4 gap-2 text-sm',
-      lg: 'h-11 px-6 gap-2 text-base',
-      icon: 'size-9',
+      xs: `h-6 px-2 gap-1 text-xs ${pill ? '' : 'rounded-md'}`,
+      sm: `h-8 px-3 gap-1.5 text-xs ${pill ? '' : 'rounded-md'}`,
+      md: `h-9 px-4 gap-2 text-sm ${pill ? '' : 'rounded-lg'}`,
+      lg: `h-10 px-5 gap-2 text-sm ${pill ? '' : 'rounded-lg'}`,
+      icon: `size-9 ${pill ? '' : 'rounded-lg'}`,
     };
 
     return [base, variantMap[this.variant()], sizeMap[this.size()]].join(' ');

@@ -83,14 +83,15 @@ export class InputComponent implements ControlValueAccessor {
   );
 
   protected readonly wrapperClasses = computed(() => {
+    // Radio ligado al tamaño: menos alto -> menos redondez (estilo shadcn).
     const sizeMap: Record<InputSize, string> = {
-      sm: 'h-8 px-2.5 gap-2 text-xs',
-      md: 'h-10 px-3 gap-2 text-sm',
-      lg: 'h-11 px-3.5 gap-2.5 text-base',
+      sm: 'h-8 px-2.5 gap-2 text-xs rounded-md',
+      md: 'h-9 px-3 gap-2 text-sm rounded-lg',
+      lg: 'h-10 px-3.5 gap-2 text-base rounded-lg',
     };
 
     const base =
-      'flex items-center rounded-[var(--radius)] border bg-[var(--color-background)] transition-all';
+      'flex items-center border bg-[var(--color-background)] transition-all';
 
     const state = this.hasError()
       ? 'border-[var(--color-destructive)] focus-within:ring-[3px] focus-within:ring-[var(--color-destructive)]/25'
