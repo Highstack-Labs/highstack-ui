@@ -42,6 +42,8 @@ export class InputComponent implements ControlValueAccessor {
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly readonly = input(false, { transform: booleanAttribute });
   readonly required = input(false, { transform: booleanAttribute });
+  /** Muestra el botón de ojito para revelar/ocultar la contraseña (solo type="password"). */
+  readonly passwordToggle = input(true, { transform: booleanAttribute });
 
   /** Mensaje de error manual (tiene prioridad sobre los errors de Signal Forms). */
   readonly error = input<string>('');
@@ -53,6 +55,15 @@ export class InputComponent implements ControlValueAccessor {
   /** disabled puede venir del input o de CVA (setDisabledState). */
   private readonly cvaDisabled = signal(false);
   protected readonly isDisabled = computed(() => this.disabled() || this.cvaDisabled());
+
+  /** Estado y tipo efectivo para el toggle de contraseña. */
+  protected readonly showPassword = signal(false);
+  protected readonly hasPasswordToggle = computed(
+    () => this.type() === 'password' && this.passwordToggle(),
+  );
+  protected readonly resolvedType = computed(() =>
+    this.type() === 'password' && this.showPassword() ? 'text' : this.type(),
+  );
 
   protected readonly errorMessage = computed(() => {
     if (this.error()) return this.error();

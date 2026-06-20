@@ -113,7 +113,11 @@ export class InputPage implements AfterViewInit {
 <ui-input label="Deshabilitado" [disabled]="true" value="No editable" />
 <ui-input label="Solo lectura" [readonly]="true" value="Solo lectura" />`;
 
-  readonly passwordCode = `<ui-input label="Contraseña" type="password" placeholder="••••••••" />`;
+  readonly passwordCode = `<!-- Con ojito (por defecto) -->
+<ui-input label="Contraseña" type="password" placeholder="••••••••" />
+
+<!-- Sin ojito -->
+<ui-input label="Contraseña" type="password" [passwordToggle]="false" />`;
 
   readonly signalFormsCode = `// componente.ts
 import { signal } from '@angular/core';
