@@ -59,30 +59,8 @@ export class InputPage implements AfterViewInit {
   ];
 
   ngAfterViewInit() {
-    this.pageNav.setSections(this.sections);
-    this.pageNav.setActive('instalacion');
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
-        if (visible) {
-          this.pageNav.setActive(visible.target.id);
-        }
-      },
-      { rootMargin: '-15% 0px -75% 0px', threshold: 0 },
-    );
-
-    for (const section of this.sections) {
-      const el = document.getElementById(section.id);
-      if (el) observer.observe(el);
-    }
-
-    this.destroyRef.onDestroy(() => {
-      observer.disconnect();
-      this.pageNav.clear();
-    });
+    this.pageNav.startSpy(this.sections);
+    this.destroyRef.onDestroy(() => this.pageNav.stopSpy());
   }
 
   // --- Snippets ---
