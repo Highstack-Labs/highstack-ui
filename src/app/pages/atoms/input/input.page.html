@@ -1,0 +1,212 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <!-- Header fijo -->
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Input</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Campo de texto con soporte para Signal Forms, Reactive Forms y ngModel.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el componente en tu archivo TypeScript:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm">
+            <ui-input placeholder="Escribe algo..." [(value)]="demoValue" />
+            <p class="mt-2 text-xs text-[var(--color-muted-foreground)]">
+              Valor: <span class="font-mono">{{ demoValue() || '—' }}</span>
+            </p>
+          </div>
+        </app-demo-block>
+
+        <!-- Label y ayuda -->
+        <app-demo-block id="label-hint" title="Label y ayuda" [code]="labelCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm">
+            <ui-input
+              label="Email"
+              type="email"
+              placeholder="tu@correo.com"
+              hint="No compartiremos tu correo."
+            />
+          </div>
+        </app-demo-block>
+
+        <!-- Con íconos -->
+        <app-demo-block id="icons" title="Con íconos" [code]="iconsCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm space-y-4">
+            <ui-input placeholder="Buscar...">
+              <svg slot="prefix" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            </ui-input>
+            <ui-input type="email" placeholder="tu@correo.com" value="hola@correo.com">
+              <svg slot="suffix" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><polyline points="20 6 9 17 4 12" /></svg>
+            </ui-input>
+          </div>
+        </app-demo-block>
+
+        <!-- Tamaños -->
+        <app-demo-block id="sizes" title="Tamaños" [code]="sizesCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm space-y-4">
+            <ui-input size="sm" placeholder="Small" />
+            <ui-input size="md" placeholder="Medium" />
+            <ui-input size="lg" placeholder="Large" />
+          </div>
+        </app-demo-block>
+
+        <!-- Estados -->
+        <app-demo-block id="states" title="Estados" [code]="statesCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm space-y-4">
+            <ui-input label="Error" error="Este campo es obligatorio" value="valor inválido" />
+            <ui-input label="Deshabilitado" [disabled]="true" value="No editable" />
+            <ui-input label="Solo lectura" [readonly]="true" value="Solo lectura" />
+          </div>
+        </app-demo-block>
+
+        <!-- Password -->
+        <app-demo-block id="password" title="Password" [code]="passwordCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm">
+            <ui-input label="Contraseña" type="password" placeholder="••••••••" />
+          </div>
+        </app-demo-block>
+
+        <!-- Signal Forms -->
+        <section id="signal-forms" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Signal Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Vincula con <code class="font-mono text-xs">[formField]</code> de Angular 22.
+              Los errores aparecen al salir del campo (touch).
+            </p>
+          </div>
+
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <div class="w-full max-w-sm space-y-4">
+              <ui-input [formField]="signalForm.email" label="Email" type="email" placeholder="tu@correo.com" />
+              <ui-input [formField]="signalForm.password" label="Contraseña" type="password" placeholder="••••••••" />
+              <p class="text-xs text-[var(--color-muted-foreground)]">
+                Form válido:
+                <span class="font-mono">{{ signalForm().valid() }}</span>
+              </p>
+            </div>
+          </div>
+
+          <app-code-block [code]="signalFormsCode" lang="typescript" />
+          <app-code-block [code]="signalFormsTemplate" lang="html" />
+        </section>
+
+        <!-- Reactive Forms -->
+        <section id="reactive-forms" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Reactive Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Funciona con <code class="font-mono text-xs">formControlName</code> /
+              <code class="font-mono text-xs">[(ngModel)]</code> vía ControlValueAccessor.
+            </p>
+          </div>
+
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <form [formGroup]="reactiveForm" class="w-full max-w-sm">
+              <ui-input
+                formControlName="username"
+                label="Usuario"
+                placeholder="tu_usuario"
+                [invalid]="reactiveForm.controls.username.invalid"
+                [touched]="reactiveForm.controls.username.touched"
+                [error]="usernameError"
+              />
+            </form>
+          </div>
+
+          <app-code-block [code]="reactiveFormsCode" lang="typescript" />
+          <app-code-block [code]="reactiveFormsTemplate" lang="html" />
+        </section>
+
+        <!-- API Reference -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (model)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">type</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'text'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md' | 'lg'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">label</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">hint</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">error</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">disabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">readonly</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">required</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">[slot=prefix] / [slot=suffix]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">content projection (íconos)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
