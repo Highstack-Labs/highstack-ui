@@ -1,0 +1,40 @@
+@let card = group.appearance() === 'card';
+
+<label
+  [for]="id"
+  [class]="card ? cardClasses() : ''"
+  class="flex items-start gap-2.5"
+  [class.cursor-pointer]="!isDisabled()"
+  [class.cursor-not-allowed]="isDisabled()"
+>
+  <span class="relative inline-flex items-center">
+    <input
+      type="radio"
+      [id]="id"
+      [name]="group.name()"
+      [value]="value()"
+      [checked]="checked()"
+      [disabled]="isDisabled()"
+      (change)="onSelect()"
+      class="peer absolute inset-0 size-full opacity-0 m-0 cursor-pointer disabled:cursor-not-allowed"
+    />
+    <span [class]="circleClasses()">
+      @if (checked()) {
+        <span [class]="dotClasses()"></span>
+      }
+    </span>
+  </span>
+
+  @if (label() || description()) {
+    <span class="flex flex-col gap-0.5 -mt-px">
+      @if (label()) {
+        <span class="text-sm font-medium text-[var(--color-foreground)] leading-tight">
+          {{ label() }}
+        </span>
+      }
+      @if (description()) {
+        <span class="text-xs text-[var(--color-muted-foreground)]">{{ description() }}</span>
+      }
+    </span>
+  }
+</label>
