@@ -1,0 +1,152 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Tabs</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Organiza contenido en pestañas. Compositional, con navegación por teclado.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el grupo y las pestañas:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Underline -->
+        <app-demo-block id="underline" title="Underline" [code]="underlineCode" class="block scroll-mt-28">
+          <div class="w-full">
+            <ui-tabs>
+              <ui-tab value="cuenta" label="Cuenta">
+                <p class="text-sm text-[var(--color-muted-foreground)]">Configura los datos de tu cuenta y perfil.</p>
+              </ui-tab>
+              <ui-tab value="seguridad" label="Seguridad">
+                <p class="text-sm text-[var(--color-muted-foreground)]">Cambia tu contraseña y activa 2FA.</p>
+              </ui-tab>
+              <ui-tab value="notif" label="Notificaciones">
+                <p class="text-sm text-[var(--color-muted-foreground)]">Elige qué alertas quieres recibir.</p>
+              </ui-tab>
+              <ui-tab value="facturacion" label="Facturación" [disabled]="true">
+                <p class="text-sm text-[var(--color-muted-foreground)]">No disponible.</p>
+              </ui-tab>
+            </ui-tabs>
+          </div>
+        </app-demo-block>
+
+        <!-- Pills -->
+        <app-demo-block id="pills" title="Pills" [code]="pillsCode" class="block scroll-mt-28">
+          <div class="w-full">
+            <ui-tabs variant="pills">
+              <ui-tab value="general" label="General">
+                <p class="text-sm text-[var(--color-muted-foreground)]">Ajustes generales del espacio de trabajo.</p>
+              </ui-tab>
+              <ui-tab value="equipo" label="Equipo">
+                <p class="text-sm text-[var(--color-muted-foreground)]">Invita y administra a tu equipo.</p>
+              </ui-tab>
+              <ui-tab value="plan" label="Plan">
+                <p class="text-sm text-[var(--color-muted-foreground)]">Tu plan actual y uso.</p>
+              </ui-tab>
+            </ui-tabs>
+          </div>
+        </app-demo-block>
+
+        <!-- Con íconos -->
+        <app-demo-block id="icons" title="Con íconos" [code]="iconsCode" class="block scroll-mt-28">
+          <div class="w-full">
+            <ui-tabs variant="pills">
+              <ui-tab value="perfil" label="Perfil">
+                <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                <p class="text-sm text-[var(--color-muted-foreground)]">Tu información personal.</p>
+              </ui-tab>
+              <ui-tab value="ajustes" label="Ajustes">
+                <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+                <p class="text-sm text-[var(--color-muted-foreground)]">Preferencias de la aplicación.</p>
+              </ui-tab>
+            </ui-tabs>
+          </div>
+        </app-demo-block>
+
+        <!-- Tamaños -->
+        <app-demo-block id="sizes" title="Tamaños" [code]="sizesCode" class="block scroll-mt-28">
+          <div class="w-full space-y-8">
+            <ui-tabs size="sm">
+              <ui-tab value="a" label="Small A"><p class="text-sm text-[var(--color-muted-foreground)]">Pestañas pequeñas.</p></ui-tab>
+              <ui-tab value="b" label="Small B"><p class="text-sm text-[var(--color-muted-foreground)]">Panel B.</p></ui-tab>
+            </ui-tabs>
+            <ui-tabs size="md">
+              <ui-tab value="a" label="Medium A"><p class="text-sm text-[var(--color-muted-foreground)]">Pestañas medianas.</p></ui-tab>
+              <ui-tab value="b" label="Medium B"><p class="text-sm text-[var(--color-muted-foreground)]">Panel B.</p></ui-tab>
+            </ui-tabs>
+          </div>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-tabs · value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (model)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">primera pestaña</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-tabs · variant</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'underline' | 'pills'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'underline'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-tabs · size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-tab · value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (requerido)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-tab · label</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-tab · disabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-tab · [slot=icon]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">content projection</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
