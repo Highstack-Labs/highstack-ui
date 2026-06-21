@@ -1,0 +1,229 @@
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  booleanAttribute,
+  computed,
+  contentChildren,
+  forwardRef,
+  inject,
+  input,
+  model,
+  signal,
+} from '@angular/core';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+
+export type SelectSize = 'sm' | 'md' | 'lg';
+
+interface SelectValidationError {
+  kind?: string;
+  message?: string;
+}
+
+let nextId = 0;
+
+/**
+ * Select compositional, sin dependencias. Combina el overlay del Dropdown con
+ * la integración de formularios del Input: Signal Forms (`[formField]`),
+ * ControlValueAccessor (ngModel/Reactive) y two-way `[(value)]`.
+ */
+@Component({
+  selector: 'ui-select',
+  templateUrl: './select.component.html',
+  host: { class: 'block' },
+  providers: [
+    { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectComponent), multi: true },
+  ],
+})
+export class SelectComponent implements ControlValueAccessor {
+  readonly value = model<string>('');
+
+  readonly placeholder = input<string>('Selecciona…');
+  readonly label = input<string>('');
+  readonly hint = input<string>('');
+  readonly error = input<string>('');
+  readonly size = input<SelectSize>('md');
+  readonly id = input<string>(`ui-select-${nextId++}`);
+
+  readonly disabled = input(false, { transform: booleanAttribute });
+  readonly required = input(false, { transform: booleanAttribute });
+  readonly invalid = input(false, { transform: booleanAttribute });
+  readonly touched = input(false, { transform: booleanAttribute });
+  readonly errors = input<readonly SelectValidationError[]>([]);
+
+  readonly open = signal(false);
+  private readonly el = inject(ElementRef<HTMLElement>);
+  private readonly options = contentChildren(OptionComponent);
+
+  private readonly cvaDisabled = signal(false);
+  protected readonly isDisabled = computed(() => this.disabled() || this.cvaDisabled());
+
+  protected readonly errorMessage = computed(() => {
+    if (this.error()) return this.error();
+    if (this.touched()) {
+      const first = this.errors()[0];
+      if (first) return first.message ?? first.kind ?? 'Campo inválido';
+    }
+    return '';
+  });
+  protected readonly hasError = computed(
+    () => !!this.error() || !!this.errorMessage() || (this.invalid() && this.touched()),
+  );
+
+  protected readonly selectedLabel = computed(() => {
+    const v = this.value();
+    const opt = this.options().find((o) => o.value() === v);
+    return opt ? opt.getLabel() : '';
+  });
+
+  protected readonly triggerClasses = computed(() => {
+    const sizeMap: Record<SelectSize, string> = {
+      sm: 'h-8 px-2.5 text-xs rounded-lg',
+      md: 'h-9 px-3 text-sm rounded-[10px]',
+      lg: 'h-10 px-3.5 text-base rounded-[10px]',
+    };
+    const base =
+      'flex w-full items-center justify-between gap-2 border bg-[var(--color-background)] transition-all outline-none cursor-pointer text-left';
+    const state = this.hasError()
+      ? 'border-[var(--color-destructive)] focus-visible:ring-[3px] focus-visible:ring-[var(--color-destructive)]/25'
+      : 'border-[var(--color-input)] focus-visible:border-[var(--color-ring)] focus-visible:ring-[3px] focus-visible:ring-[var(--color-ring)]/40';
+    const disabled = this.isDisabled()
+      ? 'opacity-50 cursor-not-allowed bg-[var(--color-muted)]/40'
+      : '';
+    return [base, sizeMap[this.size()], state, disabled].join(' ');
+  });
+
+  protected readonly describedById = computed(() =>
+    this.hasError() || this.hint() ? `${this.id()}-desc` : null,
+  );
+
+  toggle() {
+    if (this.isDisabled()) return;
+    this.open.update((o) => !o);
+    if (this.open()) this.focusActive();
+  }
+
+  close() {
+    this.open.set(false);
+  }
+
+  /** Llamado por una ui-option al elegirse. */
+  choose(v: string) {
+    this.value.set(v);
+    this.onChange(v);
+    this.onTouched();
+    this.close();
+    const trigger = this.el.nativeElement.querySelector('[data-trigger]') as HTMLElement | null;
+    trigger?.focus();
+  }
+
+  @HostListener('document:click', ['$event'])
+  protected onDocClick(event: MouseEvent) {
+    if (this.open() && !this.el.nativeElement.contains(event.target as Node)) this.close();
+  }
+
+  @HostListener('keydown', ['$event'])
+  protected onKeydown(event: KeyboardEvent) {
+    const enabled = this.options().filter((o) => !o.disabled());
+    if (!this.open()) {
+      if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+        event.preventDefault();
+        this.toggle();
+      }
+      return;
+    }
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.close();
+      return;
+    }
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (!enabled.length) return;
+      const active = document.activeElement;
+      const idx = enabled.findIndex((o) => o.isActive(active));
+      const next =
+        event.key === 'ArrowDown'
+          ? (idx + 1) % enabled.length
+          : (idx - 1 + enabled.length) % enabled.length;
+      enabled[next].focus();
+    }
+  }
+
+  private focusActive() {
+    setTimeout(() => {
+      const opts = this.options().filter((o) => !o.disabled());
+      const sel = opts.find((o) => o.value() === this.value());
+      (sel ?? opts[0])?.focus();
+    });
+  }
+
+  // --- ControlValueAccessor ---
+  private onChange: (value: string) => void = () => {};
+  private onTouched: () => void = () => {};
+
+  writeValue(value: string): void {
+    this.value.set(value ?? '');
+  }
+  registerOnChange(fn: (value: string) => void): void {
+    this.onChange = fn;
+  }
+  registerOnTouched(fn: () => void): void {
+    this.onTouched = fn;
+  }
+  setDisabledState(isDisabled: boolean): void {
+    this.cvaDisabled.set(isDisabled);
+  }
+}
+
+/** Opción dentro de ui-select. */
+@Component({
+  selector: 'ui-option',
+  template: `
+    <span class="flex-1"><ng-content /></span>
+    @if (selected()) {
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--color-primary)]"><polyline points="20 6 9 17 4 12" /></svg>
+    }
+  `,
+  host: {
+    role: 'option',
+    tabindex: '-1',
+    '[attr.aria-selected]': 'selected()',
+    '[attr.aria-disabled]': 'disabled() || null',
+    '(click)': 'onClick()',
+    '[class]': 'hostClasses()',
+  },
+})
+export class OptionComponent {
+  readonly value = input.required<string>();
+  readonly disabled = input(false, { transform: booleanAttribute });
+
+  private readonly select = inject(SelectComponent);
+  private readonly el = inject(ElementRef<HTMLElement>);
+
+  protected readonly selected = computed(() => this.select.value() === this.value());
+
+  protected readonly hostClasses = computed(() => {
+    const base =
+      'flex items-center gap-2 rounded-md px-2 py-1.5 text-sm cursor-pointer select-none outline-none transition-colors text-[var(--color-foreground)]';
+    const state = this.disabled()
+      ? 'opacity-50 pointer-events-none'
+      : 'hover:bg-[var(--color-accent)] focus:bg-[var(--color-accent)]';
+    return [base, state].join(' ');
+  });
+
+  getLabel() {
+    return this.el.nativeElement.textContent?.trim() ?? '';
+  }
+  focus() {
+    this.el.nativeElement.focus();
+  }
+  isActive(node: Element | null) {
+    return node === this.el.nativeElement;
+  }
+
+  protected onClick() {
+    if (this.disabled()) return;
+    this.select.choose(this.value());
+  }
+}
