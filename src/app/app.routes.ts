@@ -7,6 +7,7 @@ import { CardPage } from './pages/atoms/card/card.page';
 import { CheckboxPage } from './pages/atoms/checkbox/checkbox.page';
 import { SwitchPage } from './pages/atoms/switch/switch.page';
 import { RadioPage } from './pages/atoms/radio/radio.page';
+import { AvatarPage } from './pages/atoms/avatar/avatar.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 
@@ -25,6 +26,7 @@ export const routes: Routes = [
       { path: 'atoms/checkbox', component: CheckboxPage },
       { path: 'atoms/switch', component: SwitchPage },
       { path: 'atoms/radio',  component: RadioPage },
+      { path: 'atoms/avatar', component: AvatarPage },
     ],
   },
 ];
