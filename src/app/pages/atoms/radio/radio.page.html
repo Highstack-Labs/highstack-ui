@@ -1,0 +1,188 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Radio</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Selección única con soporte para Signal Forms, Reactive Forms y ngModel.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el grupo y los items:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <ui-radio-group [(value)]="fruit">
+            <ui-radio value="apple" label="Manzana" />
+            <ui-radio value="banana" label="Banana" />
+            <ui-radio value="orange" label="Naranja" />
+          </ui-radio-group>
+        </app-demo-block>
+
+        <!-- Con descripción -->
+        <app-demo-block id="description" title="Con descripción" [code]="descriptionCode" class="block scroll-mt-28">
+          <ui-radio-group [(value)]="plan">
+            <ui-radio value="free" label="Free" description="Para empezar." />
+            <ui-radio value="pro" label="Pro" description="$29/mes, hasta 10 usuarios." />
+            <ui-radio value="ent" label="Enterprise" description="Facturación personalizada." />
+          </ui-radio-group>
+        </app-demo-block>
+
+        <!-- Horizontal -->
+        <app-demo-block id="horizontal" title="Horizontal" [code]="horizontalCode" class="block scroll-mt-28">
+          <ui-radio-group orientation="horizontal" [(value)]="layout">
+            <ui-radio value="grid" label="Cuadrícula" />
+            <ui-radio value="list" label="Lista" />
+            <ui-radio value="board" label="Tablero" />
+          </ui-radio-group>
+        </app-demo-block>
+
+        <!-- Tamaños -->
+        <app-demo-block id="sizes" title="Tamaños" [code]="sizesCode" class="block scroll-mt-28">
+          <div class="flex flex-col gap-6">
+            <ui-radio-group size="sm" value="a" orientation="horizontal">
+              <ui-radio value="a" label="Small A" />
+              <ui-radio value="b" label="Small B" />
+            </ui-radio-group>
+            <ui-radio-group size="md" value="a" orientation="horizontal">
+              <ui-radio value="a" label="Medium A" />
+              <ui-radio value="b" label="Medium B" />
+            </ui-radio-group>
+          </div>
+        </app-demo-block>
+
+        <!-- Variante card -->
+        <app-demo-block id="card" title="Variante card" [code]="cardCode" class="block scroll-mt-28">
+          <ui-radio-group appearance="card" orientation="horizontal" [(value)]="cardPlan" class="w-full">
+            <ui-radio value="free" label="Free" description="$0/mes" class="flex-1" />
+            <ui-radio value="pro" label="Pro" description="$29/mes" class="flex-1" />
+            <ui-radio value="ent" label="Enterprise" description="Custom" class="flex-1" />
+          </ui-radio-group>
+        </app-demo-block>
+
+        <!-- Signal Forms -->
+        <section id="signal-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Signal Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Vincula el grupo con <code class="font-mono text-xs">[formField]</code>.
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <ui-radio-group [formField]="signalForm.plan">
+              <ui-radio value="free" label="Free" />
+              <ui-radio value="pro" label="Pro" />
+              <ui-radio value="ent" label="Enterprise" />
+            </ui-radio-group>
+            <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+              Form válido: <span class="font-mono">{{ signalForm().valid() }}</span>
+            </p>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="signalFormsCode" lang="typescript" />
+            <app-code-block [code]="signalFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- Reactive Forms -->
+        <section id="reactive-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Reactive Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Funciona con <code class="font-mono text-xs">[formControl]</code> /
+              <code class="font-mono text-xs">[(ngModel)]</code> vía ControlValueAccessor.
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <ui-radio-group [formControl]="reactiveCtrl" orientation="horizontal">
+              <ui-radio value="mensual" label="Mensual" />
+              <ui-radio value="anual" label="Anual" />
+            </ui-radio-group>
+            <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+              Valor: <span class="font-mono">{{ reactiveCtrl.value }}</span>
+            </p>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="reactiveFormsCode" lang="typescript" />
+            <app-code-block [code]="reactiveFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">radio-group · value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (model)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">radio-group · size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">radio-group · orientation</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'vertical' | 'horizontal'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'vertical'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">radio-group · appearance</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'default' | 'card'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'default'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">radio-group · disabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">radio · value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (requerido)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">radio · label / description</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">radio · disabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
