@@ -70,11 +70,11 @@ export class ButtonComponent {
     // Radio ligado al tamaño: menos alto → menos redondez (estilo shadcn).
     const pill = this.pill();
     const sizeMap: Record<ButtonSize, string> = {
-      xs: `h-6 px-2 gap-1 text-xs ${pill ? '' : 'rounded-md'}`,
-      sm: `h-8 px-3 gap-1.5 text-xs ${pill ? '' : 'rounded-md'}`,
-      md: `h-9 px-4 gap-2 text-sm ${pill ? '' : 'rounded-lg'}`,
-      lg: `h-10 px-5 gap-2 text-sm ${pill ? '' : 'rounded-lg'}`,
-      icon: `size-9 ${pill ? '' : 'rounded-lg'}`,
+      xs: `h-6 px-2 gap-1 text-xs ${pill ? '' : 'rounded-lg'}`,
+      sm: `h-8 px-3 gap-1.5 text-xs ${pill ? '' : 'rounded-lg'}`,
+      md: `h-9 px-4 gap-2 text-sm ${pill ? '' : 'rounded-[10px]'}`,
+      lg: `h-10 px-5 gap-2 text-sm ${pill ? '' : 'rounded-[10px]'}`,
+      icon: `size-9 ${pill ? '' : 'rounded-[10px]'}`,
     };
 
     return [base, variantMap[this.variant()], sizeMap[this.size()]].join(' ');

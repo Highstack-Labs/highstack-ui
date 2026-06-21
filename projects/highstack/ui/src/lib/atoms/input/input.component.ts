@@ -85,9 +85,9 @@ export class InputComponent implements ControlValueAccessor {
   protected readonly wrapperClasses = computed(() => {
     // Radio ligado al tamaño: menos alto -> menos redondez (estilo shadcn).
     const sizeMap: Record<InputSize, string> = {
-      sm: 'h-8 px-2.5 gap-2 text-xs rounded-md',
-      md: 'h-9 px-3 gap-2 text-sm rounded-lg',
-      lg: 'h-10 px-3.5 gap-2 text-base rounded-lg',
+      sm: 'h-8 px-2.5 gap-2 text-xs rounded-lg',
+      md: 'h-9 px-3 gap-2 text-sm rounded-[10px]',
+      lg: 'h-10 px-3.5 gap-2 text-base rounded-[10px]',
     };
 
     const base =
