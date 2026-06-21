@@ -30,6 +30,7 @@ export class BadgePage implements AfterViewInit {
     { id: 'colors', label: 'Colores' },
     { id: 'dot', label: 'Con punto' },
     { id: 'icon', label: 'Con ícono' },
+    { id: 'glass', label: 'Glass' },
     { id: 'removable', label: 'Removible' },
     { id: 'sizes', label: 'Tamaños' },
     { id: 'api', label: 'API' },
@@ -65,6 +66,11 @@ export class BadgePage implements AfterViewInit {
   readonly removableCode = `@for (tag of tags(); track tag) {
   <ui-badge [removable]="true" (remove)="removeTag(tag)">{{ tag }}</ui-badge>
 }`;
+
+  readonly glassCode = `<!-- Luce mejor sobre una imagen o fondo con color -->
+<ui-badge variant="glass" color="primary">Primary</ui-badge>
+<ui-badge variant="glass" color="success" [dot]="true">En vivo</ui-badge>
+<ui-badge variant="glass" color="secondary">Neutral</ui-badge>`;
 
   readonly sizesCode = `<ui-badge size="sm">Small</ui-badge>
 <ui-badge size="md">Medium</ui-badge>`;
