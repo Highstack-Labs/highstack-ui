@@ -12,7 +12,8 @@ export class CardComponent {
   readonly variant = input<CardVariant>('elevated');
 
   protected readonly hostClasses = computed(() => {
-    const base = 'block rounded-[var(--radius)] bg-[var(--color-background)] text-[var(--color-foreground)]';
+    const base =
+      'flex flex-col gap-6 py-6 rounded-[var(--radius)] bg-[var(--color-background)] text-[var(--color-foreground)]';
 
     const variantMap: Record<CardVariant, string> = {
       elevated: 'border border-[var(--color-border)] shadow-sm',
@@ -30,7 +31,7 @@ export class CardComponent {
 @Component({
   selector: 'ui-card-header',
   template: `<ng-content />`,
-  host: { class: 'flex flex-col gap-1.5 px-6 pt-6' },
+  host: { class: 'flex flex-col gap-1.5 px-6' },
 })
 export class CardHeaderComponent {}
 
@@ -54,7 +55,7 @@ export class CardDescriptionComponent {}
 @Component({
   selector: 'ui-card-content',
   template: `<ng-content />`,
-  host: { class: 'block px-6 py-6' },
+  host: { class: 'block px-6' },
 })
 export class CardContentComponent {}
 
@@ -62,6 +63,6 @@ export class CardContentComponent {}
 @Component({
   selector: 'ui-card-footer',
   template: `<ng-content />`,
-  host: { class: 'flex items-center gap-3 px-6 pb-6' },
+  host: { class: 'flex items-center gap-3 px-6' },
 })
 export class CardFooterComponent {}
