@@ -41,13 +41,13 @@ export class ButtonComponent {
 
     const variantMap: Record<ButtonVariant, string> = {
       default:
-        'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] shadow-sm hover:bg-[var(--color-primary)]/95 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
+        'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] shadow-sm hover:bg-[var(--color-primary)]/95 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
       destructive:
-        'bg-[var(--color-destructive)] text-[var(--color-destructive-foreground)] shadow-sm hover:bg-[var(--color-destructive)]/95 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-[var(--color-destructive)]/20',
+        'bg-[var(--color-destructive)] text-[var(--color-destructive-foreground)] shadow-sm hover:bg-[var(--color-destructive)]/95 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-[var(--color-destructive)]/20',
       outline:
-        'border border-[var(--color-input)] bg-[var(--color-background)] shadow-sm hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)] hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
+        'border border-[var(--color-input)] bg-[var(--color-background)] shadow-sm hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)] active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
       secondary:
-        'bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] shadow-sm hover:bg-[var(--color-secondary)]/90 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
+        'bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] shadow-sm hover:bg-[var(--color-secondary)]/90 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
       ghost:
         'hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)] active:scale-[0.98]',
       link: 'text-[var(--color-primary)] underline-offset-4 hover:underline',
@@ -57,14 +57,14 @@ export class ButtonComponent {
         'bg-[length:200%_100%] bg-left ' +
         'shadow-[0_1px_2px_0_rgb(0_0_0/0.10),inset_0_1px_0_0_rgb(255_255_255/0.22)] ' +
         'transition-[background-position,transform,box-shadow] duration-300 ease-out ' +
-        'hover:bg-right hover:-translate-y-[1px] hover:shadow-[0_6px_16px_-4px_rgb(0_0_0/0.30),inset_0_1px_0_0_rgb(255_255_255/0.28)] ' +
+        'hover:bg-right ' +
         'active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
       glass:
-        'backdrop-blur-2xl bg-white/10 border border-white/15 text-white/90 shadow-sm hover:bg-white/[0.18] hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
+        'backdrop-blur-2xl bg-white/10 border border-white/15 text-white/90 shadow-sm hover:bg-white/[0.18] active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
       success:
-        'bg-emerald-500 text-white shadow-sm hover:bg-emerald-600 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-emerald-500/20',
+        'bg-emerald-500 text-white shadow-sm hover:bg-emerald-600 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-emerald-500/20',
       warning:
-        'bg-amber-500 text-white shadow-sm hover:bg-amber-600 hover:-translate-y-[1px] hover:shadow-md active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-amber-500/20',
+        'bg-amber-500 text-white shadow-sm hover:bg-amber-600 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-amber-500/20',
     };
 
     // Radio ligado al tamaño: menos alto → menos redondez (estilo shadcn).
