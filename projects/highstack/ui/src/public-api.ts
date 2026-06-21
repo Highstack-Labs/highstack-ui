@@ -13,6 +13,8 @@ export * from './lib/atoms/input/input.component';
 export * from './lib/atoms/radio/radio.component';
 export * from './lib/atoms/select/select.component';
 export * from './lib/atoms/tabs/tabs.component';
+export * from './lib/atoms/toast/toast.types';
+export * from './lib/atoms/toast/toast.service';
 export * from './lib/atoms/tooltip/tooltip.directive';
 export * from './lib/atoms/switch/switch.component';
 export * from './lib/providers';
