@@ -10,6 +10,7 @@ import { RadioPage } from './pages/atoms/radio/radio.page';
 import { AvatarPage } from './pages/atoms/avatar/avatar.page';
 import { TooltipPage } from './pages/atoms/tooltip/tooltip.page';
 import { DropdownPage } from './pages/atoms/dropdown/dropdown.page';
+import { SelectPage } from './pages/atoms/select/select.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 
@@ -31,6 +32,7 @@ export const routes: Routes = [
       { path: 'atoms/avatar', component: AvatarPage },
       { path: 'atoms/tooltip', component: TooltipPage },
       { path: 'atoms/dropdown', component: DropdownPage },
+      { path: 'atoms/select', component: SelectPage },
     ],
   },
 ];
