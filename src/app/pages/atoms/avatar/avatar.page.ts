@@ -4,7 +4,6 @@ import {
   AvatarGroupComponent,
 } from '../../../../components/atoms/avatar/avatar.component';
 import { BadgeComponent } from '../../../../components/atoms/badge/badge.component';
-import { ButtonComponent } from '../../../../components/atoms/button/button.component';
 import {
   CardComponent,
   CardContentComponent,
@@ -19,7 +18,6 @@ import { PageNavService, PageSection } from '../../../shared/page-nav.service';
     AvatarComponent,
     AvatarGroupComponent,
     BadgeComponent,
-    ButtonComponent,
     CardComponent,
     CardContentComponent,
     DemoBlockComponent,

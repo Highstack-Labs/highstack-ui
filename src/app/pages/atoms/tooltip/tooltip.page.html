@@ -1,0 +1,130 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Tooltip</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Etiqueta flotante al pasar el cursor o enfocar. Directiva sin dependencias.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa la directiva y aplícala a cualquier elemento:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <ui-button uiTooltip="Guardar cambios">Guardar</ui-button>
+          <span class="text-xs text-[var(--color-muted-foreground)]">← pasa el cursor</span>
+        </app-demo-block>
+
+        <!-- Posiciones -->
+        <app-demo-block id="placement" title="Posiciones" [code]="placementCode" class="block scroll-mt-28">
+          <div class="flex flex-wrap items-center gap-3">
+            <ui-button variant="outline" uiTooltip="Arriba" tooltipPlacement="top">Top</ui-button>
+            <ui-button variant="outline" uiTooltip="Abajo" tooltipPlacement="bottom">Bottom</ui-button>
+            <ui-button variant="outline" uiTooltip="Izquierda" tooltipPlacement="left">Left</ui-button>
+            <ui-button variant="outline" uiTooltip="Derecha" tooltipPlacement="right">Right</ui-button>
+          </div>
+        </app-demo-block>
+
+        <!-- Delay -->
+        <app-demo-block id="delay" title="Delay" [code]="delayCode" class="block scroll-mt-28">
+          <div class="flex flex-wrap items-center gap-3">
+            <ui-button variant="secondary" uiTooltip="Aparece al instante" [tooltipDelay]="0">Inmediato</ui-button>
+            <ui-button variant="secondary" uiTooltip="Aparece tras 500ms" [tooltipDelay]="500">500ms</ui-button>
+          </div>
+        </app-demo-block>
+
+        <!-- En íconos -->
+        <app-demo-block id="icons" title="En íconos" [code]="iconsCode" class="block scroll-mt-28">
+          <div class="flex items-center gap-3">
+            <button
+              uiTooltip="Más información"
+              tooltipPlacement="right"
+              class="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--color-border)] text-[var(--color-muted-foreground)] hover:bg-[var(--color-accent)] cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>
+            </button>
+            <button
+              uiTooltip="Eliminar"
+              tooltipPlacement="top"
+              class="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--color-border)] text-[var(--color-destructive)] hover:bg-[var(--color-accent)] cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
+            </button>
+            <button
+              uiTooltip="Configuración"
+              tooltipPlacement="bottom"
+              class="inline-flex size-9 items-center justify-center rounded-lg border border-[var(--color-border)] text-[var(--color-muted-foreground)] hover:bg-[var(--color-accent)] cursor-pointer"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" /></svg>
+            </button>
+          </div>
+        </app-demo-block>
+
+        <!-- Deshabilitado -->
+        <app-demo-block id="disabled" title="Deshabilitado" [code]="disabledCode" class="block scroll-mt-28">
+          <ui-button variant="ghost" uiTooltip="No se muestra" [tooltipDisabled]="true">Sin tooltip</ui-button>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">uiTooltip</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (texto; vacío = no muestra)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">tooltipPlacement</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'top' | 'bottom' | 'left' | 'right'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'top'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">tooltipDelay</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">number (ms)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">300</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">tooltipDisabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-[var(--color-muted-foreground)]">
+            Se muestra con hover y con foco de teclado (Tab); se cierra con Escape. Salta al lado
+            opuesto si no cabe en el viewport.
+          </p>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
