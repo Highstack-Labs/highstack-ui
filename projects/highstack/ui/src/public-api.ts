@@ -2,6 +2,7 @@
  * Public API Surface of @highstacklabs2026/ui
  */
 
+export * from './lib/atoms/avatar/avatar.component';
 export * from './lib/atoms/badge/badge.component';
 export * from './lib/atoms/button/button.component';
 export * from './lib/atoms/card/card.component';
