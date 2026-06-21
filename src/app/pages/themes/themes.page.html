@@ -54,6 +54,44 @@
         }
       </div>
 
+      <!-- Modo oscuro -->
+      <div class="space-y-4 pt-6">
+        <div>
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Modo oscuro</h2>
+          <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+            Funciona con cualquier tema de color. Modo actual:
+            <span class="font-medium text-[var(--color-foreground)]">{{ theme.isDark() ? 'Oscuro' : 'Claro' }}</span>
+          </p>
+        </div>
+
+        <div class="inline-flex items-center gap-1 rounded-[var(--radius)] border border-[var(--color-border)] p-1">
+          <button
+            type="button"
+            (click)="theme.setDark(false)"
+            class="inline-flex items-center gap-1.5 px-3 h-8 rounded-[calc(var(--radius)-0.25rem)] text-sm font-medium transition-colors cursor-pointer"
+            [class.bg-[var(--color-accent)]]="!theme.isDark()"
+            [class.text-[var(--color-foreground)]]="!theme.isDark()"
+            [class.text-[var(--color-muted-foreground)]]="theme.isDark()"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>
+            Claro
+          </button>
+          <button
+            type="button"
+            (click)="theme.setDark(true)"
+            class="inline-flex items-center gap-1.5 px-3 h-8 rounded-[calc(var(--radius)-0.25rem)] text-sm font-medium transition-colors cursor-pointer"
+            [class.bg-[var(--color-accent)]]="theme.isDark()"
+            [class.text-[var(--color-foreground)]]="theme.isDark()"
+            [class.text-[var(--color-muted-foreground)]]="!theme.isDark()"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
+            Oscuro
+          </button>
+        </div>
+
+        <app-code-block [code]="darkExample" lang="html" />
+      </div>
+
       <!-- Cómo aplicar el tema en tu app -->
       <div class="space-y-6 pt-6">
         <div>

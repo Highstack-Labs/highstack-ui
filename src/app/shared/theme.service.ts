@@ -40,6 +40,8 @@ export class ThemeService {
     () => this.themes.find((t) => t.id === this.current())?.label ?? 'Zinc',
   );
 
+  readonly isDark = signal(false);
+
   setTheme(theme: ThemeId) {
     this.current.set(theme);
     const body = document.body;
@@ -51,5 +53,14 @@ export class ThemeService {
     if (theme !== 'default') {
       body.classList.add(`theme-${theme}`);
     }
+  }
+
+  setDark(dark: boolean) {
+    this.isDark.set(dark);
+    document.body.classList.toggle('dark', dark);
+  }
+
+  toggleDark() {
+    this.setDark(!this.isDark());
   }
 }

@@ -4,7 +4,28 @@
 
   <!-- Sidebar -->
   <aside class="w-52 shrink-0 border-r border-[var(--color-border)] px-4 py-6 overflow-y-auto">
-    
+
+    <!-- Brand + dark toggle -->
+    <div class="flex items-center justify-between mb-6 px-2">
+      <span class="inline-flex items-center gap-1.5 font-semibold text-sm text-[var(--color-foreground)]">
+        <span class="inline-flex size-5 items-center justify-center rounded-[6px] bg-[linear-gradient(135deg,var(--color-primary),var(--color-primary-gradient))] text-[11px] font-bold text-[var(--color-primary-foreground)]">h</span>
+        highstack
+      </span>
+      <button
+        type="button"
+        (click)="theme.toggleDark()"
+        [attr.aria-label]="theme.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'"
+        [attr.aria-pressed]="theme.isDark()"
+        class="inline-flex size-7 items-center justify-center rounded-lg text-[var(--color-muted-foreground)] hover:bg-[var(--color-accent)] hover:text-[var(--color-foreground)] transition-colors cursor-pointer"
+      >
+        @if (theme.isDark()) {
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>
+        } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
+        }
+      </button>
+    </div>
+
     <!-- Getting Started -->
     <p class="mb-3 px-2 text-xs font-semibold uppercase tracking-widest text-[var(--color-muted-foreground)]">
       Getting Started
