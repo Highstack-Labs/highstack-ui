@@ -25,6 +25,35 @@
   --radius: 0.8rem; /* Redondez suavizada de 12px para estilo premium */
 }
 
+/* Modo oscuro: mismos tokens, paleta invertida. Se activa con la clase .dark
+   en el <body> (o <html>). Va antes de los .theme-* para que el color de cada
+   tema gane sobre el primario por defecto. */
+.dark {
+  --color-background: oklch(0.145 0.005 285.82);
+  --color-foreground: oklch(0.985 0 0);
+
+  /* Por defecto (zinc) el primario se invierte: claro con texto oscuro. */
+  --color-primary: oklch(0.92 0.004 286);
+  --color-primary-gradient: oklch(0.80 0.01 286);
+  --color-primary-foreground: oklch(0.21 0.006 285.82);
+
+  --color-destructive: oklch(0.62 0.21 25);
+  --color-destructive-foreground: oklch(0.985 0 0);
+
+  --color-secondary: oklch(0.27 0.006 286);
+  --color-secondary-foreground: oklch(0.985 0 0);
+
+  --color-accent: oklch(0.27 0.006 286);
+  --color-accent-foreground: oklch(0.985 0 0);
+
+  --color-muted: oklch(0.27 0.006 286);
+  --color-muted-foreground: oklch(0.71 0.015 286);
+
+  --color-border: oklch(0.30 0.006 286);
+  --color-input: oklch(0.33 0.006 286);
+  --color-ring: oklch(0.55 0.013 286);
+}
+
 /* Paletas balanceadas: chroma reducido para no verse tan vivos ni apagados.
    El gradiente usa un color destino con el TONO desplazado (hue shift)
    para lograr un degradado bicolor moderno, no solo claro/oscuro. */
