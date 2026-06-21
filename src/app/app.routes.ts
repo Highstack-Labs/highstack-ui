@@ -12,6 +12,7 @@ import { TooltipPage } from './pages/atoms/tooltip/tooltip.page';
 import { DropdownPage } from './pages/atoms/dropdown/dropdown.page';
 import { SelectPage } from './pages/atoms/select/select.page';
 import { TabsPage } from './pages/atoms/tabs/tabs.page';
+import { AlertPage } from './pages/atoms/alert/alert.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 
@@ -35,6 +36,7 @@ export const routes: Routes = [
       { path: 'atoms/dropdown', component: DropdownPage },
       { path: 'atoms/select', component: SelectPage },
       { path: 'atoms/tabs',   component: TabsPage },
+      { path: 'atoms/alert',  component: AlertPage },
     ],
   },
 ];
