@@ -3,6 +3,7 @@ import { Shell } from './shell/shell';
 import { ButtonPage } from './pages/atoms/button/button.page';
 import { InputPage } from './pages/atoms/input/input.page';
 import { BadgePage } from './pages/atoms/badge/badge.page';
+import { CardPage } from './pages/atoms/card/card.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 
@@ -17,6 +18,7 @@ export const routes: Routes = [
       { path: 'atoms/button', component: ButtonPage },
       { path: 'atoms/input',  component: InputPage },
       { path: 'atoms/badge',  component: BadgePage },
+      { path: 'atoms/card',   component: CardPage },
     ],
   },
 ];

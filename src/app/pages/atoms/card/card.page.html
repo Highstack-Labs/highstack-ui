@@ -1,0 +1,173 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <!-- Header fijo -->
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Card</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Contenedor flexible para agrupar contenido y acciones.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el card y sus subcomponentes:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm">
+            <ui-card>
+              <ui-card-header>
+                <ui-card-title>Título de la tarjeta</ui-card-title>
+                <ui-card-description>Una breve descripción.</ui-card-description>
+              </ui-card-header>
+              <ui-card-content>
+                <p class="text-sm text-[var(--color-muted-foreground)]">
+                  Contenido principal de la tarjeta.
+                </p>
+              </ui-card-content>
+              <ui-card-footer>
+                <ui-button size="sm">Aceptar</ui-button>
+                <ui-button size="sm" variant="ghost">Cancelar</ui-button>
+              </ui-card-footer>
+            </ui-card>
+          </div>
+        </app-demo-block>
+
+        <!-- Variantes -->
+        <app-demo-block id="variants" title="Variantes" [code]="variantsCode" class="block scroll-mt-28">
+          <div class="grid w-full gap-4 sm:grid-cols-2">
+            <ui-card variant="elevated">
+              <ui-card-header>
+                <ui-card-title>Elevated</ui-card-title>
+                <ui-card-description>Borde + sombra (default).</ui-card-description>
+              </ui-card-header>
+            </ui-card>
+            <ui-card variant="outline">
+              <ui-card-header>
+                <ui-card-title>Outline</ui-card-title>
+                <ui-card-description>Solo borde, sin sombra.</ui-card-description>
+              </ui-card-header>
+            </ui-card>
+            <ui-card variant="soft">
+              <ui-card-header>
+                <ui-card-title>Soft</ui-card-title>
+                <ui-card-description>Relleno suave, sin borde.</ui-card-description>
+              </ui-card-header>
+            </ui-card>
+            <ui-card variant="interactive">
+              <ui-card-header>
+                <ui-card-title>Interactive</ui-card-title>
+                <ui-card-description>Realce al pasar el cursor.</ui-card-description>
+              </ui-card-header>
+            </ui-card>
+          </div>
+        </app-demo-block>
+
+        <!-- Ejemplo real -->
+        <app-demo-block id="example" title="Ejemplo real" [code]="exampleCode" class="block scroll-mt-28">
+          <div class="grid w-full gap-6 sm:grid-cols-2">
+            <!-- Pricing -->
+            <ui-card class="max-w-sm">
+              <ui-card-header>
+                <div class="flex items-center justify-between">
+                  <ui-card-title>Plan Pro</ui-card-title>
+                  <ui-badge color="success" variant="soft">Popular</ui-badge>
+                </div>
+                <ui-card-description>Para equipos en crecimiento.</ui-card-description>
+              </ui-card-header>
+              <ui-card-content>
+                <p class="text-3xl font-semibold tracking-tight">
+                  $29<span class="text-sm font-normal text-[var(--color-muted-foreground)]">/mes</span>
+                </p>
+              </ui-card-content>
+              <ui-card-footer>
+                <ui-button variant="gradient" [full]="true">Empezar</ui-button>
+              </ui-card-footer>
+            </ui-card>
+
+            <!-- Login -->
+            <ui-card class="max-w-sm">
+              <ui-card-header>
+                <ui-card-title>Inicia sesión</ui-card-title>
+                <ui-card-description>Accede con tu cuenta.</ui-card-description>
+              </ui-card-header>
+              <ui-card-content>
+                <div class="space-y-3">
+                  <ui-input label="Email" type="email" placeholder="tu@correo.com" />
+                  <ui-input label="Contraseña" type="password" placeholder="••••••••" />
+                </div>
+              </ui-card-content>
+              <ui-card-footer>
+                <ui-button [full]="true">Entrar</ui-button>
+              </ui-card-footer>
+            </ui-card>
+          </div>
+        </app-demo-block>
+
+        <!-- API Reference -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-card · variant</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'elevated' | 'outline' | 'soft' | 'interactive'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'elevated'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-card-header</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">contenedor (cabecera)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-card-title</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">título</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-card-description</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">subtítulo</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-card-content</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">cuerpo</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-card-footer</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">pie (acciones)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
