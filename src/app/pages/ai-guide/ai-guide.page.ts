@@ -1,9 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { ButtonComponent } from '../../../components/atoms/button/button.component';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { CodeBlockComponent } from '../../shared/code-block/code-block.component';
 
 @Component({
   selector: 'app-ai-guide-page',
-  imports: [ButtonComponent],
+  imports: [ButtonComponent, PageHeaderComponent, CodeBlockComponent],
   templateUrl: './ai-guide.page.html',
 })
 export class AiGuidePage {

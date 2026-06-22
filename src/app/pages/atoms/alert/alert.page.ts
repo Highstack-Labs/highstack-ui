@@ -3,10 +3,11 @@ import { AlertComponent } from '../../../../components/atoms/alert/alert.compone
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-alert-page',
-  imports: [AlertComponent, DemoBlockComponent, CodeBlockComponent],
+  imports: [PageHeaderComponent, AlertComponent, DemoBlockComponent, CodeBlockComponent],
   templateUrl: './alert.page.html',
 })
 export class AlertPage implements AfterViewInit {

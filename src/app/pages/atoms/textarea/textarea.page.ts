@@ -6,10 +6,11 @@ import { TextareaComponent } from '../../../../components/atoms/textarea/textare
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-textarea-page',
-  imports: [TextareaComponent, DemoBlockComponent, CodeBlockComponent, FormField, ReactiveFormsModule],
+  imports: [PageHeaderComponent, TextareaComponent, DemoBlockComponent, CodeBlockComponent, FormField, ReactiveFormsModule],
   templateUrl: './textarea.page.html',
 })
 export class TextareaPage implements AfterViewInit {

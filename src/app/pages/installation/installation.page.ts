@@ -1,7 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { CodeBlockComponent } from '../../shared/code-block/code-block.component';
 
 @Component({
   selector: 'app-installation-page',
+  imports: [PageHeaderComponent, CodeBlockComponent],
   templateUrl: './installation.page.html',
 })
 export class InstallationPage {
@@ -29,15 +32,4 @@ export class MiComponente {}`;
   --color-primary-foreground: oklch(0.985 0 0);
   --radius: 0.5rem;
 }`;
-
-  copiedState = signal<Record<string, boolean>>({});
-
-  copyToClipboard(id: string, text: string) {
-    navigator.clipboard.writeText(text).then(() => {
-      this.copiedState.update(state => ({ ...state, [id]: true }));
-      setTimeout(() => {
-        this.copiedState.update(state => ({ ...state, [id]: false }));
-      }, 2000);
-    });
-  }
 }

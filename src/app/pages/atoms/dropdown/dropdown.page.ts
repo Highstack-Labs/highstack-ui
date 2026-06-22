@@ -11,10 +11,11 @@ import { AvatarComponent } from '../../../../components/atoms/avatar/avatar.comp
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-dropdown-page',
-  imports: [
+  imports: [PageHeaderComponent, 
     DropdownComponent,
     DropdownTriggerDirective,
     DropdownItemComponent,

@@ -6,10 +6,11 @@ import { CheckboxComponent } from '../../../../components/atoms/checkbox/checkbo
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-checkbox-page',
-  imports: [CheckboxComponent, DemoBlockComponent, CodeBlockComponent, FormField, ReactiveFormsModule],
+  imports: [PageHeaderComponent, CheckboxComponent, DemoBlockComponent, CodeBlockComponent, FormField, ReactiveFormsModule],
   templateUrl: './checkbox.page.html',
 })
 export class CheckboxPage implements AfterViewInit {

@@ -3,10 +3,11 @@ import { TabsComponent, TabComponent } from '../../../../components/atoms/tabs/t
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-tabs-page',
-  imports: [TabsComponent, TabComponent, DemoBlockComponent, CodeBlockComponent],
+  imports: [PageHeaderComponent, TabsComponent, TabComponent, DemoBlockComponent, CodeBlockComponent],
   templateUrl: './tabs.page.html',
 })
 export class TabsPage implements AfterViewInit {

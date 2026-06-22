@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, DestroyRef, inject, signal } from '@angular/core';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { form, required, email, minLength, FormField } from '@angular/forms/signals';
 
@@ -9,7 +10,7 @@ import { PageNavService, PageSection } from '../../../shared/page-nav.service';
 
 @Component({
   selector: 'app-input-page',
-  imports: [
+  imports: [PageHeaderComponent, 
     InputComponent,
     DemoBlockComponent,
     CodeBlockComponent,

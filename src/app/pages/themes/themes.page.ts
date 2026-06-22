@@ -1,10 +1,11 @@
 import { Component, inject } from '@angular/core';
 import { ThemeService } from '../../shared/theme.service';
 import { CodeBlockComponent } from '../../shared/code-block/code-block.component';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-themes-page',
-  imports: [CodeBlockComponent],
+  imports: [CodeBlockComponent, PageHeaderComponent],
   templateUrl: './themes.page.html',
 })
 export class ThemesPage {

@@ -3,10 +3,11 @@ import { BadgeComponent } from '../../../../components/atoms/badge/badge.compone
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-badge-page',
-  imports: [BadgeComponent, DemoBlockComponent, CodeBlockComponent],
+  imports: [PageHeaderComponent, BadgeComponent, DemoBlockComponent, CodeBlockComponent],
   templateUrl: './badge.page.html',
 })
 export class BadgePage implements AfterViewInit {

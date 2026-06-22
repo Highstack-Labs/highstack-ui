@@ -4,10 +4,11 @@ import { ButtonComponent } from '../../../../components/atoms/button/button.comp
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-tooltip-page',
-  imports: [TooltipDirective, ButtonComponent, DemoBlockComponent, CodeBlockComponent],
+  imports: [PageHeaderComponent, TooltipDirective, ButtonComponent, DemoBlockComponent, CodeBlockComponent],
   templateUrl: './tooltip.page.html',
 })
 export class TooltipPage implements AfterViewInit {

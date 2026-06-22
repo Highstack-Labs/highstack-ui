@@ -6,10 +6,11 @@ import { SwitchComponent } from '../../../../components/atoms/switch/switch.comp
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-switch-page',
-  imports: [SwitchComponent, DemoBlockComponent, CodeBlockComponent, FormField, ReactiveFormsModule],
+  imports: [PageHeaderComponent, SwitchComponent, DemoBlockComponent, CodeBlockComponent, FormField, ReactiveFormsModule],
   templateUrl: './switch.page.html',
 })
 export class SwitchPage implements AfterViewInit {

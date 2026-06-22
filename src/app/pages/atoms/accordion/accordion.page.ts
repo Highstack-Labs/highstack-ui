@@ -6,10 +6,11 @@ import {
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
+import { PageHeaderComponent } from '../../../shared/page-header/page-header.component';
 
 @Component({
   selector: 'app-accordion-page',
-  imports: [AccordionComponent, AccordionItemComponent, DemoBlockComponent, CodeBlockComponent],
+  imports: [PageHeaderComponent, AccordionComponent, AccordionItemComponent, DemoBlockComponent, CodeBlockComponent],
   templateUrl: './accordion.page.html',
 })
 export class AccordionPage implements AfterViewInit {

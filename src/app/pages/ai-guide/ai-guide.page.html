@@ -1,18 +1,8 @@
 <div class="text-[var(--color-foreground)] font-sans antialiased">
-  <header
-    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
-  >
-    <div class="mx-auto max-w-5xl">
-      <h1 class="text-2xl font-semibold tracking-tight">
-        highstack-ui
-        <span class="text-[var(--color-muted-foreground)] font-normal">· Guía para IA</span>
-      </h1>
-      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
-        Referencia completa pensada para agentes de IA (Claude u otros). Pásala como contexto a tu
-        agente para que implemente con la librería sin errores.
-      </p>
-    </div>
-  </header>
+  <app-page-header
+    section="Guía para IA"
+    subtitle="Referencia completa pensada para agentes de IA (Claude u otros). Pásala como contexto a tu agente para que implemente con la librería sin errores."
+  />
 
   <div class="px-8 py-10">
     <div class="mx-auto max-w-5xl space-y-6">
@@ -46,15 +36,7 @@
       </div>
 
       <!-- Contenido del documento -->
-      <div class="relative rounded-[var(--radius)] border border-zinc-800 bg-zinc-900 shadow-sm">
-        <div class="flex items-center gap-1.5 px-3.5 h-9 border-b border-zinc-800 bg-zinc-800/40">
-          <span class="size-2.5 rounded-full bg-[#ff5f57]"></span>
-          <span class="size-2.5 rounded-full bg-[#febc2e]"></span>
-          <span class="size-2.5 rounded-full bg-[#28c840]"></span>
-          <span class="ml-2 text-[11px] font-mono text-zinc-500 tracking-wide">AI-USAGE-GUIDE.md</span>
-        </div>
-        <pre class="overflow-auto max-h-[60vh] p-4 font-mono text-xs leading-relaxed text-zinc-100 scrollbar-code select-text"><code>{{ content() }}</code></pre>
-      </div>
+      <app-code-block [code]="content()" filename="AI-USAGE-GUIDE.md" maxHeight="60vh" />
     </div>
   </div>
 </div>
