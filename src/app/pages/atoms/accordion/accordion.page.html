@@ -1,0 +1,99 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Accordion</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Secciones colapsables. Compositional, uno o varios paneles abiertos.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el acordeón y sus items:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Single -->
+        <app-demo-block id="single" title="Single (uno abierto)" [code]="singleCode" class="block scroll-mt-28">
+          <div class="w-full max-w-lg">
+            <ui-accordion>
+              <ui-accordion-item title="¿Qué es highstack-ui?">
+                Una librería de componentes de UI para Angular, con temas y modo oscuro.
+              </ui-accordion-item>
+              <ui-accordion-item title="¿Funciona con Signal Forms?">
+                Sí. Los componentes de formulario soportan Signal Forms, Reactive Forms y ngModel.
+              </ui-accordion-item>
+              <ui-accordion-item title="¿Es gratis?">
+                Totalmente open source.
+              </ui-accordion-item>
+            </ui-accordion>
+          </div>
+        </app-demo-block>
+
+        <!-- Multiple -->
+        <app-demo-block id="multiple" title="Multiple (varios abiertos)" [code]="multipleCode" class="block scroll-mt-28">
+          <div class="w-full max-w-lg">
+            <ui-accordion [multiple]="true">
+              <ui-accordion-item title="Envíos">
+                Realizamos envíos a todo el país en 3-5 días hábiles.
+              </ui-accordion-item>
+              <ui-accordion-item title="Devoluciones">
+                Tienes 30 días para devolver tu compra.
+              </ui-accordion-item>
+              <ui-accordion-item title="Garantía" [disabled]="true">
+                (Sección deshabilitada)
+              </ui-accordion-item>
+            </ui-accordion>
+          </div>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-accordion · multiple</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-accordion-item · title</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-accordion-item · disabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
