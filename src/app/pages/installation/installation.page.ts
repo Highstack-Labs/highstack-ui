@@ -8,12 +8,15 @@ export class InstallationPage {
   readonly npmInstallCmd = 'npm install @highstacklabs2026/ui';
 
   readonly importExample = `import { Component } from '@angular/core';
-import { ComponenteComponent } from '@highstacklabs2026/ui';
+import { ButtonComponent, BadgeComponent } from '@highstacklabs2026/ui';
 
 @Component({
   selector: 'app-mi-componente',
-  imports: [ComponenteComponent],
-  template: \`<ui-componente>Contenido</ui-componente>\`
+  imports: [ButtonComponent, BadgeComponent],
+  template: \`
+    <ui-button variant="gradient">Guardar</ui-button>
+    <ui-badge color="success">Activo</ui-badge>
+  \`,
 })
 export class MiComponente {}`;
 
