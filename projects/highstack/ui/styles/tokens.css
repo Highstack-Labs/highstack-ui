@@ -84,3 +84,12 @@
   --color-primary-foreground: var(--color-white);
   --color-ring: oklch(0.70 0.13 14);
 }
+
+/* Barra de progreso indeterminada */
+@keyframes progress-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+.animate-progress-indeterminate {
+  animation: progress-indeterminate 1.2s ease-in-out infinite;
+}

@@ -1,6 +1,15 @@
 @import "./styles/tokens.css";
 @import "tailwindcss";
 
+/* Barra de progreso indeterminada */
+@keyframes progress-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+.animate-progress-indeterminate {
+  animation: progress-indeterminate 1.2s ease-in-out infinite;
+}
+
 /* Scrollbar global sutil de la página (fondo claro) */
 html {
   scrollbar-width: thin;
