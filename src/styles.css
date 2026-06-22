@@ -1,6 +1,23 @@
 @import "./styles/tokens.css";
 @import "tailwindcss";
 
+/* Item de navegación del sidebar: acento lateral que crece al activarse */
+.nav-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  background: linear-gradient(var(--color-primary), var(--color-primary-gradient));
+  transition: height 0.2s ease;
+}
+.nav-item.is-active::before {
+  height: 1.1rem;
+}
+
 /* Barra de progreso indeterminada */
 @keyframes progress-indeterminate {
   0% { transform: translateX(-100%); }
