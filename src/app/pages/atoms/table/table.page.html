@@ -1,0 +1,195 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Table</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Tabla data-driven: columnas por array, render custom por celda, sorting y selección.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa la tabla, la directiva de celda y el tipo de columna:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Cómo funciona -->
+        <section id="concepto" class="space-y-5 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Cómo funciona</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)] max-w-2xl">
+              La tabla es <strong class="text-[var(--color-foreground)]">data-driven</strong>: le pasas
+              <code class="font-mono text-xs">[data]</code> y <code class="font-mono text-xs">[columns]</code>
+              y pinta todo sola. Para los casos que no son texto plano hay dos mecanismos:
+            </p>
+          </div>
+
+          <div class="grid gap-4 sm:grid-cols-3">
+            <div class="rounded-[var(--radius)] border border-[var(--color-border)] p-4">
+              <p class="text-sm font-semibold text-[var(--color-foreground)]">1. Dato plano</p>
+              <p class="mt-1 text-xs text-[var(--color-muted-foreground)]">
+                <code class="font-mono">field: 'nombre'</code> → pinta el valor tal cual.
+              </p>
+            </div>
+            <div class="rounded-[var(--radius)] border border-[var(--color-border)] p-4">
+              <p class="text-sm font-semibold text-[var(--color-foreground)]">2. Dato anidado</p>
+              <p class="mt-1 text-xs text-[var(--color-muted-foreground)]">
+                <code class="font-mono">field: 'direccion.ciudad'</code> → resuelve el path con punto.
+              </p>
+            </div>
+            <div class="rounded-[var(--radius)] border border-[var(--color-border)] p-4">
+              <p class="text-sm font-semibold text-[var(--color-foreground)]">3. Render custom</p>
+              <p class="mt-1 text-xs text-[var(--color-muted-foreground)]">
+                <code class="font-mono">&lt;ng-template tableCell="field"&gt;</code> → tu componente por celda.
+              </p>
+            </div>
+          </div>
+
+          <p class="text-sm text-[var(--color-muted-foreground)] max-w-2xl">
+            La idea clave: <strong class="text-[var(--color-foreground)]">no escribes una fila ni una celda
+            a mano</strong>. Declaras las columnas en un array y, solo donde necesitas algo especial (una
+            fecha con ícono, un badge de estado, botones de acción), añades un template asociado a ese
+            <code class="font-mono text-xs">field</code>. Todo lo demás se pinta automáticamente.
+          </p>
+
+          <div class="space-y-2">
+            <p class="text-sm font-medium text-[var(--color-foreground)]">Paso 1 — columnas (array)</p>
+            <app-code-block [code]="conceptColumns" lang="typescript" />
+          </div>
+          <div class="space-y-2">
+            <p class="text-sm font-medium text-[var(--color-foreground)]">
+              Paso 2 — template solo para lo especial
+            </p>
+            <app-code-block [code]="conceptTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- Básico + anidado -->
+        <app-demo-block id="basic" title="Básico + anidado" [code]="basicCode" class="block scroll-mt-28">
+          <div class="w-full">
+            <ui-table [data]="users" [columns]="cols" />
+            <p class="mt-2 text-xs text-[var(--color-muted-foreground)]">
+              "Ciudad" usa el path anidado <span class="font-mono">direccion.ciudad</span>. Las cabeceras
+              ordenables se pueden clicar.
+            </p>
+          </div>
+        </app-demo-block>
+
+        <!-- Celdas custom -->
+        <app-demo-block id="custom" title="Celdas custom" [code]="customCode" class="block scroll-mt-28">
+          <div class="w-full">
+            <ui-table [data]="users" [columns]="cols">
+              <ng-template tableCell="estado" let-value>
+                <ui-badge [color]="value === 'activo' ? 'success' : 'secondary'" variant="soft" [dot]="true">
+                  {{ value }}
+                </ui-badge>
+              </ng-template>
+              <ng-template tableCell="creadoEn" let-value>
+                <span class="inline-flex items-center gap-1.5 text-[var(--color-muted-foreground)]">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" /><path d="M3 10h18" /><path d="M8 2v4" /><path d="M16 2v4" /></svg>
+                  {{ fmtDate(value) }}
+                </span>
+              </ng-template>
+            </ui-table>
+          </div>
+        </app-demo-block>
+
+        <!-- Selección -->
+        <app-demo-block id="selection" title="Selección" [code]="selectionCode" class="block scroll-mt-28">
+          <div class="w-full space-y-3">
+            <ui-table [data]="users" [columns]="cols" rowKey="id" [selectable]="true" (selectionChange)="selected.set($any($event))">
+              <ng-template tableCell="estado" let-value>
+                <ui-badge [color]="value === 'activo' ? 'success' : 'secondary'" variant="soft">{{ value }}</ui-badge>
+              </ng-template>
+              <ng-template tableCell="creadoEn" let-value>{{ fmtDate(value) }}</ng-template>
+            </ui-table>
+            <p class="text-xs text-[var(--color-muted-foreground)]">
+              Seleccionados: <span class="font-mono">{{ selected().length }}</span>
+            </p>
+          </div>
+        </app-demo-block>
+
+        <!-- Loading / vacío -->
+        <app-demo-block id="states" title="Loading / vacío" [code]="statesCode" class="block scroll-mt-28">
+          <div class="w-full space-y-6">
+            <div class="space-y-2">
+              <ui-button size="sm" variant="outline" (click)="toggleLoading()">Simular carga (1.5s)</ui-button>
+              <ui-table [data]="loading() ? [] : users" [columns]="cols" [loading]="loading()" />
+            </div>
+            <div>
+              <p class="mb-2 text-xs text-[var(--color-muted-foreground)]">Estado vacío:</p>
+              <ui-table [data]="[]" [columns]="emptyCols" emptyMessage="No hay usuarios todavía" />
+            </div>
+          </div>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">API Reference</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop / Pieza</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">data</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">T[]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">[]</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">columns</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">TableColumn[] (field, header, sortable, align, width)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">[]</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">&lt;ng-template tableCell="field"&gt;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">render custom; contexto: $implicit=value, row, index</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">rowKey</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (id para track/selección)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">selectable</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">loading / emptyMessage</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean / string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false / 'No hay resultados'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">(sortChange) / (selectionChange)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">SortState / T[]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
