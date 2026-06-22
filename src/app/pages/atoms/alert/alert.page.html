@@ -1,0 +1,114 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Alert" subtitle="Mensaje contextual con color e ícono según el tipo." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el componente en tu archivo TypeScript:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Tipos -->
+        <app-demo-block id="types" title="Tipos" [code]="typesCode" class="block scroll-mt-28">
+          <div class="w-full space-y-3">
+            <ui-alert type="info">Mensaje informativo para el usuario.</ui-alert>
+            <ui-alert type="success">Operación completada correctamente.</ui-alert>
+            <ui-alert type="warning">Revisa esta acción antes de continuar.</ui-alert>
+            <ui-alert type="error">Algo salió mal, inténtalo de nuevo.</ui-alert>
+          </div>
+        </app-demo-block>
+
+        <!-- Solid -->
+        <app-demo-block id="solid" title="Solid" [code]="solidCode" class="block scroll-mt-28">
+          <div class="w-full space-y-3">
+            <ui-alert type="info" variant="solid">Mensaje informativo.</ui-alert>
+            <ui-alert type="success" variant="solid">Guardado correctamente.</ui-alert>
+            <ui-alert type="warning" variant="solid">Atención requerida.</ui-alert>
+            <ui-alert type="error" variant="solid">No se pudo guardar.</ui-alert>
+          </div>
+        </app-demo-block>
+
+        <!-- Con título -->
+        <app-demo-block id="title" title="Con título" [code]="titleCode" class="block scroll-mt-28">
+          <div class="w-full space-y-3">
+            <ui-alert type="success" title="Cambios guardados">
+              Tu perfil se actualizó correctamente.
+            </ui-alert>
+            <ui-alert type="error" title="Error de pago">
+              No pudimos procesar tu tarjeta. Verifica los datos.
+            </ui-alert>
+          </div>
+        </app-demo-block>
+
+        <!-- Cerrable -->
+        <app-demo-block id="closable" title="Cerrable" [code]="closableCode" class="block scroll-mt-28">
+          <div class="w-full">
+            @if (visible()) {
+              <ui-alert type="info" title="Nueva versión disponible" [closable]="true" (close)="visible.set(false)">
+                Recarga la página para aplicar la actualización.
+              </ui-alert>
+            } @else {
+              <button
+                type="button"
+                (click)="visible.set(true)"
+                class="text-xs text-[var(--color-muted-foreground)] hover:text-[var(--color-foreground)] underline underline-offset-2 cursor-pointer"
+              >
+                Restaurar alerta
+              </button>
+            }
+          </div>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">type</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'info' | 'success' | 'warning' | 'error'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'info'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">variant</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'soft' | 'solid'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'soft'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">title</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">closable</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">(close)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">EventEmitter&lt;void&gt;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

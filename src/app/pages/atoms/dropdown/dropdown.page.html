@@ -1,0 +1,173 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Dropdown" subtitle="Menú de acciones desplegable. Compositional y sin dependencias." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el dropdown y sus piezas:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <div class="flex items-center gap-4">
+            <ui-dropdown>
+              <ui-button uiDropdownTrigger variant="outline">Opciones</ui-button>
+              <ui-dropdown-item (select)="act('Editar')">Editar</ui-dropdown-item>
+              <ui-dropdown-item (select)="act('Duplicar')">Duplicar</ui-dropdown-item>
+              <ui-dropdown-item destructive (select)="act('Eliminar')">Eliminar</ui-dropdown-item>
+            </ui-dropdown>
+            @if (lastAction()) {
+              <span class="text-xs text-[var(--color-muted-foreground)]">
+                Última acción: <span class="font-mono">{{ lastAction() }}</span>
+              </span>
+            }
+          </div>
+        </app-demo-block>
+
+        <!-- Íconos y atajos -->
+        <app-demo-block id="icons" title="Íconos y atajos" [code]="iconsCode" class="block scroll-mt-28">
+          <ui-dropdown>
+            <ui-button uiDropdownTrigger variant="outline">Editar</ui-button>
+            <ui-dropdown-item>
+              <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9" /><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
+              Editar
+              <span slot="shortcut">⌘E</span>
+            </ui-dropdown-item>
+            <ui-dropdown-item>
+              <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+              Duplicar
+              <span slot="shortcut">⌘D</span>
+            </ui-dropdown-item>
+            <ui-dropdown-separator />
+            <ui-dropdown-item destructive>
+              <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18" /><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" /><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" /></svg>
+              Eliminar
+              <span slot="shortcut">⌫</span>
+            </ui-dropdown-item>
+          </ui-dropdown>
+        </app-demo-block>
+
+        <!-- Secciones -->
+        <app-demo-block id="sections" title="Secciones" [code]="sectionsCode" class="block scroll-mt-28">
+          <ui-dropdown>
+            <ui-button uiDropdownTrigger variant="outline">Mi cuenta</ui-button>
+            <ui-dropdown-label>Sesión</ui-dropdown-label>
+            <ui-dropdown-item>Perfil</ui-dropdown-item>
+            <ui-dropdown-item>Ajustes</ui-dropdown-item>
+            <ui-dropdown-separator />
+            <ui-dropdown-item destructive>Cerrar sesión</ui-dropdown-item>
+          </ui-dropdown>
+        </app-demo-block>
+
+        <!-- Posición -->
+        <app-demo-block id="placement" title="Posición" [code]="placementCode" class="block scroll-mt-28">
+          <div class="flex items-center gap-4">
+            <ui-dropdown side="bottom" align="start">
+              <ui-button uiDropdownTrigger variant="outline">bottom · start</ui-button>
+              <ui-dropdown-item>Opción 1</ui-dropdown-item>
+              <ui-dropdown-item>Opción 2</ui-dropdown-item>
+            </ui-dropdown>
+            <ui-dropdown side="bottom" align="end">
+              <ui-button uiDropdownTrigger variant="outline">bottom · end</ui-button>
+              <ui-dropdown-item>Opción 1</ui-dropdown-item>
+              <ui-dropdown-item>Opción 2</ui-dropdown-item>
+            </ui-dropdown>
+            <ui-dropdown side="top" align="start">
+              <ui-button uiDropdownTrigger variant="outline">top · start</ui-button>
+              <ui-dropdown-item>Opción 1</ui-dropdown-item>
+              <ui-dropdown-item>Opción 2</ui-dropdown-item>
+            </ui-dropdown>
+          </div>
+        </app-demo-block>
+
+        <!-- Ejemplo real -->
+        <app-demo-block id="example" title="Ejemplo real" [code]="exampleCode" class="block scroll-mt-28">
+          <ui-dropdown align="end">
+            <button uiDropdownTrigger class="rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-ring)] cursor-pointer">
+              <ui-avatar size="sm" name="Juan Díaz" />
+            </button>
+            <ui-dropdown-label>Juan Díaz</ui-dropdown-label>
+            <ui-dropdown-item>
+              <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+              Perfil
+            </ui-dropdown-item>
+            <ui-dropdown-item>
+              <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2" /><line x1="2" x2="22" y1="10" y2="10" /></svg>
+              Facturación
+            </ui-dropdown-item>
+            <ui-dropdown-separator />
+            <ui-dropdown-item destructive>
+              <svg slot="icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" x2="9" y1="12" y2="12" /></svg>
+              Cerrar sesión
+            </ui-dropdown-item>
+          </ui-dropdown>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-dropdown · side</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'bottom' | 'top'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'bottom'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-dropdown · align</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'start' | 'end'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'start'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">[uiDropdownTrigger]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">directiva en el disparador</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-dropdown-item · (select)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">output al elegir</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-dropdown-item · destructive / disabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-dropdown-item · [slot=icon] / [slot=shortcut]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">content projection</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-dropdown-label / ui-dropdown-separator</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">encabezado / divisor</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-[var(--color-muted-foreground)]">
+            Abre/cierra al click en el disparador, cierra al hacer click afuera o con Escape;
+            navega con ↑/↓.
+          </p>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

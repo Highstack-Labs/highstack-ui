@@ -1,0 +1,100 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Toast" subtitle="Notificaciones temporales vía servicio. Se auto-montan, sin setup." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Inyecta el servicio donde lo necesites. El contenedor se monta solo:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Tipos -->
+        <app-demo-block id="tipos" title="Tipos" [code]="typesCode" class="block scroll-mt-28">
+          <div class="flex flex-wrap items-center gap-3">
+            <ui-button variant="outline" (click)="showInfo()">Info</ui-button>
+            <ui-button variant="outline" (click)="showSuccess()">Success</ui-button>
+            <ui-button variant="outline" (click)="showWarning()">Warning</ui-button>
+            <ui-button variant="outline" (click)="showError()">Error</ui-button>
+          </div>
+        </app-demo-block>
+
+        <!-- Con título -->
+        <app-demo-block id="title" title="Con título" [code]="titleCode" class="block scroll-mt-28">
+          <ui-button (click)="showWithTitle()">Mostrar toast con título</ui-button>
+        </app-demo-block>
+
+        <!-- Con acción -->
+        <app-demo-block id="action" title="Con acción" [code]="actionCode" class="block scroll-mt-28">
+          <ui-button variant="secondary" (click)="showWithAction()">Eliminar (con Deshacer)</ui-button>
+        </app-demo-block>
+
+        <!-- Posición -->
+        <app-demo-block id="position" title="Posición" [code]="positionCode" class="block scroll-mt-28">
+          <div class="grid grid-cols-3 gap-2 w-fit">
+            <ui-button size="sm" variant="ghost" (click)="setPosition('top-left')">top-left</ui-button>
+            <ui-button size="sm" variant="ghost" (click)="setPosition('top-center')">top-center</ui-button>
+            <ui-button size="sm" variant="ghost" (click)="setPosition('top-right')">top-right</ui-button>
+            <ui-button size="sm" variant="ghost" (click)="setPosition('bottom-left')">bottom-left</ui-button>
+            <ui-button size="sm" variant="ghost" (click)="setPosition('bottom-center')">bottom-center</ui-button>
+            <ui-button size="sm" variant="ghost" (click)="setPosition('bottom-right')">bottom-right</ui-button>
+          </div>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">API Reference</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Método / Opción</th>
+                  <th class="px-4 py-2.5 font-medium">Firma / Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">success / error / warning / info</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">(message, opts?) =&gt; number</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">show</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">(opts: ToastOptions) =&gt; number</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">dismiss</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">(id: number) =&gt; void</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">opts.duration</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">number (ms; 0 = no cierra)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">5000</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">opts.action</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">&#123; label, handler &#125;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">setPosition</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">top/bottom-left/center/right</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'bottom-right'</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

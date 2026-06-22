@@ -1,0 +1,183 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Select" subtitle="Selección desde un panel desplegable, con soporte para Signal Forms y Reactive Forms." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el select y la opción:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs">
+            <ui-select [(value)]="fruit" placeholder="Elige una fruta">
+              <ui-option value="apple">Manzana</ui-option>
+              <ui-option value="banana">Banana</ui-option>
+              <ui-option value="orange">Naranja</ui-option>
+              <ui-option value="grape">Uva</ui-option>
+            </ui-select>
+          </div>
+        </app-demo-block>
+
+        <!-- Label y ayuda -->
+        <app-demo-block id="label-hint" title="Label y ayuda" [code]="labelCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs">
+            <ui-select [(value)]="country" label="País" placeholder="Selecciona…" hint="Donde resides actualmente.">
+              <ui-option value="mx">México</ui-option>
+              <ui-option value="co">Colombia</ui-option>
+              <ui-option value="ar">Argentina</ui-option>
+              <ui-option value="cl">Chile</ui-option>
+            </ui-select>
+          </div>
+        </app-demo-block>
+
+        <!-- Tamaños -->
+        <app-demo-block id="sizes" title="Tamaños" [code]="sizesCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs space-y-4">
+            <ui-select size="sm" placeholder="Small">
+              <ui-option value="a">Opción A</ui-option>
+              <ui-option value="b">Opción B</ui-option>
+            </ui-select>
+            <ui-select size="md" placeholder="Medium">
+              <ui-option value="a">Opción A</ui-option>
+              <ui-option value="b">Opción B</ui-option>
+            </ui-select>
+            <ui-select size="lg" placeholder="Large">
+              <ui-option value="a">Opción A</ui-option>
+              <ui-option value="b">Opción B</ui-option>
+            </ui-select>
+          </div>
+        </app-demo-block>
+
+        <!-- Opción deshabilitada -->
+        <app-demo-block id="disabled-opt" title="Opción deshabilitada" [code]="disabledOptCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs">
+            <ui-select placeholder="Elige un plan">
+              <ui-option value="free">Free</ui-option>
+              <ui-option value="pro">Pro</ui-option>
+              <ui-option value="ent" disabled>Enterprise (próximamente)</ui-option>
+            </ui-select>
+          </div>
+        </app-demo-block>
+
+        <!-- Signal Forms -->
+        <section id="signal-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Signal Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Vincula con <code class="font-mono text-xs">[formField]</code> de Angular 22.
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <div class="w-full max-w-xs">
+              <ui-select [formField]="signalForm.country" label="País" placeholder="Elige…">
+                <ui-option value="mx">México</ui-option>
+                <ui-option value="co">Colombia</ui-option>
+                <ui-option value="ar">Argentina</ui-option>
+              </ui-select>
+              <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+                Form válido: <span class="font-mono">{{ signalForm().valid() }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="signalFormsCode" lang="typescript" />
+            <app-code-block [code]="signalFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- Reactive Forms -->
+        <section id="reactive-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Reactive Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Funciona con <code class="font-mono text-xs">[formControl]</code> /
+              <code class="font-mono text-xs">[(ngModel)]</code> vía ControlValueAccessor.
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <div class="w-full max-w-xs">
+              <ui-select [formControl]="reactiveCtrl" label="Rol" placeholder="Elige…">
+                <ui-option value="admin">Admin</ui-option>
+                <ui-option value="editor">Editor</ui-option>
+                <ui-option value="viewer">Viewer</ui-option>
+              </ui-select>
+              <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+                Valor: <span class="font-mono">{{ reactiveCtrl.value || '—' }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="reactiveFormsCode" lang="typescript" />
+            <app-code-block [code]="reactiveFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-select · value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (model)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-select · placeholder</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'Selecciona…'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-select · label / hint / error</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-select · size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md' | 'lg'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-select · disabled / required</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-option · value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (requerido)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-option · disabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-[var(--color-muted-foreground)]">
+            Abre al click o con ↓/Enter; cierra al elegir, al click afuera o con Escape; navega
+            con ↑/↓.
+          </p>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

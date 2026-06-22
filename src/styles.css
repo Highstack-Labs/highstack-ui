@@ -1,3 +1,78 @@
-/* You can add global styles to this file, and also import other style files */
-
+@import "./styles/tokens.css";
 @import "tailwindcss";
+
+/* Item de navegación del sidebar: acento lateral que crece al activarse */
+.nav-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 3px;
+  height: 0;
+  transform: translateY(-50%);
+  border-radius: 9999px;
+  background: linear-gradient(var(--color-primary), var(--color-primary-gradient));
+  transition: height 0.2s ease;
+}
+.nav-item.is-active::before {
+  height: 1.1rem;
+}
+
+/* Barra de progreso indeterminada */
+@keyframes progress-indeterminate {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(350%); }
+}
+.animate-progress-indeterminate {
+  animation: progress-indeterminate 1.2s ease-in-out infinite;
+}
+
+/* Scrollbar global sutil de la página (fondo claro) */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-border);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-ring);
+}
+*::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* Scrollbar oscuro y sutil para los recuadros de código */
+.scrollbar-code {
+  scrollbar-width: thin;
+  scrollbar-color: #3f3f46 transparent; /* thumb / track (Firefox) */
+}
+.scrollbar-code::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-code::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-code::-webkit-scrollbar-thumb {
+  background-color: #3f3f46; /* zinc-700 */
+  border-radius: 9999px;
+  border: none;
+  background-clip: border-box;
+}
+.scrollbar-code::-webkit-scrollbar-thumb:hover {
+  background-color: #52525b; /* zinc-600 */
+}
+.scrollbar-code::-webkit-scrollbar-corner {
+  background: transparent;
+}

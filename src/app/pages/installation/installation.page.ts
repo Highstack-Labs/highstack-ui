@@ -1,0 +1,35 @@
+import { Component } from '@angular/core';
+import { PageHeaderComponent } from '../../shared/page-header/page-header.component';
+import { CodeBlockComponent } from '../../shared/code-block/code-block.component';
+
+@Component({
+  selector: 'app-installation-page',
+  imports: [PageHeaderComponent, CodeBlockComponent],
+  templateUrl: './installation.page.html',
+})
+export class InstallationPage {
+  readonly npmInstallCmd = 'npm install @highstacklabs2026/ui';
+
+  readonly importExample = `import { Component } from '@angular/core';
+import { ButtonComponent, BadgeComponent } from '@highstacklabs2026/ui';
+
+@Component({
+  selector: 'app-mi-componente',
+  imports: [ButtonComponent, BadgeComponent],
+  template: \`
+    <ui-button variant="gradient">Guardar</ui-button>
+    <ui-badge color="success">Activo</ui-badge>
+  \`,
+})
+export class MiComponente {}`;
+
+  readonly stylesExample = `/* En tu archivo global de estilos (p. ej. styles.css) */
+@import '@highstacklabs2026/ui/styles.css';
+
+/* (Opcional) Re-tematiza redefiniendo los tokens DESPUÉS del import */
+:root {
+  --color-primary: oklch(0.55 0.2 264);        /* tu color de marca */
+  --color-primary-foreground: oklch(0.985 0 0);
+  --radius: 0.5rem;
+}`;
+}

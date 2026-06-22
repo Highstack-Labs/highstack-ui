@@ -1,0 +1,71 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header
+    section="Getting Started"
+    subtitle="Aprende a instalar y configurar la librería de componentes en tu aplicación Angular."
+    width="3xl"
+  />
+
+  <div class="px-8 py-10">
+    <main class="max-w-3xl mx-auto space-y-12">
+
+      <!-- Introducción -->
+      <section class="space-y-3">
+        <h2 class="text-lg font-medium text-[var(--color-foreground)]">Introducción</h2>
+        <p class="text-sm text-[var(--color-muted-foreground)] leading-relaxed">
+          <strong>&#64;highstacklabs/ui</strong> es una colección de componentes de UI premium construidos para
+          <strong>Angular 21/22</strong> y diseñados para funcionar de forma nativa con <strong>Tailwind CSS v4</strong>.
+          Todos los componentes son standalone y aprovechan las últimas características como <em>Angular Signals</em> para el control de estados reactivos.
+        </p>
+      </section>
+
+      <!-- Pasos de Instalación -->
+      <section class="space-y-8">
+        <h2 class="text-lg font-medium text-[var(--color-foreground)]">Pasos de Instalación</h2>
+
+        <!-- Paso 1 -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2.5">
+            <span class="flex items-center justify-center size-6 rounded-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)] text-xs font-semibold">1</span>
+            <h3 class="text-sm font-medium text-[var(--color-foreground)]">Instalar el paquete vía NPM</h3>
+          </div>
+          <p class="text-sm text-[var(--color-muted-foreground)] pl-8">
+            Ejecuta el siguiente comando en el directorio raíz de tu proyecto de Angular:
+          </p>
+          <div class="pl-8">
+            <app-code-block [code]="npmInstallCmd" lang="bash" />
+          </div>
+        </div>
+
+        <!-- Paso 2 -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2.5">
+            <span class="flex items-center justify-center size-6 rounded-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)] text-xs font-semibold">2</span>
+            <h3 class="text-sm font-medium text-[var(--color-foreground)]">Importar los estilos de la librería</h3>
+          </div>
+          <p class="text-sm text-[var(--color-muted-foreground)] pl-8">
+            La librería ya incluye su CSS precompilado con todas las utilidades y los tokens de tema por defecto. Solo impórtalo una vez en tu archivo global de estilos (generalmente <code class="font-mono text-xs">styles.css</code>) — no necesitas Tailwind en tu app. Para re-tematizar, redefine las variables CSS <strong>después</strong> del import:
+          </p>
+          <div class="pl-8">
+            <app-code-block [code]="stylesExample" lang="css" filename="styles.css" />
+          </div>
+        </div>
+
+        <!-- Paso 3 -->
+        <div class="space-y-3">
+          <div class="flex items-center gap-2.5">
+            <span class="flex items-center justify-center size-6 rounded-full bg-[var(--color-primary)] text-[var(--color-primary-foreground)] text-xs font-semibold">3</span>
+            <h3 class="text-sm font-medium text-[var(--color-foreground)]">Importar y usar en tus componentes</h3>
+          </div>
+          <p class="text-sm text-[var(--color-muted-foreground)] pl-8">
+            Dado que los componentes son standalone, puedes importarlos directamente en la sección <code class="font-mono text-xs">imports</code> de tus componentes Angular:
+          </p>
+          <div class="pl-8">
+            <app-code-block [code]="importExample" lang="typescript" filename="mi-componente.ts" />
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+  </div>
+</div>

@@ -1,0 +1,50 @@
+<div>
+  <!-- Header: título + toggle Preview/Código -->
+  <div class="flex items-center justify-between gap-3 my-6">
+    @if (title()) {
+      <span class="text-base font-semibold tracking-tight text-[var(--color-foreground)]">{{
+        title()
+      }}</span>
+    } @else {
+      <span></span>
+    }
+
+    <div
+      class="inline-flex items-center gap-1 rounded-[var(--radius)] bg-[var(--color-muted)] p-0.5"
+    >
+      <button
+        type="button"
+        (click)="view.set('preview')"
+        class="px-2.5 h-7 rounded-[calc(var(--radius)-0.25rem)] text-xs font-medium transition-all cursor-pointer"
+        [class.bg-[var(--color-background)]]="view() === 'preview'"
+        [class.shadow-sm]="view() === 'preview'"
+        [class.text-[var(--color-foreground)]]="view() === 'preview'"
+        [class.text-[var(--color-muted-foreground)]]="view() !== 'preview'"
+      >
+        Preview
+      </button>
+      <button
+        type="button"
+        (click)="view.set('code')"
+        class="px-2.5 h-7 rounded-[calc(var(--radius)-0.25rem)] text-xs font-medium transition-all cursor-pointer"
+        [class.bg-[var(--color-background)]]="view() === 'code'"
+        [class.shadow-sm]="view() === 'code'"
+        [class.text-[var(--color-foreground)]]="view() === 'code'"
+        [class.text-[var(--color-muted-foreground)]]="view() !== 'code'"
+      >
+        Código
+      </button>
+    </div>
+  </div>
+
+  <!-- Cuerpo -->
+  @if (view() === 'preview') {
+    <div
+      class="flex flex-wrap items-center justify-center gap-4 rounded-[var(--radius)] bg-[var(--color-muted)]/40 px-6 py-12 min-h-32"
+    >
+      <ng-content />
+    </div>
+  } @else {
+    <app-code-block [code]="code()" lang="html" />
+  }
+</div>

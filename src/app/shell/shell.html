@@ -1,0 +1,113 @@
+<div class="flex flex-col h-screen bg-[var(--color-background)]">
+
+ <div class="flex flex-1 min-h-0">
+
+  <!-- Sidebar -->
+  <aside class="w-56 shrink-0 border-r border-[var(--color-border)] bg-[var(--color-background)] px-3 py-5 overflow-y-auto">
+
+    <!-- Brand + dark toggle -->
+    <div class="flex items-center gap-2 mb-7 px-2">
+      <app-brand size="md" />
+      <span class="rounded-full bg-[var(--color-muted)] px-1.5 py-0.5 text-[10px] font-medium leading-none text-[var(--color-muted-foreground)]">{{ version }}</span>
+      <ui-button
+        class="ml-auto text-[var(--color-muted-foreground)]"
+        variant="ghost"
+        size="icon"
+        (click)="theme.toggleDark()"
+        [attr.aria-label]="theme.isDark() ? 'Activar modo claro' : 'Activar modo oscuro'"
+        [attr.aria-pressed]="theme.isDark()"
+      >
+        @if (theme.isDark()) {
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4" /><path d="M12 2v2" /><path d="M12 20v2" /><path d="m4.93 4.93 1.41 1.41" /><path d="m17.66 17.66 1.41 1.41" /><path d="M2 12h2" /><path d="M20 12h2" /><path d="m6.34 17.66-1.41 1.41" /><path d="m19.07 4.93-1.41 1.41" /></svg>
+        } @else {
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" /></svg>
+        }
+      </ui-button>
+    </div>
+
+    <!-- Getting Started -->
+    <p class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-widest text-[var(--color-muted-foreground)]">
+      Getting Started
+    </p>
+    <nav class="flex flex-col gap-0.5 mb-7">
+      @for (item of gettingStarted; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="is-active bg-[var(--color-accent)] text-[var(--color-accent-foreground)] font-medium"
+          class="nav-item relative inline-flex items-center rounded-[10px] px-3 h-8 text-sm text-[var(--color-muted-foreground)] hover:bg-[var(--color-accent)] hover:text-[var(--color-foreground)] transition-all cursor-pointer"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+
+    <!-- Componentes -->
+    <p class="mb-2 px-3 text-[11px] font-semibold uppercase tracking-widest text-[var(--color-muted-foreground)]">
+      Componentes
+    </p>
+    <nav class="flex flex-col gap-0.5">
+      @for (item of atoms; track item.route) {
+        <a
+          [routerLink]="item.route"
+          routerLinkActive="is-active bg-[var(--color-accent)] text-[var(--color-accent-foreground)] font-medium"
+          class="nav-item relative inline-flex items-center rounded-[10px] px-3 h-8 text-sm text-[var(--color-muted-foreground)] hover:bg-[var(--color-accent)] hover:text-[var(--color-foreground)] transition-all cursor-pointer"
+        >
+          {{ item.label }}
+        </a>
+      }
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <main id="app-content" class="flex-1 overflow-y-auto">
+    <router-outlet />
+  </main>
+
+  <!-- Right Sidebar: nav "En esta página" (scroll-spy de la página activa) -->
+  @if (pageNav.sections().length) {
+    <aside class="w-60 shrink-0 border-l border-[var(--color-border)] px-4 py-6 overflow-y-auto">
+      <div class="sticky top-0">
+        <p class="mb-3 px-2 text-[11px] font-semibold uppercase tracking-widest text-[var(--color-muted-foreground)]">
+          En esta página
+        </p>
+        <nav class="flex flex-col gap-0.5">
+          @for (s of pageNav.sections(); track s.id) {
+            <button
+              type="button"
+              (click)="pageNav.scrollTo(s.id)"
+              class="group flex items-center gap-2.5 h-7 px-2 text-left text-xs cursor-pointer"
+            >
+              <span
+                class="size-1.5 rounded-full transition-all duration-200"
+                [class.bg-[var(--color-primary)]]="pageNav.active() === s.id"
+                [class.scale-150]="pageNav.active() === s.id"
+                [class.bg-[var(--color-border)]]="pageNav.active() !== s.id"
+                [class.group-hover:bg-[var(--color-muted-foreground)]]="pageNav.active() !== s.id"
+              ></span>
+              <span
+                class="transition-colors"
+                [class.text-[var(--color-foreground)]]="pageNav.active() === s.id"
+                [class.font-medium]="pageNav.active() === s.id"
+                [class.text-[var(--color-muted-foreground)]]="pageNav.active() !== s.id"
+                [class.group-hover:text-[var(--color-foreground)]]="pageNav.active() !== s.id"
+              >{{ s.label }}</span>
+            </button>
+          }
+        </nav>
+      </div>
+    </aside>
+  }
+
+ </div>
+
+  <!-- Footer -->
+  <footer
+    class="shrink-0 border-t border-[var(--color-border)] bg-[var(--color-background)] px-6 py-3 flex items-center justify-center gap-1.5 text-xs text-[var(--color-muted-foreground)]"
+  >
+    <span>Hecha con</span>
+    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="currentColor" class="text-[var(--color-destructive)]"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" /></svg>
+    <span>por</span>
+    <app-brand size="sm" />
+  </footer>
+
+</div>

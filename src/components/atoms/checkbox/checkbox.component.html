@@ -1,0 +1,47 @@
+<label
+  [for]="id()"
+  class="flex items-start gap-2.5"
+  [class.cursor-pointer]="!isDisabled()"
+  [class.cursor-not-allowed]="isDisabled()"
+>
+  <span class="relative inline-flex items-center">
+    <input
+      type="checkbox"
+      [id]="id()"
+      [name]="name()"
+      [checked]="checked()"
+      [disabled]="isDisabled()"
+      [required]="required()"
+      [attr.aria-invalid]="hasError() || null"
+      (change)="toggle($event)"
+      class="peer absolute inset-0 size-full opacity-0 m-0 cursor-pointer disabled:cursor-not-allowed"
+    />
+    <span [class]="boxClasses()">
+      @if (indeterminate()) {
+        <svg xmlns="http://www.w3.org/2000/svg" [attr.width]="size() === 'sm' ? 10 : 12" [attr.height]="size() === 'sm' ? 10 : 12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12" /></svg>
+      } @else if (checked()) {
+        <svg xmlns="http://www.w3.org/2000/svg" [attr.width]="size() === 'sm' ? 10 : 12" [attr.height]="size() === 'sm' ? 10 : 12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12" /></svg>
+      }
+    </span>
+  </span>
+
+  @if (label() || description()) {
+    <span class="flex flex-col gap-0.5 -mt-px">
+      @if (label()) {
+        <span class="text-sm font-medium text-[var(--color-foreground)] leading-tight">
+          {{ label() }}
+          @if (required()) {
+            <span class="text-[var(--color-destructive)]">*</span>
+          }
+        </span>
+      }
+      @if (description()) {
+        <span class="text-xs text-[var(--color-muted-foreground)]">{{ description() }}</span>
+      }
+    </span>
+  }
+</label>
+
+@if (hasError()) {
+  <p class="mt-1.5 text-xs text-[var(--color-destructive)]">{{ errorMessage() }}</p>
+}

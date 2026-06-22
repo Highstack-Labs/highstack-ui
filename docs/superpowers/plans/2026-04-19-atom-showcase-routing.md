@@ -1,0 +1,428 @@
+# Atom Showcase Routing Implementation Plan
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Mover el showcase del Button a su propia página routable en `/atoms/button`, dejando el App root como shell vacío con `<router-outlet>`.
+
+**Architecture:** Se crea `ButtonPage` como standalone component en `src/app/pages/atoms/button/`. El contenido actual de `app.html` se mueve íntegro a `button.page.html`. El `App` root queda solo con `<router-outlet>`. Las rutas se registran en `app.routes.ts` con un redirect de `/` a `atoms/button`.
+
+**Tech Stack:** Angular 21 standalone components, Angular Router, Vitest + TestBed
+
+---
+
+### Task 1: Crear ButtonPage
+
+**Files:**
+- Create: `src/app/pages/atoms/button/button.page.ts`
+- Create: `src/app/pages/atoms/button/button.page.html`
+- Create: `src/app/pages/atoms/button/button.page.spec.ts`
+
+- [ ] **Step 1: Escribir el test primero**
+
+Crear `src/app/pages/atoms/button/button.page.spec.ts`:
+
+```ts
+import { TestBed } from '@angular/core/testing';
+import { ButtonPage } from './button.page';
+
+describe('ButtonPage', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [ButtonPage],
+    }).compileComponents();
+  });
+
+  it('should create', () => {
+    const fixture = TestBed.createComponent(ButtonPage);
+    expect(fixture.componentInstance).toBeTruthy();
+  });
+
+  it('should render button heading', async () => {
+    const fixture = TestBed.createComponent(ButtonPage);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('h1')?.textContent).toContain('highstack-ui');
+  });
+});
+```
+
+- [ ] **Step 2: Verificar que el test falla**
+
+```bash
+npm test -- --reporter=verbose 2>&1 | grep -A5 "ButtonPage"
+```
+
+Resultado esperado: error de importación — `ButtonPage` no existe aún.
+
+- [ ] **Step 3: Crear button.page.ts**
+
+Crear `src/app/pages/atoms/button/button.page.ts`:
+
+```ts
+import { Component } from '@angular/core';
+import { ButtonComponent } from '../../../../components/atoms/button/button.component';
+
+@Component({
+  selector: 'app-button-page',
+  imports: [ButtonComponent],
+  templateUrl: './button.page.html',
+})
+export class ButtonPage {}
+```
+
+- [ ] **Step 4: Crear button.page.html**
+
+Mover el contenido de `src/app/app.html` a `src/app/pages/atoms/button/button.page.html` (copiar el contenido completo tal cual):
+
+```html
+<div class="min-h-screen bg-[var(--color-background)] text-[var(--color-foreground)] p-8 font-sans antialiased">
+  <header class="mb-16 max-w-3xl mx-auto">
+    <h1 class="text-2xl font-semibold tracking-tight">
+      highstack-ui
+      <span class="text-[var(--color-muted-foreground)] font-normal">· Button</span>
+    </h1>
+    <p class="mt-1.5 text-sm text-[var(--color-muted-foreground)]">
+      Displays a button or a component that looks like a button.
+    </p>
+    <div class="mt-4 h-px bg-[var(--color-border)]"></div>
+  </header>
+
+  <main class="max-w-3xl mx-auto space-y-14">
+
+    <!-- Variants -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">Variants</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <ui-button variant="default">Default</ui-button>
+        <ui-button variant="secondary">Secondary</ui-button>
+        <ui-button variant="destructive">Destructive</ui-button>
+        <ui-button variant="outline">Outline</ui-button>
+        <ui-button variant="ghost">Ghost</ui-button>
+        <ui-button variant="link">Link</ui-button>
+      </div>
+    </section>
+
+    <!-- Sizes -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">Sizes</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <ui-button size="sm">Small</ui-button>
+        <ui-button size="md">Default</ui-button>
+        <ui-button size="lg">Large</ui-button>
+        <ui-button size="icon" variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        </ui-button>
+      </div>
+    </section>
+
+    <!-- With Icon -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">With Icon</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <ui-button>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          Login with GitHub
+        </ui-button>
+        <ui-button variant="secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+          Download
+        </ui-button>
+        <ui-button variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>
+          Copy
+        </ui-button>
+        <ui-button variant="ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" x2="12" y1="2" y2="15"/></svg>
+          Share
+        </ui-button>
+      </div>
+    </section>
+
+    <!-- Icon Buttons -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">Icon Only</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <ui-button size="icon" variant="default">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        </ui-button>
+        <ui-button size="icon" variant="secondary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        </ui-button>
+        <ui-button size="icon" variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><path d="M21 3l-7 7"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+        </ui-button>
+        <ui-button size="icon" variant="ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+        </ui-button>
+        <ui-button size="icon" variant="destructive">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+        </ui-button>
+      </div>
+    </section>
+
+    <!-- Trailing Icon -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">Trailing Icon</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <ui-button>
+          Next
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </ui-button>
+        <ui-button variant="outline">
+          Open
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><path d="M21 3l-7 7"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+        </ui-button>
+        <ui-button variant="secondary">
+          Send
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" x2="11" y1="2" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </ui-button>
+      </div>
+    </section>
+
+    <!-- Loading States -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">Loading</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <ui-button [loading]="true">Please wait</ui-button>
+        <ui-button variant="secondary" [loading]="true">Processing</ui-button>
+        <ui-button variant="destructive" [loading]="true">Deleting...</ui-button>
+        <ui-button variant="outline" [loading]="true">Saving</ui-button>
+        <ui-button variant="ghost" [loading]="true">Loading</ui-button>
+      </div>
+    </section>
+
+    <!-- Disabled -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">Disabled</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <ui-button [disabled]="true">Default</ui-button>
+        <ui-button variant="secondary" [disabled]="true">Secondary</ui-button>
+        <ui-button variant="destructive" [disabled]="true">Destructive</ui-button>
+        <ui-button variant="outline" [disabled]="true">Outline</ui-button>
+        <ui-button variant="ghost" [disabled]="true">Ghost</ui-button>
+        <ui-button variant="link" [disabled]="true">Link</ui-button>
+      </div>
+    </section>
+
+    <!-- Gradient -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">Gradient</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <ui-button variant="gradient">Gradient</ui-button>
+        <ui-button variant="gradient" size="sm">Small</ui-button>
+        <ui-button variant="gradient" size="lg">Large</ui-button>
+        <ui-button variant="gradient" size="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </ui-button>
+      </div>
+    </section>
+
+    <!-- Glass -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">Glass</h2>
+      <div class="relative overflow-hidden rounded-2xl p-6">
+        <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=800&q=80')] bg-cover bg-center"></div>
+        <div class="absolute inset-0 bg-black/30"></div>
+        <div class="relative flex flex-wrap items-center gap-3">
+          <ui-button variant="glass">Glass</ui-button>
+          <ui-button variant="glass" size="sm">Small</ui-button>
+          <ui-button variant="glass" size="lg">Large</ui-button>
+          <ui-button variant="glass" size="icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+          </ui-button>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 rounded-2xl bg-gradient-to-br from-zinc-800 via-zinc-900 to-black p-6 mt-3">
+        <ui-button variant="glass">Sign up</ui-button>
+        <ui-button variant="glass">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65S8.93 17.38 9 18v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></svg>
+          GitHub
+        </ui-button>
+        <ui-button variant="glass">
+          Learn more
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+        </ui-button>
+      </div>
+    </section>
+
+    <!-- Social / OAuth -->
+    <section>
+      <h2 class="text-sm font-medium text-[var(--color-muted-foreground)] mb-4">Social & OAuth</h2>
+      <div class="flex flex-wrap items-center gap-3">
+        <ui-button variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>
+          Continue with Google
+        </ui-button>
+        <ui-button variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 23 23"><path fill="#f35325" d="M1 1h10v10H1z"/><path fill="#81bc06" d="M12 1h10v10H12z"/><path fill="#05a6f0" d="M1 12h10v10H1z"/><path fill="#ffba08" d="M12 12h10v10H12z"/></svg>
+          Continue with Microsoft
+        </ui-button>
+        <ui-button variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Continue with Apple
+        </ui-button>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 mt-3">
+        <ui-button variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+          Continue with GitHub
+        </ui-button>
+        <ui-button variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          Continue with X
+        </ui-button>
+        <ui-button variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12S0 5.446 0 12.073c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Continue with Facebook
+        </ui-button>
+        <ui-button variant="outline">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="#5865F2"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.095 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+          Continue with Discord
+        </ui-button>
+      </div>
+    </section>
+
+  </main>
+</div>
+```
+
+- [ ] **Step 5: Correr los tests y verificar que pasan**
+
+```bash
+npm test -- --reporter=verbose 2>&1 | grep -A3 "ButtonPage"
+```
+
+Resultado esperado: 2 tests passing para `ButtonPage`.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/app/pages/atoms/button/
+git commit -m "feat: add ButtonPage standalone component at atoms/button"
+```
+
+---
+
+### Task 2: Actualizar App root como shell vacío
+
+**Files:**
+- Modify: `src/app/app.ts`
+- Modify: `src/app/app.html`
+- Modify: `src/app/app.spec.ts`
+
+- [ ] **Step 1: Actualizar el test de App**
+
+Reemplazar el contenido de `src/app/app.spec.ts`:
+
+```ts
+import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
+import { App } from './app';
+import { routes } from './app.routes';
+
+describe('App', () => {
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [App],
+      providers: [provideRouter(routes)],
+    }).compileComponents();
+  });
+
+  it('should create the app', () => {
+    const fixture = TestBed.createComponent(App);
+    expect(fixture.componentInstance).toBeTruthy();
+  });
+});
+```
+
+- [ ] **Step 2: Verificar que el test falla**
+
+```bash
+npm test -- --reporter=verbose 2>&1 | grep -A5 "App"
+```
+
+Resultado esperado: el test `should render title` falla porque `h1` ya no está en el App root.
+
+- [ ] **Step 3: Actualizar app.ts**
+
+Reemplazar `src/app/app.ts`:
+
+```ts
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+@Component({
+  selector: 'app-root',
+  imports: [RouterOutlet],
+  templateUrl: './app.html',
+  styleUrl: './app.css',
+})
+export class App {}
+```
+
+- [ ] **Step 4: Actualizar app.html**
+
+Reemplazar el contenido completo de `src/app/app.html`:
+
+```html
+<router-outlet />
+```
+
+- [ ] **Step 5: Correr los tests y verificar que pasan**
+
+```bash
+npm test -- --reporter=verbose 2>&1 | grep -E "(PASS|FAIL|App)"
+```
+
+Resultado esperado: `App > should create the app` passing.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add src/app/app.ts src/app/app.html src/app/app.spec.ts
+git commit -m "refactor: convert App root to router-outlet shell"
+```
+
+---
+
+### Task 3: Registrar rutas en app.routes.ts
+
+**Files:**
+- Modify: `src/app/app.routes.ts`
+
+- [ ] **Step 1: Actualizar app.routes.ts**
+
+Reemplazar el contenido de `src/app/app.routes.ts`:
+
+```ts
+import { Routes } from '@angular/router';
+import { ButtonPage } from './pages/atoms/button/button.page';
+
+export const routes: Routes = [
+  { path: '',             redirectTo: 'atoms/button', pathMatch: 'full' },
+  { path: 'atoms/button', component: ButtonPage },
+];
+```
+
+- [ ] **Step 2: Correr todos los tests**
+
+```bash
+npm test -- --reporter=verbose
+```
+
+Resultado esperado: todos los tests pasan (App + ButtonPage).
+
+- [ ] **Step 3: Verificar en el browser**
+
+```bash
+npm start
+```
+
+Navegar a `http://localhost:4200` — debe redirigir a `http://localhost:4200/atoms/button` y mostrar el showcase del Button.
+
+- [ ] **Step 4: Commit**
+
+```bash
+git add src/app/app.routes.ts
+git commit -m "feat: register atoms/button route with redirect from /"
+```

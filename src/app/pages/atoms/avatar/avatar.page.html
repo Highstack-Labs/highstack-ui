@@ -1,0 +1,139 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Avatar" subtitle="Representa a un usuario con imagen, iniciales o estado." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el componente en tu archivo TypeScript:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Imagen y fallback -->
+        <app-demo-block id="basic" title="Imagen y fallback" [code]="basicCode" class="block scroll-mt-28">
+          <ui-avatar [src]="photo" name="Juan Díaz" />
+          <ui-avatar name="Juan Díaz" />
+          <ui-avatar />
+        </app-demo-block>
+
+        <!-- Tamaños -->
+        <app-demo-block id="sizes" title="Tamaños" [code]="sizesCode" class="block scroll-mt-28">
+          <ui-avatar size="xs" name="Ana López" />
+          <ui-avatar size="sm" name="Ana López" />
+          <ui-avatar size="md" name="Ana López" />
+          <ui-avatar size="lg" name="Ana López" />
+          <ui-avatar size="xl" name="Ana López" />
+        </app-demo-block>
+
+        <!-- Formas -->
+        <app-demo-block id="shapes" title="Formas" [code]="shapesCode" class="block scroll-mt-28">
+          <ui-avatar shape="circle" size="lg" [src]="photo2" name="Juan Díaz" />
+          <ui-avatar shape="square" size="lg" [src]="photo2" name="Juan Díaz" />
+          <ui-avatar shape="circle" size="lg" name="Ana López" />
+          <ui-avatar shape="square" size="lg" name="Ana López" />
+        </app-demo-block>
+
+        <!-- Estado -->
+        <app-demo-block id="status" title="Estado" [code]="statusCode" class="block scroll-mt-28">
+          <ui-avatar size="lg" name="Ana López" status="online" />
+          <ui-avatar size="lg" name="Ana López" status="away" />
+          <ui-avatar size="lg" name="Ana López" status="busy" />
+          <ui-avatar size="lg" name="Ana López" status="offline" />
+        </app-demo-block>
+
+        <!-- Grupo apilado -->
+        <app-demo-block id="group" title="Grupo apilado" [code]="groupCode" class="block scroll-mt-28">
+          <div class="flex flex-col gap-6">
+            <ui-avatar-group [max]="3">
+              <ui-avatar [src]="photo" name="Ana López" />
+              <ui-avatar [src]="photo2" name="Juan Díaz" />
+              <ui-avatar name="Carla Ruiz" />
+              <ui-avatar name="Luis Mora" />
+              <ui-avatar name="Eva Soto" />
+            </ui-avatar-group>
+
+            <ui-avatar-group size="sm">
+              <ui-avatar size="sm" [src]="photo3" name="Ana López" />
+              <ui-avatar size="sm" name="Juan Díaz" />
+              <ui-avatar size="sm" name="Carla Ruiz" />
+            </ui-avatar-group>
+          </div>
+        </app-demo-block>
+
+        <!-- Ejemplo real -->
+        <app-demo-block id="example" title="Ejemplo real" [code]="exampleCode" class="block scroll-mt-28">
+          <ui-card class="max-w-xs">
+            <ui-card-content>
+              <div class="flex items-center gap-3">
+                <ui-avatar size="lg" [src]="photo" name="Juan Díaz" status="online" />
+                <div>
+                  <p class="font-semibold text-[var(--color-foreground)]">Juan Díaz</p>
+                  <ui-badge color="success" variant="soft" size="sm">Pro</ui-badge>
+                </div>
+              </div>
+            </ui-card-content>
+          </ui-card>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">avatar · src</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">avatar · name</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (genera iniciales)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">avatar · size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'xs' | 'sm' | 'md' | 'lg' | 'xl'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">avatar · shape</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'circle' | 'square'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'circle'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">avatar · status</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'online' | 'offline' | 'away' | 'busy' | null</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">null</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">avatar-group · max</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">number | null</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">null</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">avatar-group · size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'xs'…'xl' (para el "+N")</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

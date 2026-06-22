@@ -1,59 +1,44 @@
-# HighstackUi
+# HighStack UI
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.0.
+Monorepo de **HighStack UI**: una librería de componentes premium para **Angular 21/22** + una app de showcase/documentación.
 
-## Development server
+- **Librería** — [`@highstacklabs2026/ui`](./projects/highstack/ui/README.md) (`projects/highstack/ui`). Componentes standalone con **Angular Signals**, diseñados para **Tailwind CSS v4**. Publicada en npm.
+- **App de showcase** — la aplicación raíz (`src/`) que documenta y muestra los componentes en vivo (incluye la página de instalación).
 
-To start a local development server, run:
+## Requisitos
 
-```bash
-ng serve
-```
+- Node.js y npm
+- Angular CLI 21+
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## Comandos
 
 ```bash
-ng generate component component-name
+npm start            # Servidor de desarrollo en http://localhost:4200 (recarga automática)
+npm run build        # Build de producción de la app de showcase → dist/
+npm run build:lib    # Compila la librería con ng-packagr y genera su CSS → dist/highstack/ui
+npm run watch        # Build de desarrollo en modo watch
+npm test             # Tests unitarios con Vitest (vía Angular CLI)
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Construir la librería
+
+`build:lib` compila `@highstack/ui` (nombre del proyecto en `angular.json`) con ng-packagr y genera el `styles.css` precompilado vía Tailwind. Los artefactos publicables quedan en `dist/highstack/ui`.
 
 ```bash
-ng generate --help
+npm run build:lib
 ```
 
-## Building
+## Publicar
 
-To build the project run:
+Consulta la guía completa del proceso de release en **[PUBLISHING.md](./PUBLISHING.md)**.
 
 ```bash
-ng build
+npm run build:lib
+npm publish dist/highstack/ui --access public
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+> El nombre del paquete en npm es `@highstacklabs2026/ui` (definido en `projects/highstack/ui/package.json`). Recuerda subir la versión antes de publicar.
 
-## Running unit tests
+## Documentación de la librería
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Consulta el [README de `@highstacklabs2026/ui`](./projects/highstack/ui/README.md) para instalación, configuración de estilos, re-tematización y la API de componentes.

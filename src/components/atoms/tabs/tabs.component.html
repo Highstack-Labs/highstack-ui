@@ -1,0 +1,19 @@
+<div role="tablist" [class]="listClasses()">
+  @for (tab of tabs(); track tab.value()) {
+    <button
+      type="button"
+      role="tab"
+      [attr.aria-selected]="value() === tab.value()"
+      [disabled]="tab.disabled()"
+      (click)="select(tab.value())"
+      [class]="tabClasses(tab)"
+    >
+      <ng-container [ngTemplateOutlet]="tab.iconTpl() ?? null" />
+      {{ tab.label() }}
+    </button>
+  }
+</div>
+
+<div class="mt-4">
+  <ng-content />
+</div>

@@ -3,6 +3,11 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "paths": {
+      "@highstack/ui": [
+        "./dist/highstack/ui"
+      ]
+    },
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
@@ -28,6 +33,12 @@
     },
     {
       "path": "./tsconfig.spec.json"
+    },
+    {
+      "path": "./projects/highstack/ui/tsconfig.lib.json"
+    },
+    {
+      "path": "./projects/highstack/ui/tsconfig.spec.json"
     }
   ]
 }

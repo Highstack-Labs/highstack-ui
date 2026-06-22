@@ -1,0 +1,154 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Checkbox" subtitle="Casilla de verificación con soporte para Signal Forms, Reactive Forms y ngModel." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el componente en tu archivo TypeScript:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <ui-checkbox label="Acepto los términos" [(checked)]="checkedValue" />
+        </app-demo-block>
+
+        <!-- Con descripción -->
+        <app-demo-block id="description" title="Con descripción" [code]="descriptionCode" class="block scroll-mt-28">
+          <ui-checkbox label="Marketing" description="Recibe novedades y ofertas por correo." />
+        </app-demo-block>
+
+        <!-- Indeterminado -->
+        <app-demo-block id="indeterminate" title="Indeterminado" [code]="indeterminateCode" class="block scroll-mt-28">
+          <div class="flex flex-col gap-3">
+            <ui-checkbox label="Seleccionar todo" [indeterminate]="true" />
+            <div class="ml-6 flex flex-col gap-3">
+              <ui-checkbox label="Opción A" [checked]="true" />
+              <ui-checkbox label="Opción B" />
+            </div>
+          </div>
+        </app-demo-block>
+
+        <!-- Tamaños -->
+        <app-demo-block id="sizes" title="Tamaños" [code]="sizesCode" class="block scroll-mt-28">
+          <div class="flex flex-col gap-3">
+            <ui-checkbox size="sm" label="Small" [checked]="true" />
+            <ui-checkbox size="md" label="Medium" [checked]="true" />
+          </div>
+        </app-demo-block>
+
+        <!-- Estados -->
+        <app-demo-block id="states" title="Estados" [code]="statesCode" class="block scroll-mt-28">
+          <div class="flex flex-col gap-3">
+            <ui-checkbox label="Marcado" [checked]="true" />
+            <ui-checkbox label="Sin marcar" />
+            <ui-checkbox label="Deshabilitado" [disabled]="true" />
+            <ui-checkbox label="Marcado + deshabilitado" [checked]="true" [disabled]="true" />
+          </div>
+        </app-demo-block>
+
+        <!-- Signal Forms -->
+        <section id="signal-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Signal Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Vincula con <code class="font-mono text-xs">[formField]</code> (contrato
+              FormCheckboxControl).
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <ui-checkbox [formField]="signalForm.terms" label="Acepto los términos y condiciones" />
+            <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+              Form válido: <span class="font-mono">{{ signalForm().valid() }}</span>
+            </p>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="signalFormsCode" lang="typescript" />
+            <app-code-block [code]="signalFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- Reactive Forms -->
+        <section id="reactive-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Reactive Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Funciona con <code class="font-mono text-xs">[formControl]</code> /
+              <code class="font-mono text-xs">[(ngModel)]</code> vía ControlValueAccessor.
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <ui-checkbox [formControl]="reactiveCtrl" label="Recordarme" />
+            <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+              Valor: <span class="font-mono">{{ reactiveCtrl.value }}</span>
+            </p>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="reactiveFormsCode" lang="typescript" />
+            <app-code-block [code]="reactiveFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">checked</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean (model)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">label</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">description</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">indeterminate</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">disabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">required</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
