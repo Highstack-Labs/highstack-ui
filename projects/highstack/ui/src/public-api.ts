@@ -6,6 +6,7 @@ export * from './lib/atoms/accordion/accordion.component';
 export * from './lib/atoms/alert/alert.component';
 export * from './lib/atoms/avatar/avatar.component';
 export * from './lib/atoms/badge/badge.component';
+export * from './lib/atoms/breadcrumb/breadcrumb.component';
 export * from './lib/atoms/button/button.component';
 export * from './lib/atoms/card/card.component';
 export * from './lib/atoms/checkbox/checkbox.component';
