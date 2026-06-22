@@ -19,6 +19,7 @@ import { TextareaPage } from './pages/atoms/textarea/textarea.page';
 import { AccordionPage } from './pages/atoms/accordion/accordion.page';
 import { BreadcrumbPage } from './pages/atoms/breadcrumb/breadcrumb.page';
 import { TablePage } from './pages/atoms/table/table.page';
+import { PaginationPage } from './pages/atoms/pagination/pagination.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 
@@ -49,6 +50,7 @@ export const routes: Routes = [
       { path: 'atoms/accordion', component: AccordionPage },
       { path: 'atoms/breadcrumb', component: BreadcrumbPage },
       { path: 'atoms/table',  component: TablePage },
+      { path: 'atoms/pagination', component: PaginationPage },
     ],
   },
 ];
