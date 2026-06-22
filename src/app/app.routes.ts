@@ -22,6 +22,7 @@ import { TablePage } from './pages/atoms/table/table.page';
 import { PaginationPage } from './pages/atoms/pagination/pagination.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
+import { AiGuidePage } from './pages/ai-guide/ai-guide.page';
 
 export const routes: Routes = [
   {
@@ -31,6 +32,7 @@ export const routes: Routes = [
       { path: '',             redirectTo: 'installation', pathMatch: 'full' },
       { path: 'installation', component: InstallationPage },
       { path: 'themes',       component: ThemesPage },
+      { path: 'ai-guide',     component: AiGuidePage },
       { path: 'atoms/button', component: ButtonPage },
       { path: 'atoms/input',  component: InputPage },
       { path: 'atoms/badge',  component: BadgePage },

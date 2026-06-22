@@ -1,0 +1,60 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Guía para IA</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Referencia completa pensada para agentes de IA (Claude u otros). Pásala como contexto a tu
+        agente para que implemente con la librería sin errores.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl space-y-6">
+      <!-- Cómo usarla -->
+      <div class="rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-muted)]/40 p-5">
+        <h2 class="text-sm font-semibold text-[var(--color-foreground)]">¿Cómo usarla?</h2>
+        <ol class="mt-2 space-y-1 text-sm text-[var(--color-muted-foreground)] list-decimal pl-5">
+          <li>Descarga el archivo <code class="font-mono text-xs">AI-USAGE-GUIDE.md</code> o copia todo el contenido.</li>
+          <li>Pásalo como contexto/instrucciones al agente de IA que trabajará en tu app.</li>
+          <li>El agente sabrá los componentes, imports, selectores, props y errores comunes.</li>
+        </ol>
+      </div>
+
+      <!-- Acciones -->
+      <div class="flex flex-wrap items-center gap-3">
+        <a [href]="fileName" [attr.download]="fileName" class="inline-flex">
+          <ui-button>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></svg>
+            Descargar .md
+          </ui-button>
+        </a>
+        <ui-button variant="outline" (click)="copyAll()">
+          @if (copied()) {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-500"><polyline points="20 6 9 17 4 12" /></svg>
+            ¡Copiado!
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="14" x="8" y="8" rx="2" ry="2" /><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" /></svg>
+            Copiar todo
+          }
+        </ui-button>
+      </div>
+
+      <!-- Contenido del documento -->
+      <div class="relative rounded-[var(--radius)] border border-zinc-800 bg-zinc-900 shadow-sm">
+        <div class="flex items-center gap-1.5 px-3.5 h-9 border-b border-zinc-800 bg-zinc-800/40">
+          <span class="size-2.5 rounded-full bg-[#ff5f57]"></span>
+          <span class="size-2.5 rounded-full bg-[#febc2e]"></span>
+          <span class="size-2.5 rounded-full bg-[#28c840]"></span>
+          <span class="ml-2 text-[11px] font-mono text-zinc-500 tracking-wide">AI-USAGE-GUIDE.md</span>
+        </div>
+        <pre class="overflow-auto max-h-[60vh] p-4 font-mono text-xs leading-relaxed text-zinc-100 scrollbar-code select-text"><code>{{ content() }}</code></pre>
+      </div>
+    </div>
+  </div>
+</div>
