@@ -1,4 +1,4 @@
-<div class="rounded-[var(--radius)] overflow-hidden border border-zinc-800 bg-zinc-900 shadow-sm">
+<div class="rounded-[var(--radius)] overflow-hidden border border-zinc-800 bg-zinc-900 shadow-[0_1px_2px_rgb(0_0_0/0.2),0_12px_28px_-12px_rgb(0_0_0/0.45)]">
   <!-- Barra superior -->
   <div class="flex items-center justify-between gap-3 px-3.5 h-9 border-b border-zinc-800 bg-zinc-800/40">
     <div class="flex items-center gap-3">
@@ -7,7 +7,7 @@
         <span class="size-2.5 rounded-full bg-[#febc2e]"></span>
         <span class="size-2.5 rounded-full bg-[#28c840]"></span>
       </div>
-      <span class="text-[11px] font-mono text-zinc-500 tracking-wide">{{ lang() }}</span>
+      <span class="text-[11px] font-mono text-zinc-500 tracking-wide">{{ filename() || lang() }}</span>
     </div>
 
     <button
@@ -25,5 +25,8 @@
   </div>
 
   <!-- Código -->
-  <pre class="overflow-x-auto select-text p-4 font-mono text-xs leading-relaxed text-zinc-100 scrollbar-code"><code>{{ code() }}</code></pre>
+  <pre
+    class="overflow-auto select-text p-4 font-mono text-xs leading-relaxed text-zinc-100 scrollbar-code"
+    [style.max-height]="maxHeight() || null"
+  ><code>{{ code() }}</code></pre>
 </div>
