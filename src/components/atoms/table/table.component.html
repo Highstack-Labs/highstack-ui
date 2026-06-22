@@ -1,0 +1,92 @@
+<div class="w-full overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+      <tr>
+        @if (selectable()) {
+          <th class="w-10 px-4 py-2.5">
+            <ui-checkbox
+              [checked]="allSelected()"
+              [indeterminate]="someSelected()"
+              (checkedChange)="toggleAll()"
+            />
+          </th>
+        }
+        @for (col of columns(); track col.header) {
+          <th
+            class="px-4 py-2.5 font-medium whitespace-nowrap"
+            [class]="align(col.align)"
+            [style.width]="col.width"
+          >
+            @if (col.sortable && col.field) {
+              <button
+                type="button"
+                (click)="toggleSort(col)"
+                class="inline-flex items-center gap-1 hover:text-[var(--color-foreground)] transition-colors cursor-pointer"
+              >
+                {{ col.header }}
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="transition-opacity"
+                  [class.opacity-30]="sortDir(col) === null"
+                >
+                  @if (sortDir(col) === 'desc') {
+                    <path d="m6 9 6 6 6-6" />
+                  } @else {
+                    <path d="m18 15-6-6-6 6" />
+                  }
+                </svg>
+              </button>
+            } @else {
+              {{ col.header }}
+            }
+          </th>
+        }
+      </tr>
+    </thead>
+
+    <tbody class="text-[var(--color-foreground)]">
+      @if (loading()) {
+        @for (s of skeletonRows; track s) {
+          <tr class="border-t border-[var(--color-border)]">
+            @if (selectable()) {
+              <td class="px-4 py-3"><ui-skeleton width="1rem" height="1rem" /></td>
+            }
+            @for (col of columns(); track col.header) {
+              <td class="px-4 py-3"><ui-skeleton width="70%" /></td>
+            }
+          </tr>
+        }
+      } @else if (rows().length === 0) {
+        <tr>
+          <td
+            [attr.colspan]="columns().length + (selectable() ? 1 : 0)"
+            class="px-4 py-10 text-center text-[var(--color-muted-foreground)]"
+          >
+            {{ emptyMessage() }}
+          </td>
+        </tr>
+      } @else {
+        @for (row of rows(); track trackRow($index, row)) {
+          <tr class="border-t border-[var(--color-border)] hover:bg-[var(--color-muted)]/40 transition-colors">
+            @if (selectable()) {
+              <td class="px-4 py-3">
+                <ui-checkbox [checked]="isSelected(row)" (checkedChange)="toggleRow(row)" />
+              </td>
+            }
+            @for (col of columns(); track col.header) {
+              <td class="px-4 py-3 align-middle" [class]="align(col.align)">
+                @if (templateFor(col.field); as tpl) {
+                  <ng-container
+                    [ngTemplateOutlet]="tpl"
+                    [ngTemplateOutletContext]="{ $implicit: value(row, col.field), row, index: $index }"
+                  />
+                } @else {
+                  {{ value(row, col.field) }}
+                }
+              </td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
+</div>
