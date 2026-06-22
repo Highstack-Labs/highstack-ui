@@ -2,6 +2,7 @@
  * Public API Surface of @highstacklabs2026/ui
  */
 
+export * from './lib/atoms/accordion/accordion.component';
 export * from './lib/atoms/alert/alert.component';
 export * from './lib/atoms/avatar/avatar.component';
 export * from './lib/atoms/badge/badge.component';
