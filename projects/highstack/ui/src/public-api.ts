@@ -13,6 +13,7 @@ export * from './lib/atoms/checkbox/checkbox.component';
 export * from './lib/atoms/dropdown/dropdown.component';
 export * from './lib/atoms/input/input.component';
 export * from './lib/atoms/loading/loading.component';
+export * from './lib/atoms/pagination/pagination.component';
 export * from './lib/atoms/radio/radio.component';
 export * from './lib/atoms/select/select.component';
 export * from './lib/atoms/table/table.types';
