@@ -1,0 +1,122 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <header
+    class="sticky top-0 z-20 border-b border-[var(--color-border)] bg-[var(--color-background)]/85 backdrop-blur-md px-8 py-5"
+  >
+    <div class="mx-auto max-w-5xl">
+      <h1 class="text-2xl font-semibold tracking-tight">
+        highstack-ui
+        <span class="text-[var(--color-muted-foreground)] font-normal">· Loading</span>
+      </h1>
+      <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+        Indicadores de carga: spinner, skeleton y barra de progreso.
+      </p>
+    </div>
+  </header>
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa los componentes que necesites:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Spinner -->
+        <app-demo-block id="spinner" title="Spinner" [code]="spinnerCode" class="block scroll-mt-28">
+          <div class="flex items-center gap-6 text-[var(--color-primary)]">
+            <ui-spinner size="sm" />
+            <ui-spinner size="md" />
+            <ui-spinner size="lg" />
+            <ui-button>
+              <ui-spinner size="sm" /> Cargando…
+            </ui-button>
+          </div>
+        </app-demo-block>
+
+        <!-- Skeleton -->
+        <app-demo-block id="skeleton" title="Skeleton" [code]="skeletonCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm flex items-center gap-3">
+            <ui-skeleton width="2.5rem" height="2.5rem" [circle]="true" />
+            <div class="flex-1 space-y-2">
+              <ui-skeleton width="50%" />
+              <ui-skeleton width="80%" />
+            </div>
+          </div>
+        </app-demo-block>
+
+        <!-- Progress -->
+        <app-demo-block id="progress" title="Progress" [code]="progressCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm space-y-5">
+            <div class="space-y-2">
+              <ui-progress [value]="progress()" />
+              <div class="flex items-center gap-2">
+                <ui-button size="xs" variant="outline" (click)="step(-10)">−10</ui-button>
+                <ui-button size="xs" variant="outline" (click)="step(10)">+10</ui-button>
+                <span class="text-xs text-[var(--color-muted-foreground)] font-mono">{{ progress() }}%</span>
+              </div>
+            </div>
+            <ui-progress [value]="40" size="sm" />
+            <div class="space-y-1">
+              <p class="text-xs text-[var(--color-muted-foreground)]">Indeterminado</p>
+              <ui-progress [indeterminate]="true" />
+            </div>
+          </div>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">API Reference</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-spinner · size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md' | 'lg'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-skeleton · width / height</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (CSS)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">100% / 1rem</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-skeleton · circle</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-progress · value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">number (0-100)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">0</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-progress · indeterminate</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-progress · size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md' | 'lg'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

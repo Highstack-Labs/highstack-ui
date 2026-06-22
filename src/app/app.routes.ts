@@ -14,6 +14,7 @@ import { SelectPage } from './pages/atoms/select/select.page';
 import { TabsPage } from './pages/atoms/tabs/tabs.page';
 import { AlertPage } from './pages/atoms/alert/alert.page';
 import { ToastPage } from './pages/atoms/toast/toast.page';
+import { LoadingPage } from './pages/atoms/loading/loading.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 
@@ -39,6 +40,7 @@ export const routes: Routes = [
       { path: 'atoms/tabs',   component: TabsPage },
       { path: 'atoms/alert',  component: AlertPage },
       { path: 'atoms/toast',  component: ToastPage },
+      { path: 'atoms/loading', component: LoadingPage },
     ],
   },
 ];
