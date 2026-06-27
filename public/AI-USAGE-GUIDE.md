@@ -291,7 +291,7 @@ open = signal(false); // en el componente
 `DialogService` (`providedIn: 'root'`) + `DialogRef` + token `DIALOG_DATA`. Es la versión imperativa del modal: lo abres desde TypeScript, sin declarar `<ui-modal>` en el HTML. Se auto-monta (cero setup), reutiliza `<ui-modal>` por dentro y toda la API es basada en `Promise`.
 - `confirm(opts): Promise<boolean>` — `opts`: `message` (requerido), `title?`, `confirmText?` (def. `'Confirmar'`), `cancelText?` (def. `'Cancelar'`), `confirmVariant?` (`ButtonVariant`, usa `'destructive'` para borrar).
 - `alert(opts): Promise<void>` — `opts`: `message` (requerido), `title?`, `confirmText?` (def. `'Aceptar'`).
-- `open<R>(Componente, opts?): DialogRef<R>` — monta un componente dinámico. `opts`: `data?` (se inyecta con `DIALOG_DATA`), más `size`/`closeOnBackdrop`/`closeOnEscape`/`showClose`/`ariaLabel` (mismos defaults que `<ui-modal>`). `ref.closed` es una `Promise` con el resultado; el componente se cierra con `ref.close(resultado)`.
+- `open<R>(Componente, opts?): DialogRef<R>` — monta un componente dinámico. `opts`: `data?` (se inyecta con `DIALOG_DATA`), `title?`/`description?` (renderizan un **header automático** arriba del componente, con su hueco para la X — no escribas el título dentro), más `size`/`closeOnBackdrop`/`closeOnEscape`/`showClose`/`ariaLabel` (mismos defaults que `<ui-modal>`). `ref.closed` es una `Promise` con el resultado; el componente se cierra con `ref.close(resultado)`.
 - Cerrar por backdrop/Escape/✕ resuelve `confirm` como `false` y `open()` como `undefined`.
 
 ```ts
@@ -307,13 +307,19 @@ if (ok) this.borrar();
 
 await this.dialog.alert({ title: 'Listo', message: 'Cambios guardados.' });
 
-const ref = this.dialog.open(EditarUsuarioComponent, { data: { id: 42 }, size: 'lg' });
+const ref = this.dialog.open(EditarUsuarioComponent, {
+  data: { id: 42 },
+  title: 'Editar usuario',
+  description: 'Modifica los datos y guarda.',
+  size: 'lg',
+});
 const result = await ref.closed;
 ```
 
 ```ts
-// El componente dinámico lee datos y se cierra por inyección. Escribe contenido
-// PLANO (sin sub-componentes de modal); el diálogo le da el padding.
+// El componente dinámico lee datos y se cierra por inyección. Escribe SOLO el
+// cuerpo PLANO (sin sub-componentes de modal); el diálogo le da el padding y el
+// header lo pone `title`/`description` de open().
 export class EditarUsuarioComponent {
   private ref = inject(DialogRef<Usuario>);
   protected data = inject(DIALOG_DATA);

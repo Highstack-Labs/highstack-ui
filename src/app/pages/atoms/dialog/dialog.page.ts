@@ -17,14 +17,6 @@ import { ToastService } from '../../../../components/atoms/toast/toast.service';
   selector: 'app-edit-name-dialog',
   imports: [ButtonComponent, InputComponent],
   template: `
-    <div class="space-y-1">
-      <h2 class="text-lg font-semibold tracking-tight text-[var(--color-foreground)]">
-        Editar nombre
-      </h2>
-      <p class="text-sm text-[var(--color-muted-foreground)]">
-        Componente dinámico abierto vía servicio.
-      </p>
-    </div>
     <ui-input [(value)]="name" placeholder="Tu nombre" />
     <div class="flex items-center justify-end gap-3">
       <ui-button variant="ghost" (click)="ref.close()">Cancelar</ui-button>
@@ -82,6 +74,8 @@ export class DialogPage implements AfterViewInit {
   async openComponent() {
     const ref = this.dialog.open<string, { name?: string }>(EditNameDialogComponent, {
       data: { name: 'Ada' },
+      title: 'Editar nombre',
+      description: 'Componente dinámico abierto vía servicio.',
       size: 'md',
     });
     const result = await ref.closed;
@@ -108,11 +102,10 @@ if (ok) this.borrar();`;
   message: 'Tus cambios se guardaron.',
 });`;
 
-  readonly componentCode = `// 1. El componente escribe su contenido (el diálogo le da el padding).
-//    Lee los datos y se cierra devolviendo un resultado.
+  readonly componentCode = `// 1. El componente solo escribe su cuerpo (el diálogo le da el padding).
+//    El título/descripción se pasan por opción → header automático.
 @Component({
   template: \`
-    <h2 class="text-lg font-semibold">Editar nombre</h2>
     <ui-input [(value)]="name" />
     <div class="flex justify-end gap-3">
       <ui-button variant="ghost" (click)="ref.close()">Cancelar</ui-button>
@@ -126,7 +119,12 @@ export class EditNameDialog {
   name = '';
 }
 
-// 2. Lo abres desde el servicio
-const ref = this.dialog.open(EditNameDialog, { data: { name: 'Ada' }, size: 'md' });
+// 2. Lo abres desde el servicio (title/description renderizan el header)
+const ref = this.dialog.open(EditNameDialog, {
+  data: { name: 'Ada' },
+  title: 'Editar nombre',
+  description: 'Componente dinámico abierto vía servicio.',
+  size: 'md',
+});
 const result = await ref.closed;`;
 }

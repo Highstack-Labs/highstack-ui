@@ -20,6 +20,14 @@ export interface DialogBaseOptions {
 export interface DialogOptions<D = unknown> extends DialogBaseOptions {
   /** Datos inyectados en el componente vía el token `DIALOG_DATA`. */
   data?: D;
+  /**
+   * Título opcional. Si lo pasas, el diálogo renderiza un header automático
+   * (con su propio espaciado y hueco para la X) encima del componente, sin que
+   * tengas que escribirlo dentro.
+   */
+  title?: string;
+  /** Descripción opcional bajo el título del header automático. */
+  description?: string;
 }
 
 /** Opciones para `dialog.confirm(opts)`. */
@@ -100,7 +108,7 @@ export class DialogRef<R = unknown> {
 export interface DialogInstance {
   id: number;
   open: WritableSignal<boolean>;
-  options: DialogBaseOptions;
+  options: DialogBaseOptions & { title?: string; description?: string };
   // `any` evita el conflicto de varianza del parámetro de `_resolve` al guardar
   // refs de distintos tipos (DialogRef<boolean>, <void>, <R>) en una misma lista.
   ref: DialogRef<any>;

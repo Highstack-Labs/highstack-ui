@@ -39,10 +39,25 @@ import { DialogService } from './dialog.service';
         @switch (d.kind) {
           @case ('component') {
             <!--
+              Header automático: si pasas title/description en open(), se renderiza
+              con las mismas piezas que confirm/alert (incluye el hueco pr-12 para
+              la X), así no tienes que escribirlo dentro del componente.
+            -->
+            @if (d.options.title || d.options.description) {
+              <ui-modal-header>
+                @if (d.options.title) {
+                  <ui-modal-title>{{ d.options.title }}</ui-modal-title>
+                }
+                @if (d.options.description) {
+                  <ui-modal-description>{{ d.options.description }}</ui-modal-description>
+                }
+              </ui-modal-header>
+            }
+            <!--
               El host que crea ngComponentOutlet rompería el flex del panel, así
-              que aquí aportamos el padding horizontal y convertimos al host en
-              una columna con gap para que el contenido del componente quede
-              espaciado igual que confirm/alert (sin necesidad de sub-componentes).
+              que aquí aportamos el padding horizontal por defecto y convertimos al
+              host en una columna con gap para espaciar el contenido del componente
+              (sin necesidad de sub-componentes).
             -->
             <div class="px-6 [&>*]:flex [&>*]:flex-col [&>*]:gap-4">
               <ng-container *ngComponentOutlet="d.component!; injector: d.injector!" />

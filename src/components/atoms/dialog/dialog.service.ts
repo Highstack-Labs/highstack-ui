@@ -166,6 +166,8 @@ export class DialogService {
     closeOnEscape?: boolean;
     showClose?: boolean;
     ariaLabel?: string;
+    title?: string;
+    description?: string;
   }) {
     return {
       size: opts?.size,
@@ -173,6 +175,8 @@ export class DialogService {
       closeOnEscape: opts?.closeOnEscape,
       showClose: opts?.showClose,
       ariaLabel: opts?.ariaLabel,
+      title: opts?.title,
+      description: opts?.description,
     };
   }
 
