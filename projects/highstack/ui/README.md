@@ -92,6 +92,76 @@ export class MiComponente {}
 | `loading`  | `boolean`                                                                                      | `false`     |
 | `type`     | `'button' \| 'submit' \| 'reset'`                                                             | `'button'`  |
 
+### `<ui-modal>`
+
+Ventana modal (diálogo) con overlay, animación de entrada/salida, bloqueo del scroll del body, cierre con `Escape` / clic en el fondo y accesibilidad básica. Se controla con un signal vía `[(open)]`.
+
+```ts
+import { Component, signal } from '@angular/core';
+import {
+  ButtonComponent,
+  ModalComponent,
+  ModalHeaderComponent,
+  ModalTitleComponent,
+  ModalDescriptionComponent,
+  ModalContentComponent,
+  ModalFooterComponent,
+} from '@highstacklabs2026/ui';
+
+@Component({
+  selector: 'app-demo',
+  imports: [
+    ButtonComponent,
+    ModalComponent,
+    ModalHeaderComponent,
+    ModalTitleComponent,
+    ModalDescriptionComponent,
+    ModalContentComponent,
+    ModalFooterComponent,
+  ],
+  template: `
+    <ui-button (click)="open.set(true)">Abrir modal</ui-button>
+
+    <ui-modal [(open)]="open">
+      <ui-modal-header>
+        <ui-modal-title>¿Eliminar proyecto?</ui-modal-title>
+        <ui-modal-description>Esta acción no se puede deshacer.</ui-modal-description>
+      </ui-modal-header>
+
+      <ui-modal-content>
+        Se borrarán todos los archivos asociados de forma permanente.
+      </ui-modal-content>
+
+      <ui-modal-footer>
+        <ui-button variant="ghost" (click)="open.set(false)">Cancelar</ui-button>
+        <ui-button variant="destructive" (click)="open.set(false)">Eliminar</ui-button>
+      </ui-modal-footer>
+    </ui-modal>
+  `,
+})
+export class DemoComponent {
+  open = signal(false);
+}
+```
+
+Las partes (`ui-modal-header`, `ui-modal-title`, etc.) son **opcionales**: dentro de `<ui-modal>` puedes proyectar cualquier contenido libre.
+
+| Prop              | Tipo                                          | Default | Descripción                                          |
+| ----------------- | --------------------------------------------- | ------- | ---------------------------------------------------- |
+| `open`            | `boolean` (model, two-way `[(open)]`)         | `false` | Abre / cierra el modal.                              |
+| `size`            | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'`      | `'md'`  | Ancho máximo del panel.                              |
+| `closeOnBackdrop` | `boolean`                                     | `true`  | Cerrar al hacer clic en el fondo.                    |
+| `closeOnEscape`   | `boolean`                                     | `true`  | Cerrar al pulsar `Escape`.                           |
+| `showClose`       | `boolean`                                     | `true`  | Muestra el botón (X) de cerrar.                      |
+| `ariaLabel`       | `string`                                      | —       | Etiqueta accesible (usa el título si lo omites).     |
+
+| Evento   | Cuándo se emite                          |
+| -------- | ---------------------------------------- |
+| `opened` | El modal terminó de abrirse.             |
+| `closed` | El modal se cerró (por cualquier vía).   |
+
+Componentes exportados: `ModalComponent`, `ModalHeaderComponent`, `ModalTitleComponent`, `ModalDescriptionComponent`, `ModalContentComponent`, `ModalFooterComponent`.
+
 ## Desarrollo
 
 ### Build de la librería

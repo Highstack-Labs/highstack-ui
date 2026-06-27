@@ -32,6 +32,7 @@ export class Shell {
     { label: 'Input', route: '/atoms/input' },
     { label: 'Badge', route: '/atoms/badge' },
     { label: 'Card', route: '/atoms/card' },
+    { label: 'Modal', route: '/atoms/modal' },
     { label: 'Checkbox', route: '/atoms/checkbox' },
     { label: 'Switch', route: '/atoms/switch' },
     { label: 'Radio', route: '/atoms/radio' },

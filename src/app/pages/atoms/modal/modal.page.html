@@ -1,0 +1,153 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Modal" subtitle="Ventana de diálogo con overlay, animación y cierre con Escape o clic en el fondo." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el modal y sus subcomponentes:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <ui-button (click)="basicOpen.set(true)">Abrir modal</ui-button>
+
+          <ui-modal [(open)]="basicOpen">
+            <ui-modal-header>
+              <ui-modal-title>¿Eliminar proyecto?</ui-modal-title>
+              <ui-modal-description>Esta acción no se puede deshacer.</ui-modal-description>
+            </ui-modal-header>
+            <ui-modal-content>
+              Se borrarán todos los archivos asociados de forma permanente.
+            </ui-modal-content>
+            <ui-modal-footer>
+              <ui-button variant="ghost" (click)="basicOpen.set(false)">Cancelar</ui-button>
+              <ui-button variant="destructive" (click)="basicOpen.set(false)">Eliminar</ui-button>
+            </ui-modal-footer>
+          </ui-modal>
+        </app-demo-block>
+
+        <!-- Tamaños -->
+        <app-demo-block id="sizes" title="Tamaños" [code]="sizesCode" class="block scroll-mt-28">
+          <div class="flex flex-wrap gap-3">
+            <ui-button size="sm" variant="outline" (click)="openWithSize('sm')">sm</ui-button>
+            <ui-button size="sm" variant="outline" (click)="openWithSize('md')">md</ui-button>
+            <ui-button size="sm" variant="outline" (click)="openWithSize('lg')">lg</ui-button>
+            <ui-button size="sm" variant="outline" (click)="openWithSize('xl')">xl</ui-button>
+            <ui-button size="sm" variant="outline" (click)="openWithSize('full')">full</ui-button>
+          </div>
+
+          <ui-modal [(open)]="sizeOpen" [size]="currentSize()">
+            <ui-modal-header>
+              <ui-modal-title>Tamaño: {{ currentSize() }}</ui-modal-title>
+              <ui-modal-description>El panel se adapta al tamaño elegido.</ui-modal-description>
+            </ui-modal-header>
+            <ui-modal-content>
+              Cambia el valor de <code class="font-mono text-xs">size</code> para controlar el ancho máximo del modal.
+            </ui-modal-content>
+            <ui-modal-footer>
+              <ui-button (click)="sizeOpen.set(false)">Cerrar</ui-button>
+            </ui-modal-footer>
+          </ui-modal>
+        </app-demo-block>
+
+        <!-- Con formulario -->
+        <app-demo-block id="form" title="Con formulario" [code]="formCode" class="block scroll-mt-28">
+          <ui-button (click)="formOpen.set(true)">Crear cuenta</ui-button>
+
+          <ui-modal [(open)]="formOpen" size="md">
+            <ui-modal-header>
+              <ui-modal-title>Crear cuenta</ui-modal-title>
+              <ui-modal-description>Completa tus datos para empezar.</ui-modal-description>
+            </ui-modal-header>
+            <ui-modal-content>
+              <div class="space-y-3">
+                <ui-input label="Nombre" placeholder="Ada Lovelace" />
+                <ui-input label="Email" type="email" placeholder="ada@correo.com" />
+              </div>
+            </ui-modal-content>
+            <ui-modal-footer>
+              <ui-button variant="ghost" (click)="formOpen.set(false)">Cancelar</ui-button>
+              <ui-button (click)="formOpen.set(false)">Crear</ui-button>
+            </ui-modal-footer>
+          </ui-modal>
+        </app-demo-block>
+
+        <!-- API Reference -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal · open</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean (two-way [(open)])</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal · size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md' | 'lg' | 'xl' | 'full'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal · closeOnBackdrop</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">true</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal · closeOnEscape</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">true</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal · showClose</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">true</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal · ariaLabel</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal · (opened) / (closed)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">output&lt;void&gt;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal-header / -title / -description</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">cabecera (opcional)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal-content</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">cuerpo (opcional)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-modal-footer</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">pie / acciones (opcional)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

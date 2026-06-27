@@ -215,6 +215,32 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 </ui-card>
 ```
 
+### Modal
+`ModalComponent` + subcomponentes · `<ui-modal>` + `<ui-modal-header>`, `<ui-modal-title>`, `<ui-modal-description>`, `<ui-modal-content>`, `<ui-modal-footer>`
+- Modal: `[(open)]` (model boolean, controla abrir/cerrar), `size` (`'sm'|'md'|'lg'|'xl'|'full'`, def. `'md'`), `closeOnBackdrop` (def. `true`), `closeOnEscape` (def. `true`), `showClose` (def. `true`), `ariaLabel`.
+- Outputs: `(opened)`, `(closed)`.
+- Los subcomponentes son opcionales: puedes proyectar contenido libre dentro de `<ui-modal>`.
+
+```html
+<ui-button (click)="open.set(true)">Abrir</ui-button>
+
+<ui-modal [(open)]="open" size="md">
+  <ui-modal-header>
+    <ui-modal-title>¿Eliminar proyecto?</ui-modal-title>
+    <ui-modal-description>Esta acción no se puede deshacer.</ui-modal-description>
+  </ui-modal-header>
+  <ui-modal-content>Se borrarán todos los archivos de forma permanente.</ui-modal-content>
+  <ui-modal-footer>
+    <ui-button variant="ghost" (click)="open.set(false)">Cancelar</ui-button>
+    <ui-button variant="destructive" (click)="open.set(false)">Eliminar</ui-button>
+  </ui-modal-footer>
+</ui-modal>
+```
+
+```ts
+open = signal(false); // en el componente
+```
+
 ### Alert
 `AlertComponent` · `<ui-alert>`
 - `type`: `'info' | 'success' | 'warning' | 'error'` (def. `'info'`)
@@ -387,6 +413,7 @@ ButtonComponent, InputComponent, TextareaComponent, CheckboxComponent, SwitchCom
 RadioGroupComponent, RadioComponent, SelectComponent, OptionComponent,
 BadgeComponent, AvatarComponent, AvatarGroupComponent,
 CardComponent, CardHeaderComponent, CardTitleComponent, CardDescriptionComponent, CardContentComponent, CardFooterComponent,
+ModalComponent, ModalHeaderComponent, ModalTitleComponent, ModalDescriptionComponent, ModalContentComponent, ModalFooterComponent,
 AlertComponent, TooltipDirective,
 DropdownComponent, DropdownTriggerDirective, DropdownItemComponent, DropdownLabelComponent, DropdownSeparatorComponent,
 ToastService, TabsComponent, TabComponent,
