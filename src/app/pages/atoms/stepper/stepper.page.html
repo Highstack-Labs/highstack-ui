@@ -44,6 +44,52 @@
           <ui-stepper [(active)]="progress" variant="progress" [steps]="steps" />
         </app-demo-block>
 
+        <!-- Composicional -->
+        <app-demo-block
+          id="composicional"
+          title="Composicional (con contenido)"
+          [code]="compositionalCode"
+          class="block scroll-mt-28"
+        >
+          <div class="space-y-6">
+            <ui-stepper [(active)]="compositional">
+              <ui-step label="Cuenta" description="Email y contraseña">
+                <div class="rounded-[var(--radius)] border border-[var(--color-border)] p-4 text-sm">
+                  Formulario de la <strong>cuenta</strong>.
+                </div>
+              </ui-step>
+              <ui-step label="Perfil" description="Tus datos">
+                <div class="rounded-[var(--radius)] border border-[var(--color-border)] p-4 text-sm">
+                  Formulario del <strong>perfil</strong>.
+                </div>
+              </ui-step>
+              <ui-step label="Confirmar">
+                <div class="rounded-[var(--radius)] border border-[var(--color-border)] p-4 text-sm">
+                  Resumen y <strong>envío</strong>.
+                </div>
+              </ui-step>
+            </ui-stepper>
+
+            <div class="flex items-center justify-center gap-3">
+              <ui-button
+                size="sm"
+                variant="ghost"
+                (click)="compositional.set(compositional() - 1)"
+                [disabled]="compositional() === 0"
+              >
+                Anterior
+              </ui-button>
+              <ui-button
+                size="sm"
+                (click)="compositional.set(compositional() + 1)"
+                [disabled]="compositional() === 2"
+              >
+                Siguiente
+              </ui-button>
+            </div>
+          </div>
+        </app-demo-block>
+
         <!-- Wizard completo -->
         <app-demo-block id="wizard" title="Wizard con navegación" [code]="wizardCode" class="block scroll-mt-28">
           <div class="space-y-8">

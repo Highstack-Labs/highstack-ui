@@ -1,5 +1,9 @@
 import { AfterViewInit, Component, DestroyRef, computed, inject, signal } from '@angular/core';
-import { StepperComponent, StepItem } from '../../../../components/atoms/stepper/stepper.component';
+import {
+  StepperComponent,
+  StepComponent,
+  StepItem,
+} from '../../../../components/atoms/stepper/stepper.component';
 import { ButtonComponent } from '../../../../components/atoms/button/button.component';
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
@@ -11,6 +15,7 @@ import { PageHeaderComponent } from '../../../shared/page-header/page-header.com
   imports: [
     PageHeaderComponent,
     StepperComponent,
+    StepComponent,
     ButtonComponent,
     DemoBlockComponent,
     CodeBlockComponent,
@@ -28,6 +33,7 @@ export class StepperPage implements AfterViewInit {
     { id: 'description', label: 'Con descripción' },
     { id: 'vertical', label: 'Vertical' },
     { id: 'progress', label: 'Barra de progreso' },
+    { id: 'composicional', label: 'Composicional' },
     { id: 'wizard', label: 'Wizard' },
     { id: 'api', label: 'API' },
   ];
@@ -42,6 +48,7 @@ export class StepperPage implements AfterViewInit {
   protected readonly withDesc = signal(1);
   protected readonly vertical = signal(1);
   protected readonly progress = signal(1);
+  protected readonly compositional = signal(0);
   protected readonly wizard = signal(0);
 
   protected readonly steps: StepItem[] = [
@@ -89,6 +96,19 @@ export class StepperPage implements AfterViewInit {
   readonly verticalCode = `<ui-stepper [(active)]="paso" orientation="vertical" [steps]="steps" />`;
 
   readonly progressCode = `<ui-stepper [(active)]="paso" variant="progress" [steps]="steps" />`;
+
+  readonly compositionalCode = `<!-- Modo composicional: cada <ui-step> proyecta el contenido del paso activo -->
+<ui-stepper [(active)]="paso">
+  <ui-step label="Cuenta" description="Email y contraseña">
+    <p>Formulario de la cuenta…</p>
+  </ui-step>
+  <ui-step label="Perfil" description="Tus datos">
+    <p>Formulario del perfil…</p>
+  </ui-step>
+  <ui-step label="Confirmar">
+    <p>Resumen y envío…</p>
+  </ui-step>
+</ui-stepper>`;
 
   readonly wizardCode = `<ui-stepper [(active)]="paso" [steps]="steps" [linear]="true">
   <!-- contenido del paso activo va aparte; aquí solo el indicador -->

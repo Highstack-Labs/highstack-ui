@@ -69,6 +69,11 @@
 
         <!-- Posición -->
         <app-demo-block id="placement" title="Posición" [code]="placementCode" class="block scroll-mt-28">
+          <p class="mb-4 text-sm text-[var(--color-muted-foreground)]">
+            <code class="font-mono text-xs">side</code> y <code class="font-mono text-xs">align</code>
+            son la posición preferida. Si el menú no cabe, <strong>se voltea automáticamente</strong>
+            (abre hacia arriba o se alinea al otro borde) para no salirse de la pantalla.
+          </p>
           <div class="flex items-center gap-4">
             <ui-dropdown side="bottom" align="start">
               <ui-button uiDropdownTrigger variant="outline">bottom · start</ui-button>
@@ -126,12 +131,12 @@
               <tbody class="text-[var(--color-foreground)]">
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">ui-dropdown · side</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'bottom' | 'top'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'bottom' | 'top' (preferido; auto-flip)</td>
                   <td class="px-4 py-2.5 font-mono text-xs">'bottom'</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">ui-dropdown · align</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'start' | 'end'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'start' | 'end' (preferido; auto-flip)</td>
                   <td class="px-4 py-2.5 font-mono text-xs">'start'</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">

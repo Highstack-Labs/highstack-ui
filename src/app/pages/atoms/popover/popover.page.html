@@ -30,6 +30,12 @@
 
         <!-- Posición -->
         <app-demo-block id="sides" title="Posición" [code]="sidesCode" class="block scroll-mt-28">
+          <p class="mb-4 text-sm text-[var(--color-muted-foreground)]">
+            <code class="font-mono text-xs">side</code> y <code class="font-mono text-xs">align</code>
+            son la posición preferida. Si el panel no cabe en esa posición, el popover
+            <strong>se voltea automáticamente</strong> al lado/alineación opuesta para no salirse
+            de la pantalla (p. ej. un disparador pegado al borde derecho abre hacia la izquierda).
+          </p>
           <div class="flex flex-wrap items-center justify-center gap-3 py-10">
             <ui-popover side="top">
               <ui-button uiPopoverTrigger size="sm" variant="outline">top</ui-button>
@@ -65,12 +71,12 @@
               <tbody class="text-[var(--color-foreground)]">
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">ui-popover · side</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'bottom' | 'top' | 'left' | 'right'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'bottom' | 'top' | 'left' | 'right' (preferido; auto-flip)</td>
                   <td class="px-4 py-2.5 font-mono text-xs">'bottom'</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">ui-popover · align</td>
-                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'start' | 'center' | 'end'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'start' | 'center' | 'end' (preferido; auto-flip)</td>
                   <td class="px-4 py-2.5 font-mono text-xs">'center'</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
