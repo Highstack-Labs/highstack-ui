@@ -38,7 +38,15 @@ import { DialogService } from './dialog.service';
       >
         @switch (d.kind) {
           @case ('component') {
-            <ng-container *ngComponentOutlet="d.component!; injector: d.injector!" />
+            <!--
+              El host que crea ngComponentOutlet rompería el flex del panel, así
+              que aquí aportamos el padding horizontal y convertimos al host en
+              una columna con gap para que el contenido del componente quede
+              espaciado igual que confirm/alert (sin necesidad de sub-componentes).
+            -->
+            <div class="px-6 [&>*]:flex [&>*]:flex-col [&>*]:gap-4">
+              <ng-container *ngComponentOutlet="d.component!; injector: d.injector!" />
+            </div>
           }
           @case ('confirm') {
             <ui-modal-header>

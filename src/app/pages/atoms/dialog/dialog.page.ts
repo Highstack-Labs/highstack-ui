@@ -1,13 +1,6 @@
 import { AfterViewInit, Component, DestroyRef, inject } from '@angular/core';
 import { DialogService } from '../../../../components/atoms/dialog/dialog.service';
 import { DialogRef, DIALOG_DATA } from '../../../../components/atoms/dialog/dialog.types';
-import {
-  ModalHeaderComponent,
-  ModalTitleComponent,
-  ModalDescriptionComponent,
-  ModalContentComponent,
-  ModalFooterComponent,
-} from '../../../../components/atoms/modal/modal.component';
 import { ButtonComponent } from '../../../../components/atoms/button/button.component';
 import { InputComponent } from '../../../../components/atoms/input/input.component';
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
@@ -22,27 +15,21 @@ import { ToastService } from '../../../../components/atoms/toast/toast.service';
  */
 @Component({
   selector: 'app-edit-name-dialog',
-  imports: [
-    ModalHeaderComponent,
-    ModalTitleComponent,
-    ModalDescriptionComponent,
-    ModalContentComponent,
-    ModalFooterComponent,
-    ButtonComponent,
-    InputComponent,
-  ],
+  imports: [ButtonComponent, InputComponent],
   template: `
-    <ui-modal-header>
-      <ui-modal-title>Editar nombre</ui-modal-title>
-      <ui-modal-description>Componente dinámico abierto vía servicio.</ui-modal-description>
-    </ui-modal-header>
-    <ui-modal-content>
-      <ui-input [(value)]="name" placeholder="Tu nombre" />
-    </ui-modal-content>
-    <ui-modal-footer>
+    <div class="space-y-1">
+      <h2 class="text-lg font-semibold tracking-tight text-[var(--color-foreground)]">
+        Editar nombre
+      </h2>
+      <p class="text-sm text-[var(--color-muted-foreground)]">
+        Componente dinámico abierto vía servicio.
+      </p>
+    </div>
+    <ui-input [(value)]="name" placeholder="Tu nombre" />
+    <div class="flex items-center justify-end gap-3">
       <ui-button variant="ghost" (click)="ref.close()">Cancelar</ui-button>
       <ui-button (click)="ref.close(name)">Guardar</ui-button>
-    </ui-modal-footer>
+    </div>
   `,
 })
 export class EditNameDialogComponent {
@@ -121,11 +108,22 @@ if (ok) this.borrar();`;
   message: 'Tus cambios se guardaron.',
 });`;
 
-  readonly componentCode = `// 1. El componente lee los datos y se cierra con un resultado
+  readonly componentCode = `// 1. El componente escribe su contenido (el diálogo le da el padding).
+//    Lee los datos y se cierra devolviendo un resultado.
+@Component({
+  template: \`
+    <h2 class="text-lg font-semibold">Editar nombre</h2>
+    <ui-input [(value)]="name" />
+    <div class="flex justify-end gap-3">
+      <ui-button variant="ghost" (click)="ref.close()">Cancelar</ui-button>
+      <ui-button (click)="ref.close(name)">Guardar</ui-button>
+    </div>
+  \`,
+})
 export class EditNameDialog {
   ref = inject(DialogRef<string>);
   data = inject(DIALOG_DATA);
-  guardar(nombre: string) { this.ref.close(nombre); }
+  name = '';
 }
 
 // 2. Lo abres desde el servicio
