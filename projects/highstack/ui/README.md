@@ -162,6 +162,75 @@ Las partes (`ui-modal-header`, `ui-modal-title`, etc.) son **opcionales**: dentr
 
 Componentes exportados: `ModalComponent`, `ModalHeaderComponent`, `ModalTitleComponent`, `ModalDescriptionComponent`, `ModalContentComponent`, `ModalFooterComponent`.
 
+### `<ui-drawer>`
+
+Panel deslizante anclado a un borde. Mismo control y subcomponentes que el modal (`[(open)]`, header/title/description/content/footer), pero entra desde un lado. Ideal para navegación móvil, filtros y formularios laterales.
+
+```html
+<ui-button (click)="open.set(true)">Abrir panel</ui-button>
+
+<ui-drawer [(open)]="open" side="right">
+  <ui-drawer-header>
+    <ui-drawer-title>Filtros</ui-drawer-title>
+    <ui-drawer-description>Ajusta los resultados.</ui-drawer-description>
+  </ui-drawer-header>
+  <ui-drawer-content>…</ui-drawer-content>
+  <ui-drawer-footer>
+    <ui-button variant="ghost" (click)="open.set(false)">Cancelar</ui-button>
+    <ui-button (click)="open.set(false)">Aplicar</ui-button>
+  </ui-drawer-footer>
+</ui-drawer>
+```
+
+| Prop   | Tipo                                     | Default   |
+| ------ | ---------------------------------------- | --------- |
+| `open` | `boolean` (model, two-way `[(open)]`)    | `false`   |
+| `side` | `'right' \| 'left' \| 'top' \| 'bottom'` | `'right'` |
+| `size` | `'sm' \| 'md' \| 'lg' \| 'xl' \| 'full'` | `'md'`    |
+
+También: `closeOnBackdrop`, `closeOnEscape`, `showClose` (todos `true`), `ariaLabel`, y outputs `(opened)`/`(closed)`. Exporta `DrawerComponent` + `Drawer{Header,Title,Description,Content,Footer}Component`.
+
+### `<ui-popover>`
+
+Contenedor flotante de contenido libre, anclado a un disparador. A diferencia del dropdown (menú de ítems) o el tooltip (solo texto en hover), proyecta cualquier HTML. Abre al hacer clic; cierra con clic-afuera o `Escape`.
+
+```html
+<ui-popover side="bottom" align="start">
+  <ui-button uiPopoverTrigger variant="outline">Dimensiones</ui-button>
+
+  <div class="space-y-2">
+    <ui-input label="Ancho" />
+    <ui-input label="Alto" />
+  </div>
+</ui-popover>
+```
+
+| Prop    | Tipo                                  | Default    |
+| ------- | ------------------------------------- | ---------- |
+| `side`  | `'bottom' \| 'top' \| 'left' \| 'right'` | `'bottom'` |
+| `align` | `'start' \| 'center' \| 'end'`        | `'center'` |
+
+El disparador se marca con la directiva `[uiPopoverTrigger]`. Exporta `PopoverComponent` y `PopoverTriggerDirective`.
+
+### `<ui-separator>`
+
+Línea divisoria fina.
+
+```html
+<ui-separator />
+
+<div class="flex items-center gap-3 h-5">
+  <span>Inicio</span>
+  <ui-separator orientation="vertical" />
+  <span>Perfil</span>
+</div>
+```
+
+| Prop          | Tipo                          | Default        |
+| ------------- | ----------------------------- | -------------- |
+| `orientation` | `'horizontal' \| 'vertical'`  | `'horizontal'` |
+| `decorative`  | `boolean`                     | `true`         |
+
 ## Desarrollo
 
 ### Build de la librería

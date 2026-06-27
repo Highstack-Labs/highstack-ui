@@ -1,0 +1,93 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Popover" subtitle="Contenedor flotante anclado a un disparador, con contenido libre." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el popover y la directiva del disparador:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <ui-popover side="bottom" align="start">
+            <ui-button uiPopoverTrigger variant="outline">Dimensiones</ui-button>
+
+            <div class="space-y-3">
+              <p class="text-sm font-medium text-[var(--color-foreground)]">Dimensiones</p>
+              <ui-input label="Ancho" placeholder="100%" />
+              <ui-input label="Alto" placeholder="auto" />
+            </div>
+          </ui-popover>
+        </app-demo-block>
+
+        <!-- Posición -->
+        <app-demo-block id="sides" title="Posición" [code]="sidesCode" class="block scroll-mt-28">
+          <div class="flex flex-wrap items-center justify-center gap-3 py-10">
+            <ui-popover side="top">
+              <ui-button uiPopoverTrigger size="sm" variant="outline">top</ui-button>
+              <p class="text-sm text-[var(--color-muted-foreground)]">Aparece arriba del disparador.</p>
+            </ui-popover>
+            <ui-popover side="bottom">
+              <ui-button uiPopoverTrigger size="sm" variant="outline">bottom</ui-button>
+              <p class="text-sm text-[var(--color-muted-foreground)]">Aparece debajo del disparador.</p>
+            </ui-popover>
+            <ui-popover side="left">
+              <ui-button uiPopoverTrigger size="sm" variant="outline">left</ui-button>
+              <p class="text-sm text-[var(--color-muted-foreground)]">Aparece a la izquierda.</p>
+            </ui-popover>
+            <ui-popover side="right">
+              <ui-button uiPopoverTrigger size="sm" variant="outline">right</ui-button>
+              <p class="text-sm text-[var(--color-muted-foreground)]">Aparece a la derecha.</p>
+            </ui-popover>
+          </div>
+        </app-demo-block>
+
+        <!-- API Reference -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Componente / Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-popover · side</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'bottom' | 'top' | 'left' | 'right'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'bottom'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">ui-popover · align</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'start' | 'center' | 'end'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'center'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">[uiPopoverTrigger]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">directiva en el elemento disparador</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">contenido proyectado</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">cualquier HTML dentro de &lt;ui-popover&gt;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
