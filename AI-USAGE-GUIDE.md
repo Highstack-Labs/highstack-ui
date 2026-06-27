@@ -126,6 +126,17 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 <ui-input label="Contraseña" type="password" />  <!-- trae ojito; [passwordToggle]="false" para quitarlo -->
 ```
 
+### Label
+`LabelComponent` · `<ui-label>`
+- `for` (string): id del control asociado. `required` (boolean): muestra el asterisco `*`.
+- El texto va como contenido proyectado.
+- Los `<ui-input>`, `<ui-textarea>` y `<ui-select>` ya renderizan su propio label vía su prop `label`. Usa `<ui-label>` directo solo para etiquetar controles propios o casos fuera de esos componentes.
+
+```html
+<ui-label for="campo" required>Nombre</ui-label>
+<mi-control id="campo"></mi-control>
+```
+
 ### Textarea
 `TextareaComponent` · `<ui-textarea>`
 - `value` (model), `label`, `hint`, `error`, `placeholder`, `rows` (def. 4), `disabled`, `readonly`, `required`, `autoGrow` (crece con el contenido).
@@ -161,6 +172,19 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
   <ui-radio value="free" label="Free" description="$0/mes" />
   <ui-radio value="pro" label="Pro" description="$29/mes" />
 </ui-radio-group>
+```
+
+### Segmented
+`SegmentedComponent` · `<ui-segmented>`
+- Selección única con apariencia de botones conectados (segmented control). Data-driven.
+- `value` (model), `options` (`SegmentedOption[]`), `size` (`'sm'|'md'`), `fullWidth`, `disabled`, `name`, `required`, `invalid`, `touched`, `errors`.
+- `SegmentedOption`: `{ value, label, icon?, disabled? }` (`icon` es SVG inline opcional).
+- Forms: `[(value)]`, `[formField]`, `formControlName`, `ngModel`.
+
+```html
+<!-- modelos = [{ value: 'gpt', label: 'GPT-4' }, { value: 'claude', label: 'Claude' }] -->
+<ui-segmented [options]="modelos" [(value)]="modelo" />
+<ui-segmented [options]="modelos" [formField]="form.modelo" [fullWidth]="true" />
 ```
 
 ### Select

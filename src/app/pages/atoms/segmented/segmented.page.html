@@ -1,0 +1,157 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header
+    section="Segmented"
+    subtitle="Control de selección única con apariencia de botones conectados. Ideal para elegir modelos, vistas o rangos."
+  />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el componente en tu archivo TypeScript:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <div class="space-y-3">
+            <ui-segmented [options]="modelos" [(value)]="modelo" />
+            <p class="text-xs text-[var(--color-muted-foreground)]">
+              Seleccionado: <span class="font-mono">{{ modelo() }}</span>
+            </p>
+          </div>
+        </app-demo-block>
+
+        <!-- Con íconos -->
+        <app-demo-block id="icons" title="Con íconos" [code]="iconsCode" class="block scroll-mt-28">
+          <ui-segmented [options]="vistas" [(value)]="vista" />
+        </app-demo-block>
+
+        <!-- Tamaños -->
+        <app-demo-block id="sizes" title="Tamaños" [code]="sizesCode" class="block scroll-mt-28">
+          <div class="flex flex-col items-start gap-4">
+            <ui-segmented size="sm" [options]="rango" [(value)]="rangoSel" />
+            <ui-segmented size="md" [options]="rango" [(value)]="rangoSel" />
+          </div>
+        </app-demo-block>
+
+        <!-- Ancho completo -->
+        <app-demo-block
+          id="full-width"
+          title="Ancho completo"
+          [code]="fullWidthCode"
+          class="block scroll-mt-28"
+        >
+          <div class="w-full max-w-md">
+            <ui-segmented [fullWidth]="true" [options]="rango" [(value)]="rangoSel" />
+          </div>
+        </app-demo-block>
+
+        <!-- Deshabilitado -->
+        <app-demo-block
+          id="disabled"
+          title="Deshabilitado"
+          [code]="disabledCode"
+          class="block scroll-mt-28"
+        >
+          <div class="flex flex-col items-start gap-4">
+            <ui-segmented [options]="planes" [(value)]="planSel" />
+            <ui-segmented [options]="planes" [(value)]="planSel" [disabled]="true" />
+          </div>
+        </app-demo-block>
+
+        <!-- Signal Forms -->
+        <section id="signal-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Signal Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Vincula con <code class="font-mono text-xs">[formField]</code> de Angular 22.
+            </p>
+          </div>
+
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <div class="space-y-3">
+              <ui-segmented [formField]="signalForm.modelo" [options]="modelos" />
+              <p class="text-xs text-[var(--color-muted-foreground)]">
+                Form válido: <span class="font-mono">{{ signalForm().valid() }}</span>
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="signalFormsCode" lang="typescript" />
+            <app-code-block [code]="signalFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- API Reference -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">
+            Propiedades (API Reference)
+          </h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    string (model)
+                  </td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">options</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    SegmentedOption[] · &#123; value, label, icon?, disabled? &#125;
+                  </td>
+                  <td class="px-4 py-2.5 font-mono text-xs">[]</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    'sm' | 'md'
+                  </td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">fullWidth</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    boolean
+                  </td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">disabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    boolean
+                  </td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">required / invalid / touched / errors</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    estado de validación (Signal Forms)
+                  </td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

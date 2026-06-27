@@ -30,6 +30,7 @@ export class Shell {
   protected readonly atoms: NavItem[] = [
     { label: 'Button', route: '/atoms/button' },
     { label: 'Input', route: '/atoms/input' },
+    { label: 'Label', route: '/atoms/label' },
     { label: 'Badge', route: '/atoms/badge' },
     { label: 'Card', route: '/atoms/card' },
     { label: 'Modal', route: '/atoms/modal' },
@@ -40,6 +41,7 @@ export class Shell {
     { label: 'Checkbox', route: '/atoms/checkbox' },
     { label: 'Switch', route: '/atoms/switch' },
     { label: 'Radio', route: '/atoms/radio' },
+    { label: 'Segmented', route: '/atoms/segmented' },
     { label: 'Avatar', route: '/atoms/avatar' },
     { label: 'Tooltip', route: '/atoms/tooltip' },
     { label: 'Dropdown', route: '/atoms/dropdown' },

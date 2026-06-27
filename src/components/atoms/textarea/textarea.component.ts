@@ -11,6 +11,7 @@ import {
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LabelComponent } from '../label/label.component';
 
 interface TextareaValidationError {
   kind?: string;
@@ -26,6 +27,7 @@ let nextId = 0;
 @Component({
   selector: 'ui-textarea',
   templateUrl: './textarea.component.html',
+  imports: [LabelComponent],
   host: { class: 'block' },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => TextareaComponent), multi: true },

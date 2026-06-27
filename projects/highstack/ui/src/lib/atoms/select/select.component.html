@@ -1,13 +1,5 @@
 @if (label()) {
-  <label
-    [for]="id()"
-    class="block mb-1.5 text-sm font-medium text-[var(--color-foreground)]"
-  >
-    {{ label() }}
-    @if (required()) {
-      <span class="text-[var(--color-destructive)]">*</span>
-    }
-  </label>
+  <ui-label [for]="id()" [required]="required()">{{ label() }}</ui-label>
 }
 
 <div class="relative">

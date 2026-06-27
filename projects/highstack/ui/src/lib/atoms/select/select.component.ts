@@ -12,6 +12,7 @@ import {
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LabelComponent } from '../label/label.component';
 
 export type SelectSize = 'sm' | 'md' | 'lg';
 
@@ -30,6 +31,7 @@ let nextId = 0;
 @Component({
   selector: 'ui-select',
   templateUrl: './select.component.html',
+  imports: [LabelComponent],
   host: { class: 'block' },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectComponent), multi: true },

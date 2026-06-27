@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Shell } from './shell/shell';
 import { ButtonPage } from './pages/atoms/button/button.page';
 import { InputPage } from './pages/atoms/input/input.page';
+import { LabelPage } from './pages/atoms/label/label.page';
 import { BadgePage } from './pages/atoms/badge/badge.page';
 import { CardPage } from './pages/atoms/card/card.page';
 import { ModalPage } from './pages/atoms/modal/modal.page';
@@ -26,6 +27,7 @@ import { TablePage } from './pages/atoms/table/table.page';
 import { PaginationPage } from './pages/atoms/pagination/pagination.page';
 import { DialogPage } from './pages/atoms/dialog/dialog.page';
 import { StepperPage } from './pages/atoms/stepper/stepper.page';
+import { SegmentedPage } from './pages/atoms/segmented/segmented.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 import { AiGuidePage } from './pages/ai-guide/ai-guide.page';
@@ -41,6 +43,7 @@ export const routes: Routes = [
       { path: 'ai-guide',     component: AiGuidePage },
       { path: 'atoms/button', component: ButtonPage },
       { path: 'atoms/input',  component: InputPage },
+      { path: 'atoms/label',  component: LabelPage },
       { path: 'atoms/badge',  component: BadgePage },
       { path: 'atoms/card',   component: CardPage },
       { path: 'atoms/modal',  component: ModalPage },
@@ -50,6 +53,7 @@ export const routes: Routes = [
       { path: 'atoms/checkbox', component: CheckboxPage },
       { path: 'atoms/switch', component: SwitchPage },
       { path: 'atoms/radio',  component: RadioPage },
+      { path: 'atoms/segmented', component: SegmentedPage },
       { path: 'atoms/avatar', component: AvatarPage },
       { path: 'atoms/tooltip', component: TooltipPage },
       { path: 'atoms/dropdown', component: DropdownPage },

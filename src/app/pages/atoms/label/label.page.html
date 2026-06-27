@@ -1,0 +1,110 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header
+    section="Label"
+    subtitle="Etiqueta de formulario reutilizable. Centraliza el estilo del label e identifica controles propios."
+  />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el componente en tu archivo TypeScript:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Cuándo usarlo -->
+        <section class="space-y-2 scroll-mt-28">
+          <p class="text-sm text-[var(--color-muted-foreground)]">
+            <code class="font-mono text-xs">&lt;ui-input&gt;</code>,
+            <code class="font-mono text-xs">&lt;ui-textarea&gt;</code> y
+            <code class="font-mono text-xs">&lt;ui-select&gt;</code> ya renderizan su propio label
+            con su prop <code class="font-mono text-xs">label</code>. Usa
+            <code class="font-mono text-xs">&lt;ui-label&gt;</code> directo solo para etiquetar
+            controles propios o casos fuera de esos componentes.
+          </p>
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <div class="w-full max-w-sm">
+            <ui-label for="nombre">Nombre</ui-label>
+            <ui-input id="nombre" placeholder="Tu nombre" />
+          </div>
+        </app-demo-block>
+
+        <!-- Requerido -->
+        <app-demo-block
+          id="required"
+          title="Requerido"
+          [code]="requiredCode"
+          class="block scroll-mt-28"
+        >
+          <div class="w-full max-w-sm">
+            <ui-label for="email-demo" required>Email</ui-label>
+            <ui-input id="email-demo" type="email" placeholder="tu@correo.com" />
+          </div>
+        </app-demo-block>
+
+        <!-- Control propio -->
+        <app-demo-block
+          id="custom"
+          title="Control propio"
+          [code]="customCode"
+          class="block scroll-mt-28"
+        >
+          <div class="w-full max-w-sm">
+            <ui-label for="rango" required>Volumen</ui-label>
+            <input id="rango" type="range" class="w-full accent-[var(--color-primary)]" />
+          </div>
+        </app-demo-block>
+
+        <!-- API Reference -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">
+            Propiedades (API Reference)
+          </h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">for</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    string
+                  </td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">required</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    boolean
+                  </td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">&lt;ng-content&gt;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">
+                    content projection (texto del label)
+                  </td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>
