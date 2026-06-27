@@ -241,6 +241,59 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 open = signal(false); // en el componente
 ```
 
+### Drawer (sheet lateral)
+`DrawerComponent` + subcomponentes · `<ui-drawer>` + `<ui-drawer-header>`, `<ui-drawer-title>`, `<ui-drawer-description>`, `<ui-drawer-content>`, `<ui-drawer-footer>`
+- Drawer: `[(open)]` (model boolean), `side` (`'right'|'left'|'top'|'bottom'`, def. `'right'`), `size` (`'sm'|'md'|'lg'|'xl'|'full'`, def. `'md'`), `closeOnBackdrop`/`closeOnEscape`/`showClose` (def. `true`), `ariaLabel`.
+- Outputs: `(opened)`, `(closed)`. Subcomponentes opcionales (mismo patrón que el modal).
+- Mismo control que el modal pero entra deslizando desde un borde. Ideal para nav móvil, filtros y formularios laterales.
+
+```html
+<ui-button (click)="open.set(true)">Abrir panel</ui-button>
+
+<ui-drawer [(open)]="open" side="right">
+  <ui-drawer-header>
+    <ui-drawer-title>Filtros</ui-drawer-title>
+    <ui-drawer-description>Ajusta los resultados.</ui-drawer-description>
+  </ui-drawer-header>
+  <ui-drawer-content>…</ui-drawer-content>
+  <ui-drawer-footer>
+    <ui-button variant="ghost" (click)="open.set(false)">Cancelar</ui-button>
+    <ui-button (click)="open.set(false)">Aplicar</ui-button>
+  </ui-drawer-footer>
+</ui-drawer>
+```
+
+### Popover
+`PopoverComponent` + `PopoverTriggerDirective` · `<ui-popover>` + `[uiPopoverTrigger]`
+- `<ui-popover>`: `side` (`'bottom'|'top'|'left'|'right'`, def. `'bottom'`), `align` (`'start'|'center'|'end'`, def. `'center'`).
+- `[uiPopoverTrigger]`: directiva en el elemento que abre el popover (con clic).
+- Contenedor flotante de **contenido libre** (a diferencia del dropdown, que es un menú de ítems, y el tooltip, que es solo texto en hover). Cierra con clic-afuera o Escape.
+
+```html
+<ui-popover side="bottom" align="start">
+  <ui-button uiPopoverTrigger variant="outline">Dimensiones</ui-button>
+
+  <div class="space-y-2">
+    <ui-input label="Ancho" />
+    <ui-input label="Alto" />
+  </div>
+</ui-popover>
+```
+
+### Separator
+`SeparatorComponent` · `<ui-separator>`
+- `orientation`: `'horizontal' | 'vertical'` (def. `'horizontal'`) · `decorative`: boolean (def. `true`; ponlo `false` si separa grupos con significado semántico).
+
+```html
+<ui-separator />
+
+<div class="flex items-center gap-3 h-5">
+  <span>Inicio</span>
+  <ui-separator orientation="vertical" />
+  <span>Perfil</span>
+</div>
+```
+
 ### Alert
 `AlertComponent` · `<ui-alert>`
 - `type`: `'info' | 'success' | 'warning' | 'error'` (def. `'info'`)
@@ -414,6 +467,8 @@ RadioGroupComponent, RadioComponent, SelectComponent, OptionComponent,
 BadgeComponent, AvatarComponent, AvatarGroupComponent,
 CardComponent, CardHeaderComponent, CardTitleComponent, CardDescriptionComponent, CardContentComponent, CardFooterComponent,
 ModalComponent, ModalHeaderComponent, ModalTitleComponent, ModalDescriptionComponent, ModalContentComponent, ModalFooterComponent,
+DrawerComponent, DrawerHeaderComponent, DrawerTitleComponent, DrawerDescriptionComponent, DrawerContentComponent, DrawerFooterComponent,
+PopoverComponent, PopoverTriggerDirective, SeparatorComponent,
 AlertComponent, TooltipDirective,
 DropdownComponent, DropdownTriggerDirective, DropdownItemComponent, DropdownLabelComponent, DropdownSeparatorComponent,
 ToastService, TabsComponent, TabComponent,
