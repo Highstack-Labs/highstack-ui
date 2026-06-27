@@ -15,9 +15,12 @@ import {
 export type DropdownSide = 'bottom' | 'top';
 export type DropdownAlign = 'start' | 'end';
 
+/** Margen mínimo al borde del viewport (px). */
+const MARGIN = 8;
+
 /**
  * Menú desplegable compositional, sin dependencias. Maneja abrir/cerrar,
- * posición, click-afuera y navegación por teclado.
+ * posición (con auto-flip al viewport), click-afuera y navegación por teclado.
  */
 @Component({
   selector: 'ui-dropdown',
@@ -33,21 +36,73 @@ export class DropdownComponent {
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly items = contentChildren(DropdownItemComponent);
 
+  /** Lado/alineación efectivos tras medir el viewport (pueden voltear los inputs). */
+  protected readonly resolvedSide = signal<DropdownSide>('bottom');
+  protected readonly resolvedAlign = signal<DropdownAlign>('start');
+  /** Oculta el panel un frame hasta posicionarlo, para que el flip no se vea saltar. */
+  protected readonly ready = signal(false);
+
   protected readonly panelClasses = computed(() => {
     const base =
-      'absolute z-50 min-w-48 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md text-[var(--color-foreground)]';
-    const side = this.side() === 'top' ? 'bottom-full mb-1.5' : 'top-full mt-1.5';
-    const align = this.align() === 'end' ? 'right-0' : 'left-0';
-    return [base, side, align].join(' ');
+      'absolute z-50 min-w-48 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md text-[var(--color-foreground)] transition-opacity duration-100';
+    const side = this.resolvedSide() === 'top' ? 'bottom-full mb-1.5' : 'top-full mt-1.5';
+    const align = this.resolvedAlign() === 'end' ? 'right-0' : 'left-0';
+    const visibility = this.ready() ? 'opacity-100' : 'opacity-0';
+    return [base, side, align, visibility].join(' ');
   });
 
   toggle() {
-    this.open.update((o) => !o);
-    if (this.open()) this.focusItem(0);
+    if (this.open()) this.close();
+    else this.openDropdown();
+  }
+
+  private openDropdown() {
+    this.resolvedSide.set(this.side());
+    this.resolvedAlign.set(this.align());
+    this.ready.set(false);
+    this.open.set(true);
+    // Tras renderizar el panel, medirlo y ajustar la posición al viewport.
+    requestAnimationFrame(() => this.updatePosition());
+    this.focusItem(0);
   }
 
   close() {
     this.open.set(false);
+    this.ready.set(false);
+  }
+
+  /** Mide el panel y voltea lado/alineación si se sale del viewport. */
+  private updatePosition() {
+    const panel = this.el.nativeElement.querySelector('[role="menu"]') as HTMLElement | null;
+    if (!panel || !this.open()) return;
+
+    const host = this.el.nativeElement.getBoundingClientRect();
+    const rect = panel.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Eje principal (vertical): voltear top/bottom si no cabe y el opuesto tiene más sitio.
+    let side = this.side();
+    const spaceBelow = vh - host.bottom;
+    const spaceAbove = host.top;
+    if (side === 'bottom' && spaceBelow < rect.height + MARGIN && spaceAbove >= spaceBelow) {
+      side = 'top';
+    } else if (side === 'top' && spaceAbove < rect.height + MARGIN && spaceBelow >= spaceAbove) {
+      side = 'bottom';
+    }
+
+    // Eje transversal (horizontal): start ancla a la izquierda, end a la derecha.
+    let align = this.align();
+    const leftFor = (a: DropdownAlign) => (a === 'end' ? host.right - rect.width : host.left);
+    const inView = (a: DropdownAlign) =>
+      leftFor(a) >= MARGIN && leftFor(a) + rect.width <= vw - MARGIN;
+    if (!inView(align) && inView(align === 'start' ? 'end' : 'start')) {
+      align = align === 'start' ? 'end' : 'start';
+    }
+
+    this.resolvedSide.set(side);
+    this.resolvedAlign.set(align);
+    this.ready.set(true);
   }
 
   @HostListener('document:click', ['$event'])
@@ -55,6 +110,12 @@ export class DropdownComponent {
     if (this.open() && !this.el.nativeElement.contains(event.target as Node)) {
       this.close();
     }
+  }
+
+  @HostListener('window:resize')
+  @HostListener('window:scroll')
+  protected onViewportChange() {
+    if (this.open()) this.updatePosition();
   }
 
   @HostListener('keydown', ['$event'])
