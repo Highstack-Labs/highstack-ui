@@ -24,6 +24,8 @@ import { AccordionPage } from './pages/atoms/accordion/accordion.page';
 import { BreadcrumbPage } from './pages/atoms/breadcrumb/breadcrumb.page';
 import { TablePage } from './pages/atoms/table/table.page';
 import { PaginationPage } from './pages/atoms/pagination/pagination.page';
+import { DialogPage } from './pages/atoms/dialog/dialog.page';
+import { StepperPage } from './pages/atoms/stepper/stepper.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 import { AiGuidePage } from './pages/ai-guide/ai-guide.page';
@@ -61,6 +63,8 @@ export const routes: Routes = [
       { path: 'atoms/breadcrumb', component: BreadcrumbPage },
       { path: 'atoms/table',  component: TablePage },
       { path: 'atoms/pagination', component: PaginationPage },
+      { path: 'atoms/dialog', component: DialogPage },
+      { path: 'atoms/stepper', component: StepperPage },
     ],
   },
 ];

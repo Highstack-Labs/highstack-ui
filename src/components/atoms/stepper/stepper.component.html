@@ -1,0 +1,150 @@
+<!-- Indicadores -->
+@if (variant() === 'circles') {
+  <ol [class]="containerClasses()" role="list">
+    @for (state of states(); track state.index) {
+      <!-- Paso -->
+      <li
+        class="flex"
+        [class.flex-col]="orientation() === 'horizontal'"
+        [class.items-center]="orientation() === 'horizontal'"
+        [class.flex-1]="orientation() === 'horizontal'"
+        [class.items-start]="orientation() === 'vertical'"
+        [class.gap-3]="orientation() === 'vertical'"
+        [attr.aria-current]="state.current ? 'step' : null"
+      >
+        <!-- Columna del indicador (círculo) -->
+        <div
+          class="flex"
+          [class.items-center]="orientation() === 'horizontal'"
+          [class.w-full]="orientation() === 'horizontal'"
+          [class.flex-col]="orientation() === 'vertical'"
+          [class.items-center]="orientation() === 'vertical'"
+          [class.self-stretch]="orientation() === 'vertical'"
+        >
+          <button
+            type="button"
+            [class]="circleClasses(state)"
+            [class.cursor-pointer]="canSelect(state.index)"
+            [class.cursor-default]="!canSelect(state.index)"
+            [disabled]="!canSelect(state.index)"
+            (click)="select(state.index)"
+            [attr.aria-label]="state.label"
+          >
+            @if (state.completed && showCheck()) {
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+            } @else {
+              {{ state.index + 1 }}
+            }
+          </button>
+
+          <!-- Conector (no en el último paso) -->
+          @if (!$last) {
+            <span [class]="connectorClasses(state)" aria-hidden="true"></span>
+          }
+        </div>
+
+        <!-- Texto del paso -->
+        <div
+          [class.mt-2]="orientation() === 'horizontal'"
+          [class.text-center]="orientation() === 'horizontal'"
+          [class.pb-6]="orientation() === 'vertical' && !$last"
+        >
+          <div [class]="labelClasses(state)">{{ state.label }}</div>
+          @if (state.description) {
+            <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">
+              {{ state.description }}
+            </div>
+          }
+        </div>
+      </li>
+    }
+  </ol>
+} @else {
+  <!-- Variante: barra de progreso -->
+  @if (orientation() === 'horizontal') {
+    <div>
+      <div class="relative">
+        <!-- Línea base -->
+        <div class="absolute left-0 right-0 top-4 h-1 rounded-full bg-[var(--color-border)]"></div>
+        <!-- Línea rellena -->
+        <div
+          class="absolute left-0 top-4 h-1 rounded-full bg-[var(--color-primary)] transition-all duration-300"
+          [style.width.%]="progressPct()"
+        ></div>
+        <!-- Indicadores -->
+        <ol class="relative flex items-start justify-between" role="list">
+          @for (state of states(); track state.index) {
+            <li class="flex flex-col items-center" [attr.aria-current]="state.current ? 'step' : null">
+              <button
+                type="button"
+                [class]="circleClasses(state)"
+                [class.cursor-pointer]="canSelect(state.index)"
+                [class.cursor-default]="!canSelect(state.index)"
+                [disabled]="!canSelect(state.index)"
+                (click)="select(state.index)"
+                [attr.aria-label]="state.label"
+              >
+                @if (state.completed && showCheck()) {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                } @else {
+                  {{ state.index + 1 }}
+                }
+              </button>
+              <div class="mt-2 text-center">
+                <div [class]="labelClasses(state)">{{ state.label }}</div>
+                @if (state.description) {
+                  <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">{{ state.description }}</div>
+                }
+              </div>
+            </li>
+          }
+        </ol>
+      </div>
+    </div>
+  } @else {
+    <!-- Barra de progreso vertical -->
+    <div class="flex gap-4">
+      <div class="relative w-9 shrink-0">
+        <div class="absolute left-4 top-0 bottom-0 w-1 rounded-full bg-[var(--color-border)]"></div>
+        <div
+          class="absolute left-4 top-0 w-1 rounded-full bg-[var(--color-primary)] transition-all duration-300"
+          [style.height.%]="progressPct()"
+        ></div>
+        <ol class="relative flex flex-col justify-between h-full gap-8" role="list">
+          @for (state of states(); track state.index) {
+            <li>
+              <button
+                type="button"
+                [class]="circleClasses(state)"
+                [class.cursor-pointer]="canSelect(state.index)"
+                [class.cursor-default]="!canSelect(state.index)"
+                [disabled]="!canSelect(state.index)"
+                (click)="select(state.index)"
+                [attr.aria-label]="state.label"
+              >
+                @if (state.completed && showCheck()) {
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                } @else {
+                  {{ state.index + 1 }}
+                }
+              </button>
+            </li>
+          }
+        </ol>
+      </div>
+      <ol class="flex flex-col justify-between gap-8 py-1.5" role="list">
+        @for (state of states(); track state.index) {
+          <li [attr.aria-current]="state.current ? 'step' : null">
+            <div [class]="labelClasses(state)">{{ state.label }}</div>
+            @if (state.description) {
+              <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">{{ state.description }}</div>
+            }
+          </li>
+        }
+      </ol>
+    </div>
+  }
+}
+
+<!-- Panel del paso activo (modo composicional) -->
+<ng-content />

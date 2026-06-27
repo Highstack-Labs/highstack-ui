@@ -1,0 +1,120 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header
+    section="Stepper"
+    subtitle="Indicador de pasos / wizard. Círculos o barra de progreso, horizontal o vertical, con navegación opcional."
+  />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Uso básico</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Define los pasos con <code class="font-mono text-xs">[steps]</code> o con
+              componentes <code class="font-mono text-xs">&lt;ui-step&gt;</code> hijos.
+            </p>
+          </div>
+          <app-code-block [code]="basicCode" lang="html" />
+        </section>
+
+        <!-- Círculos -->
+        <app-demo-block id="circles" title="Círculos numerados" [code]="basicCode" class="block scroll-mt-28">
+          <ui-stepper [(active)]="basic" [steps]="steps" />
+        </app-demo-block>
+
+        <!-- Con check -->
+        <app-demo-block id="check" title="Check al completar" [code]="checkCode" class="block scroll-mt-28">
+          <ui-stepper [active]="2" [steps]="steps" [showCheck]="true" [clickable]="false" />
+        </app-demo-block>
+
+        <!-- Con descripción -->
+        <app-demo-block id="description" title="Con descripción" [code]="descCode" class="block scroll-mt-28">
+          <ui-stepper [(active)]="withDesc" [steps]="stepsDesc" />
+        </app-demo-block>
+
+        <!-- Vertical -->
+        <app-demo-block id="vertical" title="Vertical" [code]="verticalCode" class="block scroll-mt-28">
+          <ui-stepper [(active)]="vertical" orientation="vertical" [steps]="stepsDesc" />
+        </app-demo-block>
+
+        <!-- Barra de progreso -->
+        <app-demo-block id="progress" title="Barra de progreso" [code]="progressCode" class="block scroll-mt-28">
+          <ui-stepper [(active)]="progress" variant="progress" [steps]="steps" />
+        </app-demo-block>
+
+        <!-- Wizard completo -->
+        <app-demo-block id="wizard" title="Wizard con navegación" [code]="wizardCode" class="block scroll-mt-28">
+          <div class="space-y-8">
+            <ui-stepper [(active)]="wizard" [steps]="wizardSteps" [linear]="true" />
+
+            <div
+              class="rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-muted)] p-6 text-sm text-[var(--color-foreground)]"
+            >
+              Paso {{ wizard() + 1 }}: <strong>{{ wizardSteps[wizard()].label }}</strong>
+            </div>
+
+            <div class="flex items-center justify-between">
+              <ui-button variant="ghost" (click)="prev()" [disabled]="isFirst()">Anterior</ui-button>
+              <ui-button (click)="next()" [disabled]="isLast()">Siguiente</ui-button>
+            </div>
+          </div>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">API Reference</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Input</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">active</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">number (two-way)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">0</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">steps</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">StepItem[] (&#123; label, description? &#125;)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">[]</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">variant</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'circles' | 'progress'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'circles'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">orientation</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'horizontal' | 'vertical'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'horizontal'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">showCheck</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">true</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">linear</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean (solo navega a completados)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">clickable</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">true</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

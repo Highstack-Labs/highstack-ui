@@ -1,0 +1,101 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header
+    section="Dialog"
+    subtitle="Modales imperativos vía servicio: confirm, alert y componentes dinámicos. Se auto-montan, sin setup."
+  />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Inyecta el servicio donde lo necesites. El contenedor se monta solo:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Confirmar -->
+        <app-demo-block id="confirm" title="Confirmar" [code]="confirmCode" class="block scroll-mt-28">
+          <ui-button variant="destructive" (click)="confirmDelete()">Eliminar proyecto…</ui-button>
+        </app-demo-block>
+
+        <!-- Alert -->
+        <app-demo-block id="alert" title="Alert" [code]="alertCode" class="block scroll-mt-28">
+          <ui-button variant="outline" (click)="showAlert()">Mostrar aviso</ui-button>
+        </app-demo-block>
+
+        <!-- Componente dinámico -->
+        <app-demo-block
+          id="componente"
+          title="Componente dinámico"
+          [code]="componentCode"
+          class="block scroll-mt-28"
+        >
+          <ui-button (click)="openComponent()">Abrir editor…</ui-button>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">API Reference</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Método / Opción</th>
+                  <th class="px-4 py-2.5 font-medium">Firma / Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">confirm</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">(opts: ConfirmOptions) =&gt; Promise&lt;boolean&gt;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">alert</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">(opts: AlertOptions) =&gt; Promise&lt;void&gt;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">open</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">(Comp, opts?: DialogOptions) =&gt; DialogRef</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">DialogRef.closed</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">Promise&lt;R | undefined&gt;</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">DialogRef.close</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">(result?: R) =&gt; void</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">DIALOG_DATA</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">InjectionToken (datos de open)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">opts.size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">sm | md | lg | xl | full</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">opts.confirmVariant</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">ButtonVariant</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'default'</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

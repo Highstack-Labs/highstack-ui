@@ -33,6 +33,7 @@ export class Shell {
     { label: 'Badge', route: '/atoms/badge' },
     { label: 'Card', route: '/atoms/card' },
     { label: 'Modal', route: '/atoms/modal' },
+    { label: 'Dialog', route: '/atoms/dialog' },
     { label: 'Drawer', route: '/atoms/drawer' },
     { label: 'Popover', route: '/atoms/popover' },
     { label: 'Separator', route: '/atoms/separator' },
@@ -52,5 +53,6 @@ export class Shell {
     { label: 'Breadcrumb', route: '/atoms/breadcrumb' },
     { label: 'Table', route: '/atoms/table' },
     { label: 'Pagination', route: '/atoms/pagination' },
+    { label: 'Stepper', route: '/atoms/stepper' },
   ];
 }
