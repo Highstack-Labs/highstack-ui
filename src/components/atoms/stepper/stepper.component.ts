@@ -116,13 +116,13 @@ export class StepperComponent {
   /** Clases del círculo indicador según el estado del paso. */
   circleClasses(state: StepState): string {
     const base =
-      'flex size-8 shrink-0 items-center justify-center rounded-full border text-[13px] font-semibold transition-colors';
+      'flex size-7 shrink-0 items-center justify-center rounded-full border text-xs font-semibold transition-colors';
     const interactive = this.canSelect(state.index) ? 'cursor-pointer' : 'cursor-default';
     if (state.current) {
       return [
         base,
         interactive,
-        'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] border-[var(--color-primary)] ring-2 ring-[var(--color-ring)]/40 ring-offset-2 ring-offset-[var(--color-background)]',
+        'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] border-[var(--color-primary)] ring-2 ring-[var(--color-ring)]/40 ring-offset-1 ring-offset-[var(--color-background)]',
       ].join(' ');
     }
     if (state.completed) {
@@ -145,7 +145,7 @@ export class StepperComponent {
       state.completed || state.current
         ? 'text-[var(--color-foreground)]'
         : 'text-[var(--color-muted-foreground)]';
-    return ['text-[13px] font-medium leading-tight', color].join(' ');
+    return ['text-xs font-medium leading-tight', color].join(' ');
   }
 }
 
