@@ -68,6 +68,12 @@ export class ToastService {
   }
 
   setPosition(position: ToastPosition) {
+    // Al cambiar de posición, descarta los toasts existentes en lugar de
+    // reubicarlos: evita que un toast creado en la posición anterior quede
+    // visualmente "pegado" en el sitio viejo (glitch de repintado en `fixed`).
+    if (position !== this.position()) {
+      this.toasts.set([]);
+    }
     this.position.set(position);
   }
 

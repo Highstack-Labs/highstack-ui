@@ -282,7 +282,7 @@ open = signal(false); // en el componente
 `ToastService` (inyectable, `providedIn: 'root'`). El contenedor se auto-monta.
 - `success/error/warning/info(message, opts?)` · `show(opts)` · `dismiss(id)` · `setPosition(pos)`.
 - `opts`: `{ type?, title?, message, duration? (ms, 0 = no auto-cierra), action?: { label, handler } }`.
-- Posiciones: `'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right'` (def. `'bottom-right'`).
+- Posiciones: `'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right'` (def. `'bottom-right'`). `setPosition()` se llama normalmente una vez al inicio; si lo cambias en caliente, descarta los toasts visibles (no los reubica).
 
 ```ts
 import { ToastService } from '@highstacklabs2026/ui';
