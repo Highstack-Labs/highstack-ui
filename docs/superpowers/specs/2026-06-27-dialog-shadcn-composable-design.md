@@ -18,7 +18,9 @@ Alinear el path imperativo con el modelo composicional de shadcn: un **único** 
 
 ### 1. `dialog-outlet`: caso `component`
 
-Se elimina el wrapper hacky. El nuevo render del caso `component`:
+El header pasa a ser **opcional y automático** vía opciones, y el cuerpo del
+componente conserva un **padding por defecto** (no se exige composición). Nuevo
+render del caso `component`:
 
 ```html
 @case ('component') {
@@ -32,15 +34,26 @@ Se elimina el wrapper hacky. El nuevo render del caso `component`:
       }
     </ui-modal-header>
   }
-  <ng-container *ngComponentOutlet="d.component!; injector: d.injector!" />
+  <div class="px-6 [&>*]:flex [&>*]:flex-col [&>*]:gap-4">
+    <ng-container *ngComponentOutlet="d.component!; injector: d.injector!" />
+  </div>
 }
 ```
 
-- El componente proyectado se renderiza **directo**, sin wrapper que altere el padding.
-- El componente es responsable de su estructura usando las piezas composables (`<ui-modal-content>`, `<ui-modal-footer>`), idéntico al uso declarativo de `<ui-modal>`. Son las que aportan `px-6`.
-- Si el dev pasa `title`/`description` en `open()`, el outlet renderiza el `<ui-modal-header>` automáticamente (con su `px-6 pr-12`), sin que el componente tenga que escribirlo.
+- **El cuerpo mantiene el wrapper con padding por defecto** (`px-6` + gap entre
+  los elementos raíz del componente). Un componente con contenido "plano" sigue
+  quedando bien espaciado, sin obligar a usar sub-componentes.
+- **Lo que cambia / arregla:** si el dev pasa `title`/`description` en `open()`,
+  el outlet renderiza el `<ui-modal-header>` **por encima** del wrapper, con su
+  propio `px-6 pr-12`. Así el título nunca choca con la X (el bug actual ocurría
+  porque el título iba dentro del wrapper sin `pr-12`).
+- El header automático usa exactamente las mismas piezas (`ui-modal-header/
+  title/description`) que `confirm`/`alert` → un solo modelo visual de header en
+  todo el sistema.
 
-**Tradeoff aceptado:** un componente que proyecte contenido "plano" (sin `ui-modal-content`) quedará sin padding horizontal. Es el modelo shadcn-puro: se compone con las piezas. Los ejemplos se actualizan para reflejarlo.
+**Nota:** el componente ya no necesita escribir su propio `<h2>`/título a mano;
+lo pasa por opción. Si aún así quiere un header custom dentro del cuerpo, puede,
+pero pierde el `pr-12` (igual que hoy) — por eso se recomienda la opción.
 
 ### 2. Tipos: `DialogOptions`
 
@@ -73,16 +86,21 @@ Replicar **todos** los cambios de código en ambos árboles (ver memoria `two-co
 - `src/components/atoms/dialog/` (showcase)
 - `projects/highstack/ui/src/lib/atoms/dialog/` (publicable)
 
-Verificar que `projects/highstack/ui/src/public-api.ts` exporta `ModalContentComponent`, `ModalFooterComponent`, `ModalHeaderComponent`, `ModalTitleComponent`, `ModalDescriptionComponent` (el componente dinámico del consumidor los necesita para componer). Añadir los que falten.
+No hacen falta exports nuevos en `public-api.ts`: el componente del consumidor
+sigue usando contenido plano y el outlet provee header + padding.
 
 ### 6. Documentación IA y ejemplos
 
 - **`AI-USAGE-GUIDE.md` (raíz)** sección Dialog:
   - Documentar `opts.title` / `opts.description` en `open()`.
-  - Cambiar el ejemplo de componente dinámico: ya **no** es "PLANO (el diálogo le da el padding)"; ahora compone con `<ui-modal-content>` / `<ui-modal-footer>`, o usa `title`/`description` para el header.
+  - Aclarar el ejemplo de componente dinámico: el cuerpo sigue siendo "PLANO (el
+    diálogo le da el padding)", pero el **título/descripción se pasan por opción**
+    (`open({ title, description })`) en vez de escribir un `<h2>` a mano.
   - Tras editar la raíz, `cp AI-USAGE-GUIDE.md public/AI-USAGE-GUIDE.md` (ver memoria `ai-guide-two-copies`).
 - **`src/app/pages/atoms/dialog/dialog.page.ts`**:
-  - `EditNameDialogComponent` se reescribe para componer con `ui-modal-content`/`ui-modal-footer` (importándolos) en vez de divs con clases sueltas; el header se pasa vía `open({ title, description })`.
+  - `EditNameDialogComponent`: quitar el bloque `<h2>` + `<p>` del template (el
+    header ahora viene del outlet); dejar solo input + botones. `openComponent()`
+    pasa `{ title: 'Editar nombre', description: '…' }`.
   - Actualizar el snippet `componentCode` para que coincida.
 - **`src/app/pages/atoms/dialog/dialog.page.html`**: añadir filas `opts.title` y `opts.description` a la tabla de API Reference.
 
