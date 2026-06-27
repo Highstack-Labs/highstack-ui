@@ -215,6 +215,120 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 </ui-card>
 ```
 
+### Modal
+`ModalComponent` + subcomponentes · `<ui-modal>` + `<ui-modal-header>`, `<ui-modal-title>`, `<ui-modal-description>`, `<ui-modal-content>`, `<ui-modal-footer>`
+- Modal: `[(open)]` (model boolean, controla abrir/cerrar), `size` (`'sm'|'md'|'lg'|'xl'|'full'`, def. `'md'`), `closeOnBackdrop` (def. `true`), `closeOnEscape` (def. `true`), `showClose` (def. `true`), `ariaLabel`.
+- Outputs: `(opened)`, `(closed)`.
+- Los subcomponentes son opcionales: puedes proyectar contenido libre dentro de `<ui-modal>`.
+
+```html
+<ui-button (click)="open.set(true)">Abrir</ui-button>
+
+<ui-modal [(open)]="open" size="md">
+  <ui-modal-header>
+    <ui-modal-title>¿Eliminar proyecto?</ui-modal-title>
+    <ui-modal-description>Esta acción no se puede deshacer.</ui-modal-description>
+  </ui-modal-header>
+  <ui-modal-content>Se borrarán todos los archivos de forma permanente.</ui-modal-content>
+  <ui-modal-footer>
+    <ui-button variant="ghost" (click)="open.set(false)">Cancelar</ui-button>
+    <ui-button variant="destructive" (click)="open.set(false)">Eliminar</ui-button>
+  </ui-modal-footer>
+</ui-modal>
+```
+
+```ts
+open = signal(false); // en el componente
+```
+
+### Drawer (sheet lateral)
+`DrawerComponent` + subcomponentes · `<ui-drawer>` + `<ui-drawer-header>`, `<ui-drawer-title>`, `<ui-drawer-description>`, `<ui-drawer-content>`, `<ui-drawer-footer>`
+- Drawer: `[(open)]` (model boolean), `side` (`'right'|'left'|'top'|'bottom'`, def. `'right'`), `size` (`'sm'|'md'|'lg'|'xl'|'full'`, def. `'md'`), `closeOnBackdrop`/`closeOnEscape`/`showClose` (def. `true`), `ariaLabel`.
+- Outputs: `(opened)`, `(closed)`. Subcomponentes opcionales (mismo patrón que el modal).
+- Mismo control que el modal pero entra deslizando desde un borde. Ideal para nav móvil, filtros y formularios laterales.
+
+```html
+<ui-button (click)="open.set(true)">Abrir panel</ui-button>
+
+<ui-drawer [(open)]="open" side="right">
+  <ui-drawer-header>
+    <ui-drawer-title>Filtros</ui-drawer-title>
+    <ui-drawer-description>Ajusta los resultados.</ui-drawer-description>
+  </ui-drawer-header>
+  <ui-drawer-content>…</ui-drawer-content>
+  <ui-drawer-footer>
+    <ui-button variant="ghost" (click)="open.set(false)">Cancelar</ui-button>
+    <ui-button (click)="open.set(false)">Aplicar</ui-button>
+  </ui-drawer-footer>
+</ui-drawer>
+```
+
+### Dialog (modales imperativos vía servicio)
+`DialogService` (`providedIn: 'root'`) + `DialogRef` + token `DIALOG_DATA`. Es la versión imperativa del modal: lo abres desde TypeScript, sin declarar `<ui-modal>` en el HTML. Se auto-monta (cero setup), reutiliza `<ui-modal>` por dentro y toda la API es basada en `Promise`.
+- `confirm(opts): Promise<boolean>` — `opts`: `message` (requerido), `title?`, `confirmText?` (def. `'Confirmar'`), `cancelText?` (def. `'Cancelar'`), `confirmVariant?` (`ButtonVariant`, usa `'destructive'` para borrar).
+- `alert(opts): Promise<void>` — `opts`: `message` (requerido), `title?`, `confirmText?` (def. `'Aceptar'`).
+- `open<R>(Componente, opts?): DialogRef<R>` — monta un componente dinámico. `opts`: `data?` (se inyecta con `DIALOG_DATA`), más `size`/`closeOnBackdrop`/`closeOnEscape`/`showClose`/`ariaLabel` (mismos defaults que `<ui-modal>`). `ref.closed` es una `Promise` con el resultado; el componente se cierra con `ref.close(resultado)`.
+- Cerrar por backdrop/Escape/✕ resuelve `confirm` como `false` y `open()` como `undefined`.
+
+```ts
+private dialog = inject(DialogService);
+
+const ok = await this.dialog.confirm({
+  title: '¿Eliminar proyecto?',
+  message: 'Esta acción no se puede deshacer.',
+  confirmText: 'Eliminar',
+  confirmVariant: 'destructive',
+});
+if (ok) this.borrar();
+
+await this.dialog.alert({ title: 'Listo', message: 'Cambios guardados.' });
+
+const ref = this.dialog.open(EditarUsuarioComponent, { data: { id: 42 }, size: 'lg' });
+const result = await ref.closed;
+```
+
+```ts
+// El componente dinámico lee datos y se cierra por inyección. Escribe contenido
+// PLANO (sin sub-componentes de modal); el diálogo le da el padding.
+export class EditarUsuarioComponent {
+  private ref = inject(DialogRef<Usuario>);
+  protected data = inject(DIALOG_DATA);
+  guardar(u: Usuario) { this.ref.close(u); }
+}
+```
+
+### Popover
+`PopoverComponent` + `PopoverTriggerDirective` · `<ui-popover>` + `[uiPopoverTrigger]`
+- `<ui-popover>`: `side` (`'bottom'|'top'|'left'|'right'`, def. `'bottom'`), `align` (`'start'|'center'|'end'`, def. `'center'`).
+- `[uiPopoverTrigger]`: directiva en el elemento que abre el popover (con clic).
+- Contenedor flotante de **contenido libre** (a diferencia del dropdown, que es un menú de ítems, y el tooltip, que es solo texto en hover). Cierra con clic-afuera o Escape.
+- `side`/`align` son la posición **preferida**: si el panel no cabe en el viewport, se **voltea automáticamente** (auto-flip) al lado/alineación opuesta. No necesitas calcular bordes a mano.
+
+```html
+<ui-popover side="bottom" align="start">
+  <ui-button uiPopoverTrigger variant="outline">Dimensiones</ui-button>
+
+  <div class="space-y-2">
+    <ui-input label="Ancho" />
+    <ui-input label="Alto" />
+  </div>
+</ui-popover>
+```
+
+### Separator
+`SeparatorComponent` · `<ui-separator>`
+- `orientation`: `'horizontal' | 'vertical'` (def. `'horizontal'`) · `decorative`: boolean (def. `true`; ponlo `false` si separa grupos con significado semántico).
+
+```html
+<ui-separator />
+
+<div class="flex items-center gap-3 h-5">
+  <span>Inicio</span>
+  <ui-separator orientation="vertical" />
+  <span>Perfil</span>
+</div>
+```
+
 ### Alert
 `AlertComponent` · `<ui-alert>`
 - `type`: `'info' | 'success' | 'warning' | 'error'` (def. `'info'`)
@@ -237,7 +351,7 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 
 ### Dropdown
 `DropdownComponent` + `DropdownTriggerDirective` + `DropdownItemComponent` + `DropdownLabelComponent` + `DropdownSeparatorComponent`
-- `<ui-dropdown>`: `side` (`'bottom'|'top'`), `align` (`'start'|'end'`).
+- `<ui-dropdown>`: `side` (`'bottom'|'top'`), `align` (`'start'|'end'`). Son la posición **preferida**: si el menú no cabe en el viewport se **voltea automáticamente** (auto-flip).
 - `[uiDropdownTrigger]`: directiva en el botón disparador.
 - `<ui-dropdown-item>`: output `(select)`, `destructive`, `disabled`, slots `[slot=icon]`/`[slot=shortcut]`.
 - `<ui-dropdown-label>`, `<ui-dropdown-separator>`.
@@ -256,7 +370,7 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 `ToastService` (inyectable, `providedIn: 'root'`). El contenedor se auto-monta.
 - `success/error/warning/info(message, opts?)` · `show(opts)` · `dismiss(id)` · `setPosition(pos)`.
 - `opts`: `{ type?, title?, message, duration? (ms, 0 = no auto-cierra), action?: { label, handler } }`.
-- Posiciones: `'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right'` (def. `'bottom-right'`).
+- Posiciones: `'top-left'|'top-center'|'top-right'|'bottom-left'|'bottom-center'|'bottom-right'` (def. `'bottom-right'`). `setPosition()` se llama normalmente una vez al inicio; si lo cambias en caliente, descarta los toasts visibles (no los reubica).
 
 ```ts
 import { ToastService } from '@highstacklabs2026/ui';
@@ -326,6 +440,26 @@ this.toast.show({ type: 'info', message: 'Eliminado', action: { label: 'Deshacer
 <ui-pagination [(page)]="page" [totalPages]="20" [(pageSize)]="size" [pageSizeOptions]="[10,25,50]" />
 ```
 
+### Stepper (pasos / wizard)
+`StepperComponent` (+ `StepComponent`) · `<ui-stepper>` (+ `<ui-step>`). API **híbrida**: pasos por array `[steps]` **o** por componentes `<ui-step>` hijos.
+- `<ui-stepper>`: `active` (model, **0-based**), `orientation` (`'horizontal'|'vertical'`, def. `'horizontal'`), `variant` (`'circles'|'progress'`, def. `'circles'`), `showCheck` (def. `true`; pasos completados muestran ✓), `linear` (def. `false`; si `true` solo navega a pasos ya completados), `clickable` (def. `true`).
+- `[steps]`: `StepItem[]` = `{ label: string; description?: string }`.
+- `<ui-step>`: `label`, `description`; su contenido proyectado se muestra cuando el paso está activo (modo composicional).
+- La navegación se controla con `active` (two-way) y/o tus propios botones Anterior/Siguiente.
+
+```html
+<!-- Data-driven -->
+<ui-stepper [(active)]="paso" [steps]="[
+  { label: 'Cuenta' }, { label: 'Perfil' }, { label: 'Confirmar' }
+]" />
+
+<!-- Composicional con contenido -->
+<ui-stepper [(active)]="paso" orientation="vertical">
+  <ui-step label="Cuenta" description="Email y contraseña">…contenido…</ui-step>
+  <ui-step label="Perfil">…contenido…</ui-step>
+</ui-stepper>
+```
+
 ### Table (el más complejo — leer con atención)
 `TableComponent` + `TableCellDirective` + tipo `TableColumn` · `<ui-table>` + `<ng-template tableCell="…">`
 
@@ -387,6 +521,11 @@ ButtonComponent, InputComponent, TextareaComponent, CheckboxComponent, SwitchCom
 RadioGroupComponent, RadioComponent, SelectComponent, OptionComponent,
 BadgeComponent, AvatarComponent, AvatarGroupComponent,
 CardComponent, CardHeaderComponent, CardTitleComponent, CardDescriptionComponent, CardContentComponent, CardFooterComponent,
+ModalComponent, ModalHeaderComponent, ModalTitleComponent, ModalDescriptionComponent, ModalContentComponent, ModalFooterComponent,
+DrawerComponent, DrawerHeaderComponent, DrawerTitleComponent, DrawerDescriptionComponent, DrawerContentComponent, DrawerFooterComponent,
+PopoverComponent, PopoverTriggerDirective, SeparatorComponent,
+DialogService, DialogRef, DIALOG_DATA,
+StepperComponent, StepComponent,
 AlertComponent, TooltipDirective,
 DropdownComponent, DropdownTriggerDirective, DropdownItemComponent, DropdownLabelComponent, DropdownSeparatorComponent,
 ToastService, TabsComponent, TabComponent,
