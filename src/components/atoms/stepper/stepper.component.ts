@@ -101,11 +101,6 @@ export class StepperComponent {
     return (Math.min(this.active(), n - 1) / (n - 1)) * 100;
   });
 
-  protected readonly containerClasses = computed(() => {
-    if (this.orientation() === 'vertical') return 'flex flex-col gap-0';
-    return 'flex items-start';
-  });
-
   /** ¿Se puede navegar a este índice por clic? */
   canSelect(index: number): boolean {
     if (!this.clickable()) return false;
@@ -121,26 +116,27 @@ export class StepperComponent {
   /** Clases del círculo indicador según el estado del paso. */
   circleClasses(state: StepState): string {
     const base =
-      'flex items-center justify-center size-9 shrink-0 rounded-full border text-sm font-medium transition-colors';
-    if (state.completed || state.current) {
+      'flex size-8 shrink-0 items-center justify-center rounded-full border text-[13px] font-semibold transition-colors';
+    const interactive = this.canSelect(state.index) ? 'cursor-pointer' : 'cursor-default';
+    if (state.current) {
       return [
         base,
+        interactive,
+        'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] border-[var(--color-primary)] ring-2 ring-[var(--color-ring)]/40 ring-offset-2 ring-offset-[var(--color-background)]',
+      ].join(' ');
+    }
+    if (state.completed) {
+      return [
+        base,
+        interactive,
         'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] border-[var(--color-primary)]',
       ].join(' ');
     }
     return [
       base,
-      'bg-[var(--color-muted)] text-[var(--color-muted-foreground)] border-[var(--color-border)]',
+      interactive,
+      'bg-[var(--color-background)] text-[var(--color-muted-foreground)] border-[var(--color-border)]',
     ].join(' ');
-  }
-
-  /** Clases del tramo conector entre dos pasos. */
-  connectorClasses(state: StepState): string {
-    const filled = state.completed ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-border)]';
-    if (this.orientation() === 'vertical') {
-      return ['w-px flex-1 my-1 self-stretch min-h-6', filled].join(' ');
-    }
-    return ['h-px flex-1 mx-2 mt-4', filled].join(' ');
   }
 
   /** Clases del label según el estado. */
@@ -149,7 +145,7 @@ export class StepperComponent {
       state.completed || state.current
         ? 'text-[var(--color-foreground)]'
         : 'text-[var(--color-muted-foreground)]';
-    return ['text-sm font-medium', color].join(' ');
+    return ['text-[13px] font-medium leading-tight', color].join(' ');
   }
 }
 

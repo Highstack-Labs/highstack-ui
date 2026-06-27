@@ -1,99 +1,125 @@
-<!-- Indicadores -->
 @if (variant() === 'circles') {
-  <ol [class]="containerClasses()" role="list">
-    @for (state of states(); track state.index) {
-      <!-- Paso -->
-      <li
-        class="flex"
-        [class.flex-col]="orientation() === 'horizontal'"
-        [class.items-center]="orientation() === 'horizontal'"
-        [class.flex-1]="orientation() === 'horizontal'"
-        [class.items-start]="orientation() === 'vertical'"
-        [class.gap-3]="orientation() === 'vertical'"
-        [attr.aria-current]="state.current ? 'step' : null"
-      >
-        <!-- Columna del indicador (círculo) -->
-        <div
-          class="flex"
-          [class.items-center]="orientation() === 'horizontal'"
-          [class.w-full]="orientation() === 'horizontal'"
-          [class.flex-col]="orientation() === 'vertical'"
-          [class.items-center]="orientation() === 'vertical'"
-          [class.self-stretch]="orientation() === 'vertical'"
+  @if (orientation() === 'horizontal') {
+    <!-- Círculos horizontales: conector como línea absoluta centrada en el círculo. -->
+    <ol class="flex items-start" role="list">
+      @for (state of states(); track state.index; let first = $first) {
+        <li
+          class="relative flex flex-1 flex-col items-center"
+          [attr.aria-current]="state.current ? 'step' : null"
         >
+          @if (!first) {
+            <span
+              class="absolute top-4 h-0.5 -translate-y-1/2 left-[calc(-50%+1.25rem)] right-[calc(50%+1.25rem)]"
+              [class]="state.upcoming ? 'bg-[var(--color-border)]' : 'bg-[var(--color-primary)]'"
+              aria-hidden="true"
+            ></span>
+          }
           <button
             type="button"
+            class="relative z-10"
             [class]="circleClasses(state)"
-            [class.cursor-pointer]="canSelect(state.index)"
-            [class.cursor-default]="!canSelect(state.index)"
             [disabled]="!canSelect(state.index)"
             (click)="select(state.index)"
             [attr.aria-label]="state.label"
           >
             @if (state.completed && showCheck()) {
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
             } @else {
               {{ state.index + 1 }}
             }
           </button>
-
-          <!-- Conector (no en el último paso) -->
-          @if (!$last) {
-            <span [class]="connectorClasses(state)" aria-hidden="true"></span>
-          }
-        </div>
-
-        <!-- Texto del paso -->
-        <div
-          [class.mt-2]="orientation() === 'horizontal'"
-          [class.text-center]="orientation() === 'horizontal'"
-          [class.pb-6]="orientation() === 'vertical' && !$last"
+          <div class="mt-2.5 max-w-[8rem] px-1 text-center">
+            <div [class]="labelClasses(state)">{{ state.label }}</div>
+            @if (state.description) {
+              <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">
+                {{ state.description }}
+              </div>
+            }
+          </div>
+        </li>
+      }
+    </ol>
+  } @else {
+    <!-- Círculos verticales: conector vertical absoluto entre círculos. -->
+    <ol class="flex flex-col" role="list">
+      @for (state of states(); track state.index; let last = $last) {
+        <li
+          class="relative flex gap-3.5 pb-7 last:pb-0"
+          [attr.aria-current]="state.current ? 'step' : null"
         >
-          <div [class]="labelClasses(state)">{{ state.label }}</div>
-          @if (state.description) {
-            <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">
-              {{ state.description }}
-            </div>
-          }
-        </div>
-      </li>
-    }
-  </ol>
+          <div class="relative flex flex-col items-center">
+            @if (!last) {
+              <span
+                class="absolute top-8 bottom-[-1.75rem] w-0.5 left-1/2 -translate-x-1/2"
+                [class]="state.completed ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-border)]'"
+                aria-hidden="true"
+              ></span>
+            }
+            <button
+              type="button"
+              class="relative z-10"
+              [class]="circleClasses(state)"
+              [disabled]="!canSelect(state.index)"
+              (click)="select(state.index)"
+              [attr.aria-label]="state.label"
+            >
+              @if (state.completed && showCheck()) {
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+              } @else {
+                {{ state.index + 1 }}
+              }
+            </button>
+          </div>
+          <div class="pt-1 pb-1">
+            <div [class]="labelClasses(state)">{{ state.label }}</div>
+            @if (state.description) {
+              <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">
+                {{ state.description }}
+              </div>
+            }
+          </div>
+        </li>
+      }
+    </ol>
+  }
 } @else {
-  <!-- Variante: barra de progreso -->
+  <!-- Variante barra de progreso: track continuo que se llena al % de avance. -->
   @if (orientation() === 'horizontal') {
     <div>
       <div class="relative">
-        <!-- Línea base -->
-        <div class="absolute left-0 right-0 top-4 h-1 rounded-full bg-[var(--color-border)]"></div>
-        <!-- Línea rellena -->
+        <!-- Track base (de centro a centro: inset de medio círculo en cada lado). -->
+        <div class="absolute left-4 right-4 top-4 h-2.5 -translate-y-1/2 rounded-full bg-[var(--color-muted)]"></div>
+        <!-- Relleno -->
         <div
-          class="absolute left-0 top-4 h-1 rounded-full bg-[var(--color-primary)] transition-all duration-300"
-          [style.width.%]="progressPct()"
+          class="absolute left-4 top-4 h-2.5 -translate-y-1/2 rounded-full bg-[var(--color-primary)] transition-[width] duration-500 ease-out"
+          [style.width]="'calc((100% - 2rem) * ' + progressPct() + ' / 100)'"
         ></div>
-        <!-- Indicadores -->
-        <ol class="relative flex items-start justify-between" role="list">
+        <ol class="relative flex justify-between" role="list">
           @for (state of states(); track state.index) {
-            <li class="flex flex-col items-center" [attr.aria-current]="state.current ? 'step' : null">
+            <li
+              class="flex flex-col items-center"
+              [attr.aria-current]="state.current ? 'step' : null"
+            >
               <button
                 type="button"
+                class="relative z-10"
                 [class]="circleClasses(state)"
-                [class.cursor-pointer]="canSelect(state.index)"
-                [class.cursor-default]="!canSelect(state.index)"
                 [disabled]="!canSelect(state.index)"
                 (click)="select(state.index)"
                 [attr.aria-label]="state.label"
               >
                 @if (state.completed && showCheck()) {
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
                 } @else {
                   {{ state.index + 1 }}
                 }
               </button>
-              <div class="mt-2 text-center">
+              <div class="mt-2.5 max-w-[8rem] px-1 text-center">
                 <div [class]="labelClasses(state)">{{ state.label }}</div>
                 @if (state.description) {
-                  <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">{{ state.description }}</div>
+                  <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">
+                    {{ state.description }}
+                  </div>
                 }
               </div>
             </li>
@@ -103,27 +129,26 @@
     </div>
   } @else {
     <!-- Barra de progreso vertical -->
-    <div class="flex gap-4">
-      <div class="relative w-9 shrink-0">
-        <div class="absolute left-4 top-0 bottom-0 w-1 rounded-full bg-[var(--color-border)]"></div>
+    <div class="relative flex gap-4 py-4">
+      <div class="relative w-8 shrink-0 self-stretch">
+        <div class="absolute left-1/2 top-4 bottom-4 w-2.5 -translate-x-1/2 rounded-full bg-[var(--color-muted)]"></div>
         <div
-          class="absolute left-4 top-0 w-1 rounded-full bg-[var(--color-primary)] transition-all duration-300"
-          [style.height.%]="progressPct()"
+          class="absolute left-1/2 top-4 w-2.5 -translate-x-1/2 rounded-full bg-[var(--color-primary)] transition-[height] duration-500 ease-out"
+          [style.height]="'calc((100% - 2rem) * ' + progressPct() + ' / 100)'"
         ></div>
-        <ol class="relative flex flex-col justify-between h-full gap-8" role="list">
+        <ol class="relative flex h-full flex-col justify-between" role="list">
           @for (state of states(); track state.index) {
             <li>
               <button
                 type="button"
+                class="relative z-10"
                 [class]="circleClasses(state)"
-                [class.cursor-pointer]="canSelect(state.index)"
-                [class.cursor-default]="!canSelect(state.index)"
                 [disabled]="!canSelect(state.index)"
                 (click)="select(state.index)"
                 [attr.aria-label]="state.label"
               >
                 @if (state.completed && showCheck()) {
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg>
                 } @else {
                   {{ state.index + 1 }}
                 }
@@ -132,12 +157,14 @@
           }
         </ol>
       </div>
-      <ol class="flex flex-col justify-between gap-8 py-1.5" role="list">
+      <ol class="flex flex-1 flex-col justify-between py-1" role="list">
         @for (state of states(); track state.index) {
           <li [attr.aria-current]="state.current ? 'step' : null">
             <div [class]="labelClasses(state)">{{ state.label }}</div>
             @if (state.description) {
-              <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">{{ state.description }}</div>
+              <div class="mt-0.5 text-xs text-[var(--color-muted-foreground)]">
+                {{ state.description }}
+              </div>
             }
           </li>
         }
