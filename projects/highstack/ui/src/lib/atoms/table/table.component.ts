@@ -13,7 +13,14 @@ import {
 import { NgTemplateOutlet } from '@angular/common';
 import { CheckboxComponent } from '../checkbox/checkbox.component';
 import { SkeletonComponent } from '../loading/loading.component';
-import { SortDirection, SortState, TableAlign, TableColumn, getByPath } from './table.types';
+import {
+  SortDirection,
+  SortState,
+  TableAlign,
+  TableColumn,
+  TableSize,
+  getByPath,
+} from './table.types';
 
 type Row = Record<string, unknown>;
 
@@ -42,6 +49,12 @@ export class TableComponent {
   readonly rowKey = input<string>('');
   readonly selectable = input(false, { transform: booleanAttribute });
   readonly emptyMessage = input<string>('No hay resultados');
+  /** Densidad de la tabla: 'sm' compacta, 'md' por defecto, 'lg' espaciosa. */
+  readonly size = input<TableSize>('md');
+  /** Color de fondo del header (acepta cualquier valor CSS: hex, rgb, var()). */
+  readonly headerColor = input<string>('#f3f4f6');
+  /** Color de fondo del contenido/filas (acepta cualquier valor CSS). */
+  readonly contentColor = input<string>('#ffffff');
 
   readonly sortChange = output<SortState>();
   readonly selectionChange = output<Row[]>();
@@ -52,6 +65,20 @@ export class TableComponent {
 
   // Filas de skeleton para el estado de carga.
   protected readonly skeletonRows = [0, 1, 2, 3, 4];
+
+  // --- Densidad (tamaño) ---
+  /** Tamaño de fuente de la tabla según `size`. */
+  protected readonly textClass = computed(
+    () => ({ sm: 'text-xs', md: 'text-sm', lg: 'text-base' })[this.size()],
+  );
+  /** Padding de las celdas del header según `size`. */
+  protected readonly headerPad = computed(
+    () => ({ sm: 'px-3 py-1.5', md: 'px-4 py-2.5', lg: 'px-5 py-3.5' })[this.size()],
+  );
+  /** Padding de las celdas del cuerpo según `size`. */
+  protected readonly bodyPad = computed(
+    () => ({ sm: 'px-3 py-2', md: 'px-4 py-3', lg: 'px-5 py-4' })[this.size()],
+  );
 
   protected templateFor(field: string | undefined): TemplateRef<unknown> | null {
     if (!field) return null;

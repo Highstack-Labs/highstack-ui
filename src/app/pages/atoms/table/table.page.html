@@ -125,6 +125,40 @@
           </div>
         </app-demo-block>
 
+        <!-- Tamaño y color -->
+        <app-demo-block id="tamano" title="Tamaño y color" [code]="sizeCode" class="block scroll-mt-28">
+          <div class="w-full space-y-6">
+            <div class="space-y-2">
+              <div class="flex flex-wrap gap-2">
+                @for (s of sizes; track s) {
+                  <ui-button
+                    size="sm"
+                    [variant]="tableSize() === s ? 'default' : 'outline'"
+                    (click)="tableSize.set(s)"
+                  >{{ s }}</ui-button>
+                }
+              </div>
+              <ui-table [data]="users" [columns]="cols" [size]="tableSize()" />
+              <p class="text-xs text-[var(--color-muted-foreground)]">
+                <span class="font-mono">size</span> ajusta fuente y padding: <span class="font-mono">sm</span>
+                compacta, <span class="font-mono">md</span> por defecto, <span class="font-mono">lg</span> espaciosa.
+              </p>
+            </div>
+            <div class="space-y-2">
+              <p class="text-xs text-[var(--color-muted-foreground)]">
+                Colores personalizados (<span class="font-mono">headerColor</span> /
+                <span class="font-mono">contentColor</span>):
+              </p>
+              <ui-table
+                [data]="users"
+                [columns]="cols"
+                headerColor="#e0f2fe"
+                contentColor="#f8fafc"
+              />
+            </div>
+          </div>
+        </app-demo-block>
+
         <!-- API -->
         <section id="api" class="space-y-3 scroll-mt-28">
           <h2 class="text-lg font-medium text-[var(--color-foreground)]">API Reference</h2>
@@ -162,6 +196,16 @@
                   <td class="px-4 py-2.5 font-mono text-xs">selectable</td>
                   <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
                   <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md' | 'lg' (fuente + padding)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">headerColor / contentColor</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (valor CSS: hex, rgb, var())</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'#f3f4f6' / '#ffffff'</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">loading / emptyMessage</td>

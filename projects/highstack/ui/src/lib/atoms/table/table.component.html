@@ -1,9 +1,12 @@
 <div class="w-full overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
-  <table class="w-full text-left text-sm">
-    <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+  <table class="w-full text-left" [class]="textClass()">
+    <thead
+      class="text-[var(--color-muted-foreground)]"
+      [style.background-color]="headerColor()"
+    >
       <tr>
         @if (selectable()) {
-          <th class="w-10 px-4 py-2.5">
+          <th class="w-10" [class]="headerPad()">
             <ui-checkbox
               [checked]="allSelected()"
               [indeterminate]="someSelected()"
@@ -13,8 +16,8 @@
         }
         @for (col of columns(); track col.header) {
           <th
-            class="px-4 py-2.5 font-medium whitespace-nowrap"
-            [class]="align(col.align)"
+            class="font-medium whitespace-nowrap"
+            [class]="headerPad() + ' ' + align(col.align)"
             [style.width]="col.width"
           >
             @if (col.sortable && col.field) {
@@ -43,15 +46,15 @@
       </tr>
     </thead>
 
-    <tbody class="text-[var(--color-foreground)]">
+    <tbody class="text-[var(--color-foreground)]" [style.background-color]="contentColor()">
       @if (loading()) {
         @for (s of skeletonRows; track s) {
           <tr class="border-t border-[var(--color-border)]">
             @if (selectable()) {
-              <td class="px-4 py-3"><ui-skeleton width="1rem" height="1rem" /></td>
+              <td [class]="bodyPad()"><ui-skeleton width="1rem" height="1rem" /></td>
             }
             @for (col of columns(); track col.header) {
-              <td class="px-4 py-3"><ui-skeleton width="70%" /></td>
+              <td [class]="bodyPad()"><ui-skeleton width="70%" /></td>
             }
           </tr>
         }
@@ -68,12 +71,12 @@
         @for (row of rows(); track trackRow($index, row)) {
           <tr class="border-t border-[var(--color-border)] hover:bg-[var(--color-muted)]/40 transition-colors">
             @if (selectable()) {
-              <td class="px-4 py-3">
+              <td [class]="bodyPad()">
                 <ui-checkbox [checked]="isSelected(row)" (checkedChange)="toggleRow(row)" />
               </td>
             }
             @for (col of columns(); track col.header) {
-              <td class="px-4 py-3 align-middle" [class]="align(col.align)">
+              <td class="align-middle" [class]="bodyPad() + ' ' + align(col.align)">
                 @if (templateFor(col.field); as tpl) {
                   <ng-container
                     [ngTemplateOutlet]="tpl"

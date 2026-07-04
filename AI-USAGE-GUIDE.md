@@ -495,7 +495,7 @@ this.toast.show({ type: 'info', message: 'Eliminado', action: { label: 'Deshacer
 
 **Estrategia:** es **data-driven**. Pasas `[data]` (array) y `[columns]` (array) y pinta TODO solo, incluido **acceso anidado** por path (`'direccion.ciudad'`). Para celdas que necesitan render custom (una fecha con formato, un badge, botones de acción), declaras un `<ng-template tableCell="FIELD">` y SOLO esa columna lo usa. **No se escriben filas ni celdas a mano.**
 
-- `<ui-table>` inputs: `data` (T[]), `columns` (`TableColumn[]`), `loading` (bool → filas skeleton), `rowKey` (string, id para track/selección), `selectable` (bool), `emptyMessage` (string).
+- `<ui-table>` inputs: `data` (T[]), `columns` (`TableColumn[]`), `loading` (bool → filas skeleton), `rowKey` (string, id para track/selección), `selectable` (bool), `emptyMessage` (string), `size` (`'sm'|'md'|'lg'`, default `'md'` — controla fuente y padding: `sm` compacta, `lg` espaciosa), `headerColor` (string CSS, default `'#f3f4f6'` plomo suave), `contentColor` (string CSS, default `'#ffffff'` blanco).
 - Outputs: `(sortChange)` → `{ field, direction }`, `(selectionChange)` → `T[]`.
 - `TableColumn`: `{ field?: string; header: string; sortable?: boolean; align?: 'left'|'center'|'right'; width?: string }`. `field` omitido = columna solo-template (p. ej. acciones).
 - `<ng-template tableCell="field">` recibe contexto: `let-value` (valor de la celda, ya resuelto), `let-row="row"` (fila completa), `let-i="index"`.

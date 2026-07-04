@@ -3,7 +3,7 @@ import {
   TableComponent,
   TableCellDirective,
 } from '../../../../components/atoms/table/table.component';
-import { TableColumn } from '../../../../components/atoms/table/table.types';
+import { TableColumn, TableSize } from '../../../../components/atoms/table/table.types';
 import { BadgeComponent } from '../../../../components/atoms/badge/badge.component';
 import { ButtonComponent } from '../../../../components/atoms/button/button.component';
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
@@ -61,6 +61,9 @@ export class TablePage implements AfterViewInit {
   readonly loading = signal(false);
   readonly emptyCols = this.cols;
 
+  readonly sizes: TableSize[] = ['sm', 'md', 'lg'];
+  readonly tableSize = signal<TableSize>('md');
+
   toggleLoading() {
     this.loading.set(true);
     setTimeout(() => this.loading.set(false), 1500);
@@ -78,6 +81,7 @@ export class TablePage implements AfterViewInit {
     { id: 'custom', label: 'Celdas custom' },
     { id: 'selection', label: 'Selección' },
     { id: 'states', label: 'Loading / vacío' },
+    { id: 'tamano', label: 'Tamaño y color' },
     { id: 'api', label: 'API' },
   ];
 
@@ -148,4 +152,17 @@ cols: TableColumn[] = [
 
 <!-- Vacío -->
 <ui-table [data]="[]" [columns]="cols" emptyMessage="No hay usuarios" />`;
+
+  readonly sizeCode = `<!-- Densidad: 'sm' | 'md' (default) | 'lg' -->
+<ui-table [data]="users" [columns]="cols" size="sm" />
+
+<!-- Colores personalizados (cualquier valor CSS: hex, rgb, var()) -->
+<ui-table
+  [data]="users"
+  [columns]="cols"
+  headerColor="#e0f2fe"
+  contentColor="#f8fafc"
+/>
+
+<!-- Defaults: headerColor='#f3f4f6' (plomo suave), contentColor='#ffffff' (blanco) -->`;
 }
