@@ -164,5 +164,5 @@ cols: TableColumn[] = [
   contentColor="#f8fafc"
 />
 
-<!-- Defaults: headerColor='#f3f4f6' (plomo suave), contentColor='#ffffff' (blanco) -->`;
+<!-- Defaults: headerColor='var(--color-muted)', contentColor='var(--color-background)' (adaptan a dark mode) -->`;
 }

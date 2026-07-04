@@ -51,10 +51,16 @@ export class TableComponent {
   readonly emptyMessage = input<string>('No hay resultados');
   /** Densidad de la tabla: 'sm' compacta, 'md' por defecto, 'lg' espaciosa. */
   readonly size = input<TableSize>('md');
-  /** Color de fondo del header (acepta cualquier valor CSS: hex, rgb, var()). */
-  readonly headerColor = input<string>('#f3f4f6');
-  /** Color de fondo del contenido/filas (acepta cualquier valor CSS). */
-  readonly contentColor = input<string>('#ffffff');
+  /**
+   * Color de fondo del header (acepta cualquier valor CSS: hex, rgb, var()).
+   * Por defecto usa el token del tema (plomo suave) para adaptarse a modo claro/oscuro.
+   */
+  readonly headerColor = input<string>('var(--color-muted)');
+  /**
+   * Color de fondo del contenido/filas (acepta cualquier valor CSS).
+   * Por defecto usa el token del tema (blanco en claro, oscuro en dark mode).
+   */
+  readonly contentColor = input<string>('var(--color-background)');
 
   readonly sortChange = output<SortState>();
   readonly selectionChange = output<Row[]>();
