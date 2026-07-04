@@ -461,12 +461,13 @@ this.toast.show({ type: 'info', message: 'Eliminado', action: { label: 'Deshacer
 
 ### Pagination
 `PaginationComponent` · `<ui-pagination>`
-- `page` (model, **1-based**), `totalPages` (number), `variant` (`'numbers'|'compact'`), `size` (`'sm'|'md'`).
+- `page` (model, **1-based**), `totalPages` (number), `variant` (`'numbers'|'compact'`), `size` (`'sm'|'md'|'lg'`, def. `'md'` — `sm` compacta botones, fuente e íconos).
 - Opcional items por página: `pageSize` (model), `pageSizeOptions` (number[]).
 
 ```html
 <ui-pagination [(page)]="page" [totalPages]="20" />
 <ui-pagination [(page)]="page" [totalPages]="20" variant="compact" />
+<ui-pagination [(page)]="page" [totalPages]="20" size="sm" />
 <ui-pagination [(page)]="page" [totalPages]="20" [(pageSize)]="size" [pageSizeOptions]="[10,25,50]" />
 ```
 
