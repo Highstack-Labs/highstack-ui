@@ -1,7 +1,13 @@
 <ng-content select="[uiDropdownTrigger]" />
 
 @if (open()) {
-  <div role="menu" [class]="panelClasses()">
+  <div
+    role="menu"
+    tabindex="-1"
+    [class]="panelClasses()"
+    [style.top.px]="panelTop()"
+    [style.left.px]="panelLeft()"
+  >
     <ng-content />
   </div>
 }

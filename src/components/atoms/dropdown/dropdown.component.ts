@@ -1,5 +1,6 @@
 import {
   Component,
+  DestroyRef,
   Directive,
   ElementRef,
   HostListener,
@@ -36,19 +37,27 @@ export class DropdownComponent {
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly items = contentChildren(DropdownItemComponent);
 
-  /** Lado/alineación efectivos tras medir el viewport (pueden voltear los inputs). */
-  protected readonly resolvedSide = signal<DropdownSide>('bottom');
-  protected readonly resolvedAlign = signal<DropdownAlign>('start');
+  /** Coordenadas fixed del panel (px, relativas al viewport). */
+  protected readonly panelTop = signal(0);
+  protected readonly panelLeft = signal(0);
   /** Oculta el panel un frame hasta posicionarlo, para que el flip no se vea saltar. */
   protected readonly ready = signal(false);
 
+  constructor() {
+    // Capture=true reposiciona también cuando el scroll ocurre en un contenedor
+    // interno (no solo la ventana), ya que el panel es `fixed`.
+    const onScroll = () => {
+      if (this.open()) this.updatePosition();
+    };
+    window.addEventListener('scroll', onScroll, true);
+    inject(DestroyRef).onDestroy(() => window.removeEventListener('scroll', onScroll, true));
+  }
+
   protected readonly panelClasses = computed(() => {
     const base =
-      'absolute z-50 min-w-48 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md text-[var(--color-foreground)] transition-opacity duration-100';
-    const side = this.resolvedSide() === 'top' ? 'bottom-full mb-1.5' : 'top-full mt-1.5';
-    const align = this.resolvedAlign() === 'end' ? 'right-0' : 'left-0';
-    const visibility = this.ready() ? 'opacity-100' : 'opacity-0';
-    return [base, side, align, visibility].join(' ');
+      'fixed z-50 min-w-48 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md text-[var(--color-foreground)] outline-none transition-opacity duration-100';
+    const visibility = this.ready() ? 'opacity-100' : 'opacity-0 pointer-events-none';
+    return [base, visibility].join(' ');
   });
 
   toggle() {
@@ -57,13 +66,14 @@ export class DropdownComponent {
   }
 
   private openDropdown() {
-    this.resolvedSide.set(this.side());
-    this.resolvedAlign.set(this.align());
     this.ready.set(false);
     this.open.set(true);
-    // Tras renderizar el panel, medirlo y ajustar la posición al viewport.
-    requestAnimationFrame(() => this.updatePosition());
-    this.focusItem(0);
+    // Tras renderizar el panel, medirlo, posicionarlo y darle foco (al panel, no
+    // a un ítem: al abrir nada debe verse resaltado/seleccionado).
+    requestAnimationFrame(() => {
+      this.updatePosition();
+      this.panel()?.focus();
+    });
   }
 
   close() {
@@ -71,37 +81,49 @@ export class DropdownComponent {
     this.ready.set(false);
   }
 
-  /** Mide el panel y voltea lado/alineación si se sale del viewport. */
+  private panel(): HTMLElement | null {
+    return this.el.nativeElement.querySelector('[role="menu"]');
+  }
+
+  /**
+   * Posiciona el panel `fixed` a partir del rect del trigger, volteando de lado
+   * (arriba/abajo) y realineando (izq/der) para que quepa en el viewport, y
+   * finalmente lo fija a los bordes de la pantalla si aún se sale.
+   */
   private updatePosition() {
-    const panel = this.el.nativeElement.querySelector('[role="menu"]') as HTMLElement | null;
+    const panel = this.panel();
     if (!panel || !this.open()) return;
 
     const host = this.el.nativeElement.getBoundingClientRect();
     const rect = panel.getBoundingClientRect();
     const vw = window.innerWidth;
     const vh = window.innerHeight;
+    const GAP = 6;
 
-    // Eje principal (vertical): voltear top/bottom si no cabe y el opuesto tiene más sitio.
+    // Eje vertical: abajo por defecto; voltear arriba si no cabe y hay más sitio.
     let side = this.side();
     const spaceBelow = vh - host.bottom;
     const spaceAbove = host.top;
-    if (side === 'bottom' && spaceBelow < rect.height + MARGIN && spaceAbove >= spaceBelow) {
+    if (side === 'bottom' && spaceBelow < rect.height + GAP + MARGIN && spaceAbove >= spaceBelow) {
       side = 'top';
-    } else if (side === 'top' && spaceAbove < rect.height + MARGIN && spaceBelow >= spaceAbove) {
+    } else if (
+      side === 'top' &&
+      spaceAbove < rect.height + GAP + MARGIN &&
+      spaceBelow >= spaceAbove
+    ) {
       side = 'bottom';
     }
+    let top = side === 'top' ? host.top - rect.height - GAP : host.bottom + GAP;
 
-    // Eje transversal (horizontal): start ancla a la izquierda, end a la derecha.
-    let align = this.align();
-    const leftFor = (a: DropdownAlign) => (a === 'end' ? host.right - rect.width : host.left);
-    const inView = (a: DropdownAlign) =>
-      leftFor(a) >= MARGIN && leftFor(a) + rect.width <= vw - MARGIN;
-    if (!inView(align) && inView(align === 'start' ? 'end' : 'start')) {
-      align = align === 'start' ? 'end' : 'start';
-    }
+    // Eje horizontal: start ancla a la izquierda del trigger, end a la derecha.
+    let left = this.align() === 'end' ? host.right - rect.width : host.left;
 
-    this.resolvedSide.set(side);
-    this.resolvedAlign.set(align);
+    // Fijar a los bordes del viewport (respeta solo los límites de la pantalla).
+    left = Math.max(MARGIN, Math.min(left, vw - rect.width - MARGIN));
+    top = Math.max(MARGIN, Math.min(top, vh - rect.height - MARGIN));
+
+    this.panelLeft.set(left);
+    this.panelTop.set(top);
     this.ready.set(true);
   }
 
@@ -113,7 +135,6 @@ export class DropdownComponent {
   }
 
   @HostListener('window:resize')
-  @HostListener('window:scroll')
   protected onViewportChange() {
     if (this.open()) this.updatePosition();
   }
@@ -139,14 +160,6 @@ export class DropdownComponent {
           : (idx - 1 + enabled.length) % enabled.length;
       enabled[next].focus();
     }
-  }
-
-  /** Enfoca el ítem habilitado en la posición dada (tras render). */
-  private focusItem(index: number) {
-    setTimeout(() => {
-      const enabled = this.items().filter((i) => !i.disabled());
-      enabled[index]?.focus();
-    });
   }
 }
 

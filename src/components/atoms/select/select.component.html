@@ -37,8 +37,11 @@
 
   <div
     role="listbox"
-    class="absolute z-50 left-0 right-0 mt-1.5 max-h-60 overflow-y-auto rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md"
+    tabindex="-1"
+    class="fixed z-50 max-h-60 overflow-y-auto rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md transition-opacity duration-100 outline-none"
     [class.hidden]="!open()"
+    [class.opacity-0]="!ready()"
+    [class.pointer-events-none]="!ready()"
   >
     <ng-content />
   </div>
