@@ -3,6 +3,8 @@ import {
   DestroyRef,
   ElementRef,
   HostListener,
+  Injector,
+  afterNextRender,
   booleanAttribute,
   computed,
   contentChildren,
@@ -61,6 +63,7 @@ export class SelectComponent implements ControlValueAccessor {
   /** Oculta el panel un frame hasta posicionarlo, para que no salte. */
   protected readonly ready = signal(false);
   private readonly el = inject(ElementRef<HTMLElement>);
+  private readonly injector = inject(Injector);
   private readonly options = contentChildren(OptionComponent);
 
   constructor() {
@@ -122,12 +125,16 @@ export class SelectComponent implements ControlValueAccessor {
     }
     this.ready.set(false);
     this.open.set(true);
-    // Tras renderizar el panel: posicionarlo (fixed, con flip al viewport) y
-    // enfocar. Si no hay valor elegido no se resalta ninguna opción.
-    requestAnimationFrame(() => {
-      this.updatePosition();
-      this.focusActive();
-    });
+    // `afterNextRender` garantiza que el panel ya esté visible en el DOM (sin
+    // depender del timing del ciclo de detección de cambios) antes de medirlo y
+    // posicionarlo; de lo contrario podía quedar invisible hasta un resize.
+    afterNextRender(
+      () => {
+        this.updatePosition();
+        this.focusActive();
+      },
+      { injector: this.injector },
+    );
   }
 
   close() {

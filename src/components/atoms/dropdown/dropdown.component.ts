@@ -4,6 +4,8 @@ import {
   Directive,
   ElementRef,
   HostListener,
+  Injector,
+  afterNextRender,
   booleanAttribute,
   computed,
   contentChildren,
@@ -35,6 +37,7 @@ export class DropdownComponent {
   readonly open = signal(false);
 
   private readonly el = inject(ElementRef<HTMLElement>);
+  private readonly injector = inject(Injector);
   private readonly items = contentChildren(DropdownItemComponent);
 
   /** Coordenadas fixed del panel (px, relativas al viewport). */
@@ -68,12 +71,18 @@ export class DropdownComponent {
   private openDropdown() {
     this.ready.set(false);
     this.open.set(true);
-    // Tras renderizar el panel, medirlo, posicionarlo y darle foco (al panel, no
-    // a un ítem: al abrir nada debe verse resaltado/seleccionado).
-    requestAnimationFrame(() => {
-      this.updatePosition();
-      this.panel()?.focus();
-    });
+    // `afterNextRender` corre una vez que el panel del @if ya está en el DOM,
+    // sin depender del timing del ciclo de detección de cambios (a diferencia de
+    // un requestAnimationFrame suelto, que podía dispararse antes de montarlo y
+    // dejar el panel invisible hasta un resize). Se posiciona y se enfoca el
+    // panel (no un ítem: al abrir nada debe verse resaltado/seleccionado).
+    afterNextRender(
+      () => {
+        this.updatePosition();
+        this.panel()?.focus();
+      },
+      { injector: this.injector },
+    );
   }
 
   close() {
