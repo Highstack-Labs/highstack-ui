@@ -13,6 +13,7 @@
       [disabled]="isDisabled()"
       [required]="required()"
       [attr.aria-invalid]="hasError() || null"
+      [attr.aria-describedby]="describedById()"
       (change)="toggle($event)"
       class="peer absolute inset-0 size-full opacity-0 m-0 cursor-pointer disabled:cursor-not-allowed"
     />
@@ -42,6 +43,8 @@
   }
 </label>
 
-@if (hasError()) {
-  <p class="mt-1.5 text-xs text-[var(--color-destructive)]">{{ errorMessage() }}</p>
+@if (errorMessage()) {
+  <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-destructive)]">{{ errorMessage() }}</p>
+} @else if (hint()) {
+  <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-muted-foreground)]">{{ hint() }}</p>
 }

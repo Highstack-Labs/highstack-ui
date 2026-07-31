@@ -1,8 +1,10 @@
 <div
   role="radiogroup"
+  [id]="id()"
   [class]="trackClasses()"
   [attr.aria-required]="required() || null"
   [attr.aria-invalid]="hasError() || null"
+  [attr.aria-describedby]="describedById()"
 >
   @for (option of options(); track option.value) {
     <button
@@ -20,3 +22,9 @@
     </button>
   }
 </div>
+
+@if (errorMessage()) {
+  <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-destructive)]">{{ errorMessage() }}</p>
+} @else if (hint()) {
+  <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-muted-foreground)]">{{ hint() }}</p>
+}
