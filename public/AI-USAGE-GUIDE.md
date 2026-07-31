@@ -147,11 +147,13 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 
 ### Checkbox
 `CheckboxComponent` · `<ui-checkbox>`
-- `checked` (model, boolean), `label`, `description`, `size` (`'sm'|'md'`), `disabled`, `required`, `indeterminate`.
+- `checked` (model, boolean), `label`, `description`, `hint`, `error`, `size` (`'sm'|'md'`), `disabled`, `required`, `indeterminate`.
+- `description` va en línea junto al label; `hint` va debajo de todo el control (como en input/select).
 
 ```html
 <ui-checkbox label="Acepto los términos" [(checked)]="acepto" />
 <ui-checkbox label="Todo" [indeterminate]="parcial" />
+<ui-checkbox label="Acepto" error="Debes aceptar para continuar" />
 ```
 
 ### Switch
@@ -164,7 +166,8 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 
 ### Radio
 `RadioGroupComponent` + `RadioComponent` · `<ui-radio-group>` + `<ui-radio>`
-- Grupo: `value` (model), `size` (`'sm'|'md'`), `orientation` (`'vertical'|'horizontal'`), `appearance` (`'default'|'card'`), `name`, `disabled`, `required`.
+- Grupo: `value` (model), `size` (`'sm'|'md'`), `orientation` (`'vertical'|'horizontal'`), `appearance` (`'default'|'card'`), `name`, `id`, `hint`, `error`, `disabled`, `required`.
+- El mensaje de error/hint se renderiza debajo del grupo (no por opción).
 - Item: `value` (**requerido**), `label`, `description`, `disabled`.
 
 ```html
@@ -177,7 +180,7 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 ### Segmented
 `SegmentedComponent` · `<ui-segmented>`
 - Selección única con apariencia de botones conectados (segmented control). Data-driven.
-- `value` (model), `options` (`SegmentedOption[]`), `size` (`'sm'|'md'`), `fullWidth`, `disabled`, `name`, `required`, `invalid`, `touched`, `errors`.
+- `value` (model), `options` (`SegmentedOption[]`), `size` (`'sm'|'md'`), `fullWidth`, `disabled`, `name`, `id`, `hint`, `error`, `required`, `invalid`, `touched`, `errors`.
 - `SegmentedOption`: `{ value, label, icon?, disabled? }` (`icon` es SVG inline opcional).
 - Forms: `[(value)]`, `[formField]`, `formControlName`, `ngModel`.
 

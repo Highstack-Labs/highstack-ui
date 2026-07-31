@@ -77,6 +77,7 @@ export class SegmentedPage implements AfterViewInit {
     { id: 'sizes', label: 'Tamaños' },
     { id: 'full-width', label: 'Ancho completo' },
     { id: 'disabled', label: 'Deshabilitado' },
+    { id: 'validation', label: 'Ayuda y error' },
     { id: 'signal-forms', label: 'Signal Forms' },
     { id: 'api', label: 'API' },
   ];
@@ -120,6 +121,16 @@ export class SegmentedPage implements AfterViewInit {
 
 <!-- Grupo completo deshabilitado -->
 <ui-segmented [options]="planes" [(value)]="plan" [disabled]="true" />`;
+
+  readonly validationCode = `<!-- El mensaje se renderiza debajo del control -->
+<ui-segmented
+  [options]="rango"
+  [(value)]="rangoSel"
+  hint="Afecta a todas las gráficas del reporte."
+/>
+
+<!-- error tiene prioridad sobre hint y sobre los errors de Signal Forms -->
+<ui-segmented [options]="planes" error="Selecciona un plan para continuar." />`;
 
   readonly signalFormsCode = `// componente.ts
 model = signal({ modelo: '' });

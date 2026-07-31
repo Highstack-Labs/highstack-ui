@@ -66,6 +66,23 @@
           </div>
         </app-demo-block>
 
+        <!-- Ayuda y error -->
+        <app-demo-block
+          id="validation"
+          title="Ayuda y error"
+          [code]="validationCode"
+          class="block scroll-mt-28"
+        >
+          <div class="flex flex-col items-start gap-6">
+            <ui-segmented
+              [options]="rango"
+              [(value)]="rangoSel"
+              hint="Afecta a todas las gráficas del reporte."
+            />
+            <ui-segmented [options]="planes" error="Selecciona un plan para continuar." />
+          </div>
+        </app-demo-block>
+
         <!-- Signal Forms -->
         <section id="signal-forms" class="space-y-6 scroll-mt-28">
           <div>
@@ -139,6 +156,16 @@
                     boolean
                   </td>
                   <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">hint</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">error</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
                 </tr>
                 <tr class="border-t border-[var(--color-border)]">
                   <td class="px-4 py-2.5 font-mono text-xs">required / invalid / touched / errors</td>
