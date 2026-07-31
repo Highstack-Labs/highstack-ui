@@ -137,8 +137,31 @@ Lo último es lo que evita escribir un parser de patrones: `formatToParts()` dev
 orden de los campos y el separador que usa el locale, así que el input acepta `31/07/2026`
 en `es-MX` y `07/31/2026` en `en-US` sin código específico por formato.
 
-**`getWeekInfo()` es API reciente y puede no existir.** Va con fallback a lunes
-(`firstDay = 1`) y el input `weekStartsOn` permite forzarlo. Ver "Riesgos".
+### Verificado en Node 24 (2026-07-31)
+
+Se comprobó antes de planear, no después:
+
+| Locale | `getWeekInfo().firstDay` | Orden de tecleo |
+|---|---|---|
+| `es-MX` | 7 (domingo) | `dd/mm/aaaa` |
+| `es-ES` | 1 (lunes) | `dd/mm/aaaa` |
+| `en-US` | 7 (domingo) | `mm/dd/aaaa` |
+| `en-GB` | 1 (lunes) | `dd/mm/aaaa` |
+| `ar-EG` | 6 (sábado) | `dd/mm/aaaa` |
+| `ja-JP` | 7 (domingo) | `aaaa/mm/dd` |
+
+Dos consecuencias que corrigen supuestos de las secciones anteriores:
+
+- **`firstDay` usa numeración ISO-8601: 1 = lunes … 7 = domingo.** No es la numeración
+  0-6 de `Date.getDay()`. El input público `weekStartsOn` se queda en **0-6 con 0 = domingo**
+  para ser consistente con `Date.getDay()` y con `weekday()` de `date-utils`, así que hay que
+  convertir en la frontera: `weekStartsOn = firstDay === 7 ? 0 : firstDay`. Es un off-by-one
+  silencioso esperando a pasar.
+- **`es-MX` empieza la semana en domingo, no en lunes.** El calendario mexicano arranca en
+  domingo; los tests del locale por defecto tienen que esperar domingo en la primera columna.
+
+`getWeekInfo()` existe en el entorno de tests, pero sigue siendo API reciente para
+navegadores viejos: el fallback se mantiene (domingo, `0`) y `weekStartsOn` permite forzarlo.
 
 ---
 
@@ -347,14 +370,15 @@ precedencia de errores, el round-trip de CVA, y abrir/Escape/regreso de foco.
 
 ## Riesgos
 
-**`Intl.Locale.prototype.getWeekInfo()` puede no existir** en el entorno de tests ni en
-navegadores algo viejos. Mitigación: fallback a lunes y el input `weekStartsOn` para
-forzarlo. **Verificar en la primera tarea del plan, no al final** — si no está disponible
-donde importa, hay que saberlo antes de construir encima.
+**~~`getWeekInfo()` puede no existir~~ — resuelto antes de planear.** Existe en Node 24 y
+discrimina correctamente por locale (ver la tabla de verificación arriba). Se mantiene el
+fallback a domingo para navegadores viejos, pero deja de ser un riesgo de diseño.
 
-**`Intl` con ICU completo en el entorno de tests.** Node trae full-icu por defecto desde v14,
-pero conviene confirmar que los nombres de meses en `es-MX` salen bien en Vitest y no en
-inglés.
+Lo que sí quedó como trampa concreta: **la conversión de numeración ISO-8601 (1-7) a la
+numeración 0-6 de `Date.getDay()`**, y que **`es-MX` empieza en domingo**. Ambos van con test
+explícito.
+
+**`Intl` con ICU completo.** Verificado: `es-MX` devuelve `'julio'` y `'mié'`, no inglés.
 
 ---
 
