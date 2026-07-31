@@ -87,7 +87,7 @@ export class SelectComponent implements ControlValueAccessor {
     return '';
   });
   protected readonly hasError = computed(
-    () => !!this.error() || !!this.errorMessage() || (this.invalid() && this.touched()),
+    () => !!this.errorMessage() || (this.invalid() && this.touched()),
   );
 
   protected readonly selectedLabel = computed(() => {
@@ -113,8 +113,9 @@ export class SelectComponent implements ControlValueAccessor {
     return [base, sizeMap[this.size()], state, disabled].join(' ');
   });
 
+  /** Solo apunta a un `<p>` que realmente se renderiza (error con texto o hint). */
   protected readonly describedById = computed(() =>
-    this.hasError() || this.hint() ? `${this.id()}-desc` : null,
+    this.errorMessage() || this.hint() ? `${this.id()}-desc` : null,
   );
 
   toggle() {

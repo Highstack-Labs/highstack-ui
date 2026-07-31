@@ -18,7 +18,7 @@
   [class]="fieldClasses()"
 ></textarea>
 
-@if (hasError()) {
+@if (errorMessage()) {
   <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-destructive)]">{{ errorMessage() }}</p>
 } @else if (hint()) {
   <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-muted-foreground)]">{{ hint() }}</p>
