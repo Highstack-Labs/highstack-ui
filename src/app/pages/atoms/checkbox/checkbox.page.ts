@@ -39,6 +39,7 @@ export class CheckboxPage implements AfterViewInit {
     { id: 'indeterminate', label: 'Indeterminado' },
     { id: 'sizes', label: 'Tamaños' },
     { id: 'states', label: 'Estados' },
+    { id: 'validation', label: 'Ayuda y error' },
     { id: 'signal-forms', label: 'Signal Forms' },
     { id: 'reactive-forms', label: 'Reactive Forms' },
     { id: 'api', label: 'API' },
@@ -67,6 +68,19 @@ export class CheckboxPage implements AfterViewInit {
   readonly statesCode = `<ui-checkbox label="Marcado" [checked]="true" />
 <ui-checkbox label="Deshabilitado" [disabled]="true" />
 <ui-checkbox label="Marcado + deshabilitado" [checked]="true" [disabled]="true" />`;
+
+  readonly validationCode = `<!-- hint: texto de ayuda debajo del control -->
+<ui-checkbox label="Recibir correos" hint="Puedes darte de baja cuando quieras." />
+
+<!-- error: tiene prioridad sobre hint y sobre los errors de Signal Forms -->
+<ui-checkbox label="Acepto los términos" error="Debes aceptar para continuar." />
+
+<!-- description va en línea junto al label; hint va debajo de todo -->
+<ui-checkbox
+  label="Marketing"
+  description="Novedades y ofertas."
+  hint="description va en línea; hint va debajo del control."
+/>`;
 
   readonly signalFormsCode = `model = signal({ terms: false });
 termsForm = form(this.model, (path) => {

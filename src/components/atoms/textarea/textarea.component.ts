@@ -67,11 +67,12 @@ export class TextareaComponent implements ControlValueAccessor {
     return '';
   });
   protected readonly hasError = computed(
-    () => !!this.error() || !!this.errorMessage() || (this.invalid() && this.touched()),
+    () => !!this.errorMessage() || (this.invalid() && this.touched()),
   );
 
+  /** Solo apunta a un `<p>` que realmente se renderiza (error con texto o hint). */
   protected readonly describedById = computed(() =>
-    this.hasError() || this.hint() ? `${this.id()}-desc` : null,
+    this.errorMessage() || this.hint() ? `${this.id()}-desc` : null,
   );
 
   protected readonly fieldClasses = computed(() => {

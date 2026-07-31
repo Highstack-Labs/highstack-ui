@@ -75,7 +75,7 @@ O manual:
 
 ## 3. Cómo funcionan los FORMULARIOS (importante)
 
-Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Select**) soportan **3 formas** de enlace, todas sobre la misma fuente de verdad:
+Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Select, Segmented**) soportan **3 formas** de enlace, todas sobre la misma fuente de verdad:
 
 ```html
 <!-- a) Two-way simple -->
@@ -90,8 +90,20 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 <ui-input [formField]="form.email" />
 ```
 
-- Input/Textarea/Select usan `value` (string). Checkbox/Switch usan `checked` (boolean). Radio usa `value` en el **grupo**.
-- Para mostrar errores de validación, los componentes aceptan `[invalid]`, `[touched]`, `[errors]` (Signal Forms los cablea solo con `[formField]`). Con Reactive Forms, pásalos tú o usa `[error]="'mensaje'"`.
+- Input/Textarea/Select/Segmented usan `value` (string). Checkbox/Switch usan `checked` (boolean). Radio usa `value` en el **grupo**.
+
+**Errores y textos de ayuda** — mismo contrato en Input, Textarea, Select, Checkbox, Radio (en el grupo) y Segmented:
+
+| Input | Para qué |
+|---|---|
+| `error` | Mensaje manual. **Gana sobre todo lo demás** y se muestra de inmediato (no espera `touched`). |
+| `errors` + `touched` | Los cablea Signal Forms solo con `[formField]`. Se muestran **solo tras interactuar**. |
+| `invalid` + `touched` | Marca el borde en rojo y `aria-invalid` aunque no haya texto que mostrar. |
+| `hint` | Texto de ayuda. Se muestra **solo cuando no hay error**. |
+
+- El mensaje se renderiza debajo del control. En Radio va debajo del **grupo**, no por opción.
+- En Checkbox, `description` es el texto en línea junto al label; `hint` es el de abajo. Son slots distintos y pueden convivir.
+- Con Reactive Forms no hay cableado automático: pasa tú `[error]` o `[invalid]`/`[touched]`.
 
 ---
 
@@ -147,11 +159,13 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 
 ### Checkbox
 `CheckboxComponent` · `<ui-checkbox>`
-- `checked` (model, boolean), `label`, `description`, `size` (`'sm'|'md'`), `disabled`, `required`, `indeterminate`.
+- `checked` (model, boolean), `label`, `description`, `hint`, `error`, `size` (`'sm'|'md'`), `disabled`, `required`, `indeterminate`.
+- `description` va en línea junto al label; `hint` va debajo de todo el control (como en input/select).
 
 ```html
 <ui-checkbox label="Acepto los términos" [(checked)]="acepto" />
 <ui-checkbox label="Todo" [indeterminate]="parcial" />
+<ui-checkbox label="Acepto" error="Debes aceptar para continuar" />
 ```
 
 ### Switch
@@ -164,7 +178,8 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 
 ### Radio
 `RadioGroupComponent` + `RadioComponent` · `<ui-radio-group>` + `<ui-radio>`
-- Grupo: `value` (model), `size` (`'sm'|'md'`), `orientation` (`'vertical'|'horizontal'`), `appearance` (`'default'|'card'`), `name`, `disabled`, `required`.
+- Grupo: `value` (model), `size` (`'sm'|'md'`), `orientation` (`'vertical'|'horizontal'`), `appearance` (`'default'|'card'`), `name`, `id`, `hint`, `error`, `disabled`, `required`.
+- El mensaje de error/hint se renderiza debajo del grupo (no por opción).
 - Item: `value` (**requerido**), `label`, `description`, `disabled`.
 
 ```html
@@ -177,7 +192,7 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 ### Segmented
 `SegmentedComponent` · `<ui-segmented>`
 - Selección única con apariencia de botones conectados (segmented control). Data-driven.
-- `value` (model), `options` (`SegmentedOption[]`), `size` (`'sm'|'md'`), `fullWidth`, `disabled`, `name`, `required`, `invalid`, `touched`, `errors`.
+- `value` (model), `options` (`SegmentedOption[]`), `size` (`'sm'|'md'`), `fullWidth`, `disabled`, `name`, `id`, `hint`, `error`, `required`, `invalid`, `touched`, `errors`.
 - `SegmentedOption`: `{ value, label, icon?, disabled? }` (`icon` es SVG inline opcional).
 - Forms: `[(value)]`, `[formField]`, `formControlName`, `ngModel`.
 
@@ -541,6 +556,7 @@ cols: TableColumn[] = [
 - **NG5002 "Invalid ICU message"** → hay una llave `{` literal en un template HTML; escápala o reescribe el texto.
 - **Multi `<ng-content>`**: si proyectas contenido y "desaparece", probablemente hay 2 `<ng-content>` sin `select` en ramas `@if/@else`; usa uno solo.
 - **Signal Forms** (`[formField]`) es API **experimental** de Angular 22 (`@angular/forms/signals`). Si no quieres experimental, usa `[formControl]`/`formControlName` (estable) — todos los componentes de formulario lo soportan vía ControlValueAccessor.
+- **El autofill del navegador se ve con fondo azul** → falta `@import '@highstacklabs2026/ui/styles.css'`. El fix vive en esa hoja, no en las clases del componente.
 - **Radio/Select/Tabs/Dropdown/Accordion/Breadcrumb** son **compositional**: el contenedor (`ui-*-group`/`ui-*`) y los items deben importarse AMBOS y usarse juntos (los items se inyectan del padre por DI).
 
 ---
@@ -548,8 +564,8 @@ cols: TableColumn[] = [
 ## 6. Lista rápida de imports (todos desde `@highstacklabs2026/ui`)
 
 ```
-ButtonComponent, InputComponent, TextareaComponent, CheckboxComponent, SwitchComponent,
-RadioGroupComponent, RadioComponent, SelectComponent, OptionComponent,
+ButtonComponent, InputComponent, TextareaComponent, LabelComponent, CheckboxComponent, SwitchComponent,
+RadioGroupComponent, RadioComponent, SegmentedComponent, SelectComponent, OptionComponent,
 BadgeComponent, AvatarComponent, AvatarGroupComponent,
 CardComponent, CardHeaderComponent, CardTitleComponent, CardDescriptionComponent, CardContentComponent, CardFooterComponent,
 ModalComponent, ModalHeaderComponent, ModalTitleComponent, ModalDescriptionComponent, ModalContentComponent, ModalFooterComponent,

@@ -76,3 +76,36 @@ html {
 .scrollbar-code::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+/*
+ * Autofill del navegador.
+ *
+ * Chrome/Safari pintan un fondo azul propio en los campos autorrellenados que
+ * NO se puede quitar con `background-color` (la regla del UA gana siempre).
+ * El truco es taparlo con un box-shadow inset del color del tema y forzar el
+ * color del texto, que sí son propiedades que el autor controla.
+ *
+ * Ojo: `:-webkit-autofill` y `:autofill` van en reglas SEPARADAS a propósito.
+ * Si un navegador no entiende uno de los dos selectores, invalida la lista
+ * completa y se cae también el otro.
+ */
+ui-input input:-webkit-autofill,
+ui-input input:-webkit-autofill:hover,
+ui-input input:-webkit-autofill:focus,
+ui-input input:-webkit-autofill:active,
+ui-textarea textarea:-webkit-autofill,
+ui-textarea textarea:-webkit-autofill:hover,
+ui-textarea textarea:-webkit-autofill:focus,
+ui-textarea textarea:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px var(--color-background) inset;
+  box-shadow: 0 0 0 1000px var(--color-background) inset;
+  -webkit-text-fill-color: var(--color-foreground);
+  caret-color: var(--color-foreground);
+}
+
+/* Firefox sí respeta background-color en :autofill. */
+ui-input input:autofill,
+ui-textarea textarea:autofill {
+  background-color: transparent;
+  color: var(--color-foreground);
+}

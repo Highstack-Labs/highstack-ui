@@ -45,6 +45,7 @@ export class RadioPage implements AfterViewInit {
     { id: 'horizontal', label: 'Horizontal' },
     { id: 'sizes', label: 'Tamaños' },
     { id: 'card', label: 'Variante card' },
+    { id: 'validation', label: 'Ayuda y error' },
     { id: 'signal-forms', label: 'Signal Forms' },
     { id: 'reactive-forms', label: 'Reactive Forms' },
     { id: 'api', label: 'API' },
@@ -83,6 +84,18 @@ export class RadioPage implements AfterViewInit {
   <ui-radio value="free" label="Free" description="$0/mes" />
   <ui-radio value="pro" label="Pro" description="$29/mes" />
   <ui-radio value="ent" label="Enterprise" description="Custom" />
+</ui-radio-group>`;
+
+  readonly validationCode = `<!-- El mensaje se renderiza debajo del grupo, no por opción -->
+<ui-radio-group value="free" hint="Puedes cambiar de plan cuando quieras.">
+  <ui-radio value="free" label="Free" />
+  <ui-radio value="pro" label="Pro" />
+</ui-radio-group>
+
+<!-- error tiene prioridad sobre hint y sobre los errors de Signal Forms -->
+<ui-radio-group orientation="horizontal" error="Selecciona un plan para continuar.">
+  <ui-radio value="free" label="Free" />
+  <ui-radio value="pro" label="Pro" />
 </ui-radio-group>`;
 
   readonly signalFormsCode = `model = signal({ plan: '' });
