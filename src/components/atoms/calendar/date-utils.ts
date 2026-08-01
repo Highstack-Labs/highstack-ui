@@ -108,3 +108,119 @@ export function buildMonthGrid(monthIso: IsoDate, weekStartsOn: number): IsoDate
 
   return Array.from({ length: 42 }, (_, i) => addDays(start, i));
 }
+
+// --- Localización vía Intl -------------------------------------------------
+// Todo lo dependiente del idioma sale del navegador. No hay nombres de meses ni
+// formatos hardcodeados en la librería.
+
+/** Instante UTC a mediodía: inmune a cualquier corrimiento por zona horaria. */
+function utcNoon(y: number, m: number, d: number): Date {
+  return new Date(Date.UTC(y, m - 1, d, 12));
+}
+
+/**
+ * Primer día de la semana del locale, en numeración 0-6 con 0 = domingo.
+ *
+ * OJO: `getWeekInfo().firstDay` usa numeración ISO-8601 (1 = lunes … 7 =
+ * domingo), distinta a la de `Date.getDay()`. Esta función es el único lugar
+ * donde se hace la conversión.
+ *
+ * `getWeekInfo` es API reciente; si no existe, se asume domingo.
+ */
+export function resolveWeekStart(locale: string): number {
+  try {
+    const info = (
+      new Intl.Locale(locale) as Intl.Locale & { getWeekInfo?: () => { firstDay: number } }
+    ).getWeekInfo?.();
+    if (!info) return 0;
+    return info.firstDay === 7 ? 0 : info.firstDay;
+  } catch {
+    return 0;
+  }
+}
+
+/** Ej. 'julio de 2026' en es-MX, 'July 2026' en en-US. */
+export function monthLabel(monthIso: IsoDate, locale: string): string {
+  const p = parseIso(monthIso);
+  if (!p) return '';
+  return new Intl.DateTimeFormat(locale, {
+    month: 'long',
+    year: 'numeric',
+    timeZone: 'UTC',
+  }).format(utcNoon(p.y, p.m, 1));
+}
+
+/** Siete nombres cortos de día, rotados según `weekStartsOn` (0 = domingo). */
+export function weekdayLabels(locale: string, weekStartsOn: number): string[] {
+  const fmt = new Intl.DateTimeFormat(locale, { weekday: 'short', timeZone: 'UTC' });
+  // 2026-08-02 es domingo, así que sirve de ancla para el índice 0.
+  return Array.from({ length: 7 }, (_, i) =>
+    fmt.format(utcNoon(2026, 8, 2 + ((weekStartsOn + i) % 7))),
+  );
+}
+
+/** Ej. '31 de julio de 2026'. Para el aria-label de cada día del grid. */
+export function fullDateLabel(iso: IsoDate, locale: string): string {
+  const p = parseIso(iso);
+  if (!p) return '';
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' }).format(
+    utcNoon(p.y, p.m, p.d),
+  );
+}
+
+/**
+ * Orden y separador de los campos según el locale, leídos de Intl en vez de
+ * mantener una tabla de patrones. Esto es lo que hace que en es-MX se teclee
+ * dd/mm/aaaa y en en-US mm/dd/aaaa sin código específico.
+ */
+function fieldOrder(locale: string): ('day' | 'month' | 'year')[] {
+  const parts = new Intl.DateTimeFormat(locale, { timeZone: 'UTC' }).formatToParts(
+    utcNoon(2026, 7, 31),
+  );
+  return parts
+    .filter((p) => p.type === 'day' || p.type === 'month' || p.type === 'year')
+    .map((p) => p.type as 'day' | 'month' | 'year');
+}
+
+/** Ej. '31/07/2026' en es-MX. Cadena vacía si no hay fecha. */
+export function formatForDisplay(iso: IsoDate, locale: string): string {
+  const p = parseIso(iso);
+  if (!p) return '';
+
+  const value = {
+    day: String(p.d).padStart(2, '0'),
+    month: String(p.m).padStart(2, '0'),
+    year: String(p.y),
+  };
+  return fieldOrder(locale)
+    .map((f) => value[f])
+    .join('/');
+}
+
+/**
+ * Parsea lo que el usuario tecleó, interpretando el orden según el locale.
+ * Devuelve null ante cualquier duda: texto incompleto, fecha inexistente, o año
+ * de dos dígitos (adivinar el siglo produce bugs silenciosos).
+ */
+export function parseLocalized(text: string, locale: string): IsoDate | null {
+  const chunks = text
+    .trim()
+    .split(/[^\d]+/)
+    .filter(Boolean);
+  if (chunks.length !== 3) return null;
+
+  const order = fieldOrder(locale);
+  const raw: Record<string, string> = {};
+  order.forEach((field, i) => (raw[field] = chunks[i]));
+
+  // Un año debe venir con sus cuatro dígitos: '26' es ambiguo.
+  if (raw['year'].length !== 4) return null;
+
+  const y = Number(raw['year']);
+  const m = Number(raw['month']);
+  const d = Number(raw['day']);
+  if (!Number.isInteger(y) || !Number.isInteger(m) || !Number.isInteger(d)) return null;
+
+  const iso = toIso(y, m, d);
+  return isValidIso(iso) ? iso : null;
+}

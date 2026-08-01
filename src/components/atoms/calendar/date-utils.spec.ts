@@ -148,3 +148,109 @@ describe('helpers', () => {
     expect(isValidIso(today())).toBe(true);
   });
 });
+
+import {
+  formatForDisplay,
+  fullDateLabel,
+  monthLabel,
+  parseLocalized,
+  resolveWeekStart,
+  weekdayLabels,
+} from './date-utils';
+
+describe('resolveWeekStart', () => {
+  it('convierte de numeración ISO (1=lunes..7=domingo) a 0=domingo', () => {
+    // es-MX arranca en domingo: Intl dice 7, nosotros usamos 0.
+    expect(resolveWeekStart('es-MX')).toBe(0);
+    expect(resolveWeekStart('en-US')).toBe(0);
+    // es-ES arranca en lunes: Intl dice 1 y 1 también es lunes en 0-6.
+    expect(resolveWeekStart('es-ES')).toBe(1);
+    expect(resolveWeekStart('en-GB')).toBe(1);
+  });
+
+  it('cae en domingo si el locale es basura', () => {
+    // Tiene que ser un tag malformado de verdad: uno bien formado pero
+    // desconocido ('xx-YY-nonsense') Intl lo acepta y responde lunes.
+    expect(resolveWeekStart('no soy locale')).toBe(0);
+    expect(resolveWeekStart('@@@')).toBe(0);
+  });
+});
+
+describe('monthLabel', () => {
+  it('usa el idioma del locale', () => {
+    expect(monthLabel('2026-07-01', 'es-MX').toLowerCase()).toContain('julio');
+    expect(monthLabel('2026-07-01', 'en-US').toLowerCase()).toContain('july');
+  });
+
+  it('incluye el año', () => {
+    expect(monthLabel('2026-07-01', 'es-MX')).toContain('2026');
+  });
+});
+
+describe('weekdayLabels', () => {
+  it('devuelve siete etiquetas', () => {
+    expect(weekdayLabels('es-MX', 0)).toHaveLength(7);
+  });
+
+  it('rota según el inicio de semana', () => {
+    const domingo = weekdayLabels('es-MX', 0);
+    const lunes = weekdayLabels('es-MX', 1);
+    // La primera del lunes es la segunda del domingo.
+    expect(lunes[0]).toBe(domingo[1]);
+    expect(lunes[6]).toBe(domingo[0]);
+  });
+});
+
+describe('formatForDisplay', () => {
+  it('respeta el orden del locale', () => {
+    expect(formatForDisplay('2026-07-31', 'es-MX')).toBe('31/07/2026');
+    expect(formatForDisplay('2026-07-31', 'en-US')).toBe('07/31/2026');
+  });
+
+  it('devuelve cadena vacía si no hay fecha', () => {
+    expect(formatForDisplay('', 'es-MX')).toBe('');
+  });
+});
+
+describe('fullDateLabel', () => {
+  it('escribe la fecha en palabras para el aria-label', () => {
+    // '31/07/2026' se lee como números sueltos en un lector de pantalla.
+    const label = fullDateLabel('2026-07-31', 'es-MX');
+    expect(label).toContain('31');
+    expect(label.toLowerCase()).toContain('julio');
+    expect(label).toContain('2026');
+  });
+
+  it('devuelve cadena vacía si no hay fecha', () => {
+    expect(fullDateLabel('', 'es-MX')).toBe('');
+  });
+});
+
+describe('parseLocalized', () => {
+  it('lee el orden del locale', () => {
+    expect(parseLocalized('31/07/2026', 'es-MX')).toBe('2026-07-31');
+    expect(parseLocalized('07/31/2026', 'en-US')).toBe('2026-07-31');
+  });
+
+  it('acepta ceros a la izquierda opcionales', () => {
+    expect(parseLocalized('1/7/2026', 'es-MX')).toBe('2026-07-01');
+  });
+
+  it('acepta separadores alternativos', () => {
+    expect(parseLocalized('31-07-2026', 'es-MX')).toBe('2026-07-31');
+  });
+
+  it('rechaza años de dos dígitos por ambiguos', () => {
+    expect(parseLocalized('31/07/26', 'es-MX')).toBeNull();
+  });
+
+  it('rechaza texto incompleto o basura', () => {
+    expect(parseLocalized('31/0', 'es-MX')).toBeNull();
+    expect(parseLocalized('abc', 'es-MX')).toBeNull();
+    expect(parseLocalized('', 'es-MX')).toBeNull();
+  });
+
+  it('rechaza fechas que no existen', () => {
+    expect(parseLocalized('31/02/2026', 'es-MX')).toBeNull();
+  });
+});
