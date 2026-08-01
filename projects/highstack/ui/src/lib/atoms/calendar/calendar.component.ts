@@ -1,5 +1,6 @@
-import { Component, computed, input, linkedSignal, model, signal } from '@angular/core';
+import { Component, computed, input, linkedSignal, model } from '@angular/core';
 import {
+  addDays,
   addMonths,
   buildMonthGrid,
   fullDateLabel,
@@ -8,6 +9,7 @@ import {
   resolveWeekStart,
   startOfMonth,
   today,
+  weekday,
   weekdayLabels,
 } from './date-utils';
 
@@ -57,8 +59,13 @@ export class CalendarComponent {
     startOfMonth(this.defaultMonth() || this.value() || today()),
   );
 
-  /** Día que tiene el tabindex=0 del roving focus. */
-  protected readonly focused = signal<string>('');
+  /**
+   * Día con tabindex=0 (roving focus). Sigue al valor cuando cambia desde
+   * afuera, pero la navegación con flechas lo mueve sin tocar el valor.
+   */
+  protected readonly focused = linkedSignal<string>(
+    () => this.value() || startOfMonth(this.month()),
+  );
 
   protected readonly resolvedWeekStart = computed(
     () => this.weekStartsOn() ?? resolveWeekStart(this.locale()),
@@ -114,6 +121,67 @@ export class CalendarComponent {
 
   protected shiftMonth(n: number) {
     this.month.set(addMonths(this.month(), n));
+  }
+
+  /**
+   * Navegación bidimensional del grid. No existía nada así en el repo: select y
+   * dropdown solo manejan ArrowUp/ArrowDown sobre una lista.
+   */
+  protected onKeydown(event: KeyboardEvent) {
+    const from = this.focused();
+    let next: string | null = null;
+
+    switch (event.key) {
+      case 'ArrowLeft':
+        next = addDays(from, -1);
+        break;
+      case 'ArrowRight':
+        next = addDays(from, 1);
+        break;
+      case 'ArrowUp':
+        next = addDays(from, -7);
+        break;
+      case 'ArrowDown':
+        next = addDays(from, 7);
+        break;
+      case 'Home':
+        next = addDays(from, -this.offsetInWeek(from));
+        break;
+      case 'End':
+        next = addDays(from, 6 - this.offsetInWeek(from));
+        break;
+      case 'PageUp':
+        next = addMonths(from, event.shiftKey ? -12 : -1);
+        break;
+      case 'PageDown':
+        next = addMonths(from, event.shiftKey ? 12 : 1);
+        break;
+      case 'Enter':
+      case ' ':
+        event.preventDefault();
+        this.select(from);
+        return;
+      default:
+        return;
+    }
+
+    event.preventDefault();
+    this.moveFocus(next);
+  }
+
+  /** Posición del día dentro de su semana, respetando weekStartsOn. */
+  private offsetInWeek(iso: string): number {
+    return (weekday(iso) - this.resolvedWeekStart() + 7) % 7;
+  }
+
+  /**
+   * Mueve el foco y arrastra el mes visible si hizo falta cruzar. Sin esto,
+   * llegar al 1° del mes siguiente obligaría a usar el mouse.
+   */
+  private moveFocus(iso: string) {
+    this.focused.set(iso);
+    const target = startOfMonth(iso);
+    if (target !== this.month()) this.month.set(target);
   }
 
   /** Para el aria-label de cada día: '15 de julio de 2026', no '15/07/2026'. */

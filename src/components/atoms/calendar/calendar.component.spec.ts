@@ -105,3 +105,94 @@ describe('CalendarComponent', () => {
     });
   });
 });
+
+describe('CalendarComponent — teclado', () => {
+  function press(fixture: ReturnType<typeof create>, key: string, shiftKey = false) {
+    const grid = fixture.nativeElement.querySelector('[role="grid"]') as HTMLElement;
+    grid.dispatchEvent(new KeyboardEvent('keydown', { key, shiftKey, bubbles: true }));
+    fixture.detectChanges();
+  }
+
+  function focusedDate(fixture: ReturnType<typeof create>): string | undefined {
+    const el = fixture.nativeElement.querySelector('[tabindex="0"][data-date]') as HTMLElement;
+    return el?.dataset['date'];
+  }
+
+  it('arranca con el foco en el valor seleccionado', () => {
+    const fixture = create({ value: '2026-07-15', month: '2026-07-01' });
+    expect(focusedDate(fixture)).toBe('2026-07-15');
+  });
+
+  it('flechas izquierda/derecha mueven un día', () => {
+    const fixture = create({ value: '2026-07-15', month: '2026-07-01' });
+    press(fixture, 'ArrowRight');
+    expect(focusedDate(fixture)).toBe('2026-07-16');
+    press(fixture, 'ArrowLeft');
+    press(fixture, 'ArrowLeft');
+    expect(focusedDate(fixture)).toBe('2026-07-14');
+  });
+
+  it('flechas arriba/abajo mueven una semana', () => {
+    const fixture = create({ value: '2026-07-15', month: '2026-07-01' });
+    press(fixture, 'ArrowDown');
+    expect(focusedDate(fixture)).toBe('2026-07-22');
+    press(fixture, 'ArrowUp');
+    press(fixture, 'ArrowUp');
+    expect(focusedDate(fixture)).toBe('2026-07-08');
+  });
+
+  it('Home y End van al inicio y fin de la semana', () => {
+    // 2026-07-15 es miércoles; con semana en domingo (es-MX) va del 12 al 18.
+    const fixture = create({ value: '2026-07-15', month: '2026-07-01', locale: 'es-MX' });
+    press(fixture, 'Home');
+    expect(focusedDate(fixture)).toBe('2026-07-12');
+    press(fixture, 'End');
+    expect(focusedDate(fixture)).toBe('2026-07-18');
+  });
+
+  it('PageUp y PageDown cambian de mes', () => {
+    const fixture = create({ value: '2026-07-15', month: '2026-07-01' });
+    press(fixture, 'PageDown');
+    expect(focusedDate(fixture)).toBe('2026-08-15');
+    expect(fixture.componentInstance.month()).toBe('2026-08-01');
+    press(fixture, 'PageUp');
+    expect(focusedDate(fixture)).toBe('2026-07-15');
+  });
+
+  it('Shift+PageUp y Shift+PageDown cambian de año', () => {
+    const fixture = create({ value: '2026-07-15', month: '2026-07-01' });
+    press(fixture, 'PageDown', true);
+    expect(focusedDate(fixture)).toBe('2027-07-15');
+    press(fixture, 'PageUp', true);
+    expect(focusedDate(fixture)).toBe('2026-07-15');
+  });
+
+  it('cruzar de mes con flechas cambia el mes visible', () => {
+    const fixture = create({ value: '2026-07-31', month: '2026-07-01' });
+    press(fixture, 'ArrowRight');
+    expect(focusedDate(fixture)).toBe('2026-08-01');
+    expect(fixture.componentInstance.month()).toBe('2026-08-01');
+  });
+
+  it('Enter selecciona el día enfocado', () => {
+    const fixture = create({ value: '', month: '2026-07-01' });
+    press(fixture, 'ArrowRight');
+    const target = focusedDate(fixture)!;
+    press(fixture, 'Enter');
+    expect(fixture.componentInstance.value()).toBe(target);
+  });
+
+  it('Enter no hace nada sobre un día deshabilitado', () => {
+    const fixture = create({
+      value: '2026-07-14',
+      month: '2026-07-01',
+      disabledDates: ['2026-07-15'],
+    });
+    press(fixture, 'ArrowRight');
+    // El día deshabilitado SÍ recibe foco: saltárselo se cicla si el mes entero
+    // está bloqueado, y esconde información del lector de pantalla.
+    expect(focusedDate(fixture)).toBe('2026-07-15');
+    press(fixture, 'Enter');
+    expect(fixture.componentInstance.value()).toBe('2026-07-14');
+  });
+});

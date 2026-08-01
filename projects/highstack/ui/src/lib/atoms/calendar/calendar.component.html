@@ -28,7 +28,7 @@
     </button>
   </div>
 
-  <table role="grid" class="border-collapse">
+  <table role="grid" (keydown)="onKeydown($event)" class="border-collapse">
     <thead>
       <tr>
         @for (w of weekdays(); track $index) {
