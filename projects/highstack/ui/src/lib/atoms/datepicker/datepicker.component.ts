@@ -71,8 +71,11 @@ export class DatepickerComponent implements ControlValueAccessor {
   // Reenviados al calendario.
   readonly locale = input<string>('es-MX');
   readonly weekStartsOn = input<number | undefined>(undefined);
-  readonly min = input<string>('');
-  readonly max = input<string>('');
+  // Signal Forms escribe `min`/`max` como `string | undefined` al cablear
+  // [formField]; el transform los normaliza a '' para que dentro siempre sean
+  // string y las comparaciones lexicográficas no tengan que defenderse.
+  readonly min = input('', { transform: (v: string | undefined) => v ?? '' });
+  readonly max = input('', { transform: (v: string | undefined) => v ?? '' });
   readonly disabledDates = input<readonly string[]>([]);
   readonly dateDisabled = input<((iso: string) => boolean) | undefined>(undefined);
 

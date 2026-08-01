@@ -75,7 +75,7 @@ O manual:
 
 ## 3. Cómo funcionan los FORMULARIOS (importante)
 
-Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Select, Segmented**) soportan **3 formas** de enlace, todas sobre la misma fuente de verdad:
+Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Select, Segmented, Datepicker**) soportan **3 formas** de enlace, todas sobre la misma fuente de verdad:
 
 ```html
 <!-- a) Two-way simple -->
@@ -213,6 +213,34 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
   <ui-option value="co">Colombia</ui-option>
   <ui-option value="ar" disabled>Argentina</ui-option>
 </ui-select>
+```
+
+### Calendar
+`CalendarComponent` · `<ui-calendar>`
+- Cuadrícula de un mes para elegir **una** fecha. Se puede embeber suelto (sin campo de texto).
+- **El valor es un string ISO `'YYYY-MM-DD'`, o `''` si no hay fecha. NUNCA un `Date`.**
+- `value` (model), `month` (mes inicial, ISO), `locale` (def. `'es-MX'`), `weekStartsOn` (`0` = domingo; por defecto sale del locale), `min`, `max` (ISO), `disabledDates` (`readonly string[]`), `dateDisabled` (`(iso: string) => boolean`).
+- Los nombres de mes/día, el inicio de semana y el orden de los campos salen de `Intl`: no hay texto hardcodeado.
+- Teclado: ←/→ un día, ↑/↓ una semana, Inicio/Fin extremos de la semana, AvPág/RePág un mes (con Shift, un año), Enter selecciona.
+
+```html
+<ui-calendar [(value)]="fecha" min="2026-08-01" max="2026-12-31" />
+<ui-calendar [(value)]="fecha" locale="en-US" [dateDisabled]="soloEntreSemana" />
+```
+
+### Datepicker
+`DatepickerComponent` · `<ui-datepicker>`
+- Campo de fecha: compone `ui-input` (campo, label y mensaje) con `ui-calendar` (panel flotante).
+- **El valor es un string ISO `'YYYY-MM-DD'`, o `''` si no hay fecha. NUNCA un `Date`.**
+- Se puede **teclear o elegir**. El orden al teclear lo define el locale (`dd/mm/aaaa` en es-MX, `mm/dd/aaaa` en en-US).
+- `value` (model), `label`, `hint`, `error`, `placeholder`, `name`, `id`, `size` (`'sm'|'md'|'lg'`), `disabled`, `readonly`, `required`, `invalid`, `touched`, `errors`, más los del calendario: `locale`, `weekStartsOn`, `min`, `max`, `disabledDates`, `dateDisabled`.
+- Forms: `[(value)]`, `[formField]`, `formControlName`, `ngModel`.
+- Los errores de formato aparecen solo al salir del campo, nunca mientras se escribe.
+
+```html
+<ui-datepicker label="Fecha de nacimiento" [(value)]="fecha" hint="Puedes escribirla o elegirla." />
+<ui-datepicker label="Cita" min="2026-08-01" max="2026-12-31" [formField]="form.cita" />
+<ui-datepicker label="Entrega" [disabledDates]="feriados" [formControl]="ctrl" />
 ```
 
 ### Badge
@@ -557,6 +585,7 @@ cols: TableColumn[] = [
 - **Multi `<ng-content>`**: si proyectas contenido y "desaparece", probablemente hay 2 `<ng-content>` sin `select` en ramas `@if/@else`; usa uno solo.
 - **Signal Forms** (`[formField]`) es API **experimental** de Angular 22 (`@angular/forms/signals`). Si no quieres experimental, usa `[formControl]`/`formControlName` (estable) — todos los componentes de formulario lo soportan vía ControlValueAccessor.
 - **El autofill del navegador se ve con fondo azul** → falta `@import '@highstacklabs2026/ui/styles.css'`. El fix vive en esa hoja, no en las clases del componente.
+- **Calendar/Datepicker: el valor es un string `'YYYY-MM-DD'`, no un `Date`.** Si le pasas un `Date` o un ISO con hora (`'2026-08-01T00:00:00Z'`) el componente lo normaliza a `''` y el campo sale vacío. Convierte antes de enlazar, y espera un string de vuelta.
 - **Radio/Select/Tabs/Dropdown/Accordion/Breadcrumb** son **compositional**: el contenedor (`ui-*-group`/`ui-*`) y los items deben importarse AMBOS y usarse juntos (los items se inyectan del padre por DI).
 
 ---
@@ -566,6 +595,7 @@ cols: TableColumn[] = [
 ```
 ButtonComponent, InputComponent, TextareaComponent, LabelComponent, CheckboxComponent, SwitchComponent,
 RadioGroupComponent, RadioComponent, SegmentedComponent, SelectComponent, OptionComponent,
+CalendarComponent, DatepickerComponent,
 BadgeComponent, AvatarComponent, AvatarGroupComponent,
 CardComponent, CardHeaderComponent, CardTitleComponent, CardDescriptionComponent, CardContentComponent, CardFooterComponent,
 ModalComponent, ModalHeaderComponent, ModalTitleComponent, ModalDescriptionComponent, ModalContentComponent, ModalFooterComponent,
