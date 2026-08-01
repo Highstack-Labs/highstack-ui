@@ -84,3 +84,13 @@
   --color-primary-foreground: var(--color-white);
   --color-ring: oklch(0.70 0.13 14);
 }
+
+/* El gradiente sube de tono (48 → 78) a propósito: rose ya recorre 18 → 45, y
+   bajar hacia el rojo dejaría los dos swatches como espejos casi idénticos.
+   La luminosidad se queda en 0.58 para que el blanco siga legible encima. */
+.theme-orange {
+  --color-primary: oklch(0.58 0.16 48);
+  --color-primary-gradient: oklch(0.72 0.14 78); /* → dorado */
+  --color-primary-foreground: var(--color-white);
+  --color-ring: oklch(0.70 0.13 48);
+}

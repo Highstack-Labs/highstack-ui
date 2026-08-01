@@ -48,7 +48,7 @@ export class Demo {}
 
 ## 2. Temas y modo oscuro
 
-5 paletas (`default`/zinc, `indigo`, `teal`, `violet`, `rose`) + modo oscuro. Se activan con **clases en el `<body>`** o con el provider.
+6 paletas (`default`/zinc, `indigo`, `teal`, `violet`, `rose`, `orange`) + modo oscuro. Se activan con **clases en el `<body>`** o con el provider.
 
 ```ts
 // app.config.ts
@@ -67,7 +67,7 @@ O manual:
 <body class="theme-indigo dark">  <!-- tema indigo + oscuro -->
 ```
 
-- Clases de tema: `theme-indigo | theme-teal | theme-violet | theme-rose` (sin clase = default/zinc).
+- Clases de tema: `theme-indigo | theme-teal | theme-violet | theme-rose | theme-orange` (sin clase = default/zinc).
 - Modo oscuro: clase `dark`. Combinable con cualquier tema.
 - Tokens principales (redefinibles): `--color-background`, `--color-foreground`, `--color-primary`, `--color-primary-foreground`, `--color-secondary`, `--color-accent`, `--color-muted`, `--color-muted-foreground`, `--color-border`, `--color-input`, `--color-ring`, `--color-destructive`, `--radius`.
 

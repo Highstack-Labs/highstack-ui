@@ -1,7 +1,7 @@
 import { inject, APP_INITIALIZER, Provider } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 
-export type HighstackTheme = 'indigo' | 'teal' | 'violet' | 'rose' | 'default';
+export type HighstackTheme = 'indigo' | 'teal' | 'violet' | 'rose' | 'orange' | 'default';
 
 export interface HighstackConfig {
   theme?: HighstackTheme;
