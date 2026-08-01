@@ -184,3 +184,118 @@ describe('DatepickerComponent — ControlValueAccessor', () => {
     expect(textbox(fixture).disabled).toBe(true);
   });
 });
+
+describe('DatepickerComponent — panel', () => {
+  function trigger(fixture: ReturnType<typeof create>): HTMLButtonElement {
+    return fixture.nativeElement.querySelector('[data-trigger]');
+  }
+  function panel(fixture: ReturnType<typeof create>): HTMLElement | null {
+    return fixture.nativeElement.querySelector('[role="dialog"]');
+  }
+
+  it('arranca cerrado', () => {
+    const fixture = create({});
+    expect(panel(fixture)).toBeNull();
+    expect(trigger(fixture).getAttribute('aria-expanded')).toBe('false');
+  });
+
+  it('el botón abre y cierra el panel', () => {
+    const fixture = create({});
+    trigger(fixture).click();
+    fixture.detectChanges();
+    expect(panel(fixture)).not.toBeNull();
+    expect(trigger(fixture).getAttribute('aria-expanded')).toBe('true');
+
+    trigger(fixture).click();
+    fixture.detectChanges();
+    expect(panel(fixture)).toBeNull();
+  });
+
+  it('no abre si está deshabilitado o en readonly', () => {
+    const deshabilitado = create({ disabled: true });
+    trigger(deshabilitado).click();
+    deshabilitado.detectChanges();
+    expect(panel(deshabilitado)).toBeNull();
+
+    const soloLectura = create({ readonly: true });
+    trigger(soloLectura).click();
+    soloLectura.detectChanges();
+    expect(panel(soloLectura)).toBeNull();
+  });
+
+  it('Escape cierra el panel y devuelve el foco al campo', () => {
+    const fixture = create({});
+    trigger(fixture).click();
+    fixture.detectChanges();
+
+    panel(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    fixture.detectChanges();
+
+    expect(panel(fixture)).toBeNull();
+    expect(document.activeElement).toBe(textbox(fixture));
+  });
+
+  it('elegir un día cierra el panel y escribe el texto', () => {
+    const fixture = create({ locale: 'es-MX', value: '2026-07-01' });
+    trigger(fixture).click();
+    fixture.detectChanges();
+
+    const day = panel(fixture)!.querySelector('[data-date="2026-07-15"]') as HTMLButtonElement;
+    day.click();
+    fixture.detectChanges();
+
+    expect(fixture.componentInstance.value()).toBe('2026-07-15');
+    expect(textbox(fixture).value).toBe('15/07/2026');
+    expect(panel(fixture)).toBeNull();
+  });
+
+  it('reenvía las restricciones al calendario', () => {
+    const fixture = create({ value: '2026-07-01', disabledDates: ['2026-07-15'] });
+    trigger(fixture).click();
+    fixture.detectChanges();
+
+    const day = panel(fixture)!.querySelector('[data-date="2026-07-15"]') as HTMLButtonElement;
+    expect(day.getAttribute('aria-disabled')).toBe('true');
+  });
+
+  it('un clic fuera cierra el panel', () => {
+    const fixture = create({});
+    trigger(fixture).click();
+    fixture.detectChanges();
+
+    document.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    fixture.detectChanges();
+    expect(panel(fixture)).toBeNull();
+  });
+
+  it('salir del panel con Tab lo cierra', () => {
+    // El panel no es modal: no hay trampa de foco, tabular fuera lo cierra.
+    const fixture = create({});
+    trigger(fixture).click();
+    fixture.detectChanges();
+
+    const outside = document.createElement('button');
+    document.body.appendChild(outside);
+    panel(fixture)!.dispatchEvent(
+      new FocusEvent('focusout', { bubbles: true, relatedTarget: outside }),
+    );
+    fixture.detectChanges();
+
+    expect(panel(fixture)).toBeNull();
+    outside.remove();
+  });
+
+  it('mover el foco dentro del panel no lo cierra', () => {
+    const fixture = create({});
+    trigger(fixture).click();
+    fixture.detectChanges();
+
+    const inside = panel(fixture)!.querySelector('[data-nav="next"]') as HTMLElement;
+    panel(fixture)!.dispatchEvent(
+      new FocusEvent('focusout', { bubbles: true, relatedTarget: inside }),
+    );
+    fixture.detectChanges();
+
+    expect(panel(fixture)).not.toBeNull();
+  });
+});

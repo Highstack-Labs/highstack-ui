@@ -1,9 +1,15 @@
 import {
   Component,
+  DestroyRef,
+  ElementRef,
+  HostListener,
+  Injector,
+  afterNextRender,
   booleanAttribute,
   computed,
   effect,
   forwardRef,
+  inject,
   input,
   model,
   signal,
@@ -12,6 +18,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { InputComponent } from '../input/input.component';
 import { formatForDisplay, isValidIso, parseLocalized } from '../calendar/date-utils';
+import { positionOverlay } from '../../shared/overlay-position';
 
 export type DatepickerSize = 'sm' | 'md' | 'lg';
 
@@ -186,6 +193,109 @@ export class DatepickerComponent implements ControlValueAccessor {
     this.parseError.set('');
     this.onChange(iso);
     this.onTouched();
+    // Elegir un día es la acción terminal del panel: se cierra y el foco vuelve
+    // al campo, que es de donde salió.
+    this.close();
+  }
+
+  // --- Panel flotante ---
+
+  private readonly el = inject(ElementRef<HTMLElement>);
+  private readonly injector = inject(Injector);
+
+  readonly open = signal(false);
+  /** Evita el parpadeo: el panel no se ve hasta estar posicionado. */
+  protected readonly ready = signal(false);
+  protected readonly panelTop = signal(0);
+  protected readonly panelLeft = signal(0);
+
+  private readonly scrollTeardown = (() => {
+    const onScroll = () => this.open() && this.updatePosition();
+    // Captura para que también reposicione al hacer scroll en un contenedor
+    // interno, no solo en la ventana.
+    window.addEventListener('scroll', onScroll, true);
+    inject(DestroyRef).onDestroy(() => window.removeEventListener('scroll', onScroll, true));
+  })();
+
+  protected toggle() {
+    if (this.isDisabled() || this.readonly()) return;
+    this.open() ? this.close() : this.openPanel();
+  }
+
+  private openPanel() {
+    this.ready.set(false);
+    this.open.set(true);
+    // afterNextRender y no requestAnimationFrame: un rAF dispara antes de que
+    // el panel esté montado y lo deja mal posicionado hasta el primer resize.
+    afterNextRender(
+      () => {
+        this.updatePosition();
+        this.ready.set(true);
+        this.panelEl()?.focus();
+      },
+      { injector: this.injector },
+    );
+  }
+
+  protected close(returnFocus = true) {
+    if (!this.open()) return;
+    this.open.set(false);
+    this.ready.set(false);
+    if (returnFocus) this.textInputEl()?.focus();
+  }
+
+  private panelEl(): HTMLElement | null {
+    return this.el.nativeElement.querySelector('[role="dialog"]');
+  }
+  private textInputEl(): HTMLElement | null {
+    return this.el.nativeElement.querySelector('input');
+  }
+
+  private updatePosition() {
+    const panel = this.panelEl();
+    const trigger = this.el.nativeElement.querySelector('[data-trigger]') as HTMLElement | null;
+    if (!panel || !trigger) return;
+
+    const t = trigger.getBoundingClientRect();
+    const p = panel.getBoundingClientRect();
+    const placement = positionOverlay(
+      { top: t.top, left: t.left, width: t.width, height: t.height },
+      { width: p.width, height: p.height },
+      { width: window.innerWidth, height: window.innerHeight },
+      'end',
+    );
+
+    this.panelTop.set(placement.top);
+    this.panelLeft.set(placement.left);
+  }
+
+  @HostListener('window:resize')
+  protected onResize() {
+    if (this.open()) this.updatePosition();
+  }
+
+  @HostListener('document:click', ['$event'])
+  protected onDocumentClick(event: MouseEvent) {
+    if (!this.open()) return;
+    if (!this.el.nativeElement.contains(event.target as Node)) this.close(false);
+  }
+
+  protected onPanelKeydown(event: KeyboardEvent) {
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      this.close();
+    }
+  }
+
+  /**
+   * El panel no es modal: no hay trampa de foco, así que tabular fuera lo
+   * cierra. `relatedTarget` es a dónde va el foco; si sigue dentro del host
+   * (por ejemplo del grid al botón de mes siguiente) no se cierra nada.
+   */
+  protected onPanelFocusout(event: FocusEvent) {
+    const next = event.relatedTarget as Node | null;
+    if (next && this.el.nativeElement.contains(next)) return;
+    this.close(false);
   }
 
   // --- ControlValueAccessor ---
