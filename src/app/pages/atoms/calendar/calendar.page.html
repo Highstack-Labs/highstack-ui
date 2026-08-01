@@ -1,0 +1,123 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Calendar" subtitle="Cuadrícula de un mes para elegir una fecha, con navegación por teclado y localización vía Intl." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el calendario:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <div class="flex flex-col items-center gap-3">
+            <ui-calendar [(value)]="fecha" />
+            <p class="text-xs text-[var(--color-muted-foreground)]">
+              Valor: <span class="font-mono">{{ fecha() || '—' }}</span>
+            </p>
+          </div>
+        </app-demo-block>
+
+        <!-- Restricciones -->
+        <app-demo-block id="restricciones" title="Restricciones" [code]="restriccionesCode" class="block scroll-mt-28">
+          <div class="flex flex-wrap items-start justify-center gap-6">
+            <div class="flex flex-col items-center gap-2">
+              <span class="text-xs text-[var(--color-muted-foreground)]">min / max</span>
+              <ui-calendar [(value)]="cita" min="2026-08-01" max="2026-12-31" />
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <span class="text-xs text-[var(--color-muted-foreground)]">disabledDates</span>
+              <ui-calendar [(value)]="entrega" [disabledDates]="feriados" />
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <span class="text-xs text-[var(--color-muted-foreground)]">dateDisabled (solo entre semana)</span>
+              <ui-calendar [dateDisabled]="soloEntreSemana" />
+            </div>
+          </div>
+        </app-demo-block>
+
+        <!-- Idioma -->
+        <app-demo-block id="locale" title="Idioma" [code]="localeCode" class="block scroll-mt-28">
+          <div class="flex flex-wrap items-start justify-center gap-6">
+            <div class="flex flex-col items-center gap-2">
+              <span class="text-xs text-[var(--color-muted-foreground)]">es-MX (semana en domingo)</span>
+              <ui-calendar [(value)]="enIngles" locale="es-MX" />
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <span class="text-xs text-[var(--color-muted-foreground)]">en-US</span>
+              <ui-calendar [(value)]="enIngles" locale="en-US" />
+            </div>
+            <div class="flex flex-col items-center gap-2">
+              <span class="text-xs text-[var(--color-muted-foreground)]">es-ES (semana en lunes)</span>
+              <ui-calendar [(value)]="enIngles" locale="es-ES" />
+            </div>
+          </div>
+        </app-demo-block>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string ISO 'YYYY-MM-DD' (model)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">month</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string ISO (mes inicial)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">del value, o hoy</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">locale</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'es-MX'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">weekStartsOn</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">number (0 = domingo)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">del locale</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">min / max</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string ISO</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">disabledDates</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">readonly string[]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">[]</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">dateDisabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">(iso: string) =&gt; boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-[var(--color-muted-foreground)]">
+            Teclado: ←/→ un día, ↑/↓ una semana, Inicio/Fin extremos de la semana, AvPág/RePág
+            un mes, con Shift un año, Enter selecciona. Cruzar de mes arrastra el mes visible.
+          </p>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

@@ -42,6 +42,8 @@ export class Shell {
     { label: 'Switch', route: '/atoms/switch' },
     { label: 'Radio', route: '/atoms/radio' },
     { label: 'Segmented', route: '/atoms/segmented' },
+    { label: 'Calendar', route: '/atoms/calendar' },
+    { label: 'Datepicker', route: '/atoms/datepicker' },
     { label: 'Avatar', route: '/atoms/avatar' },
     { label: 'Tooltip', route: '/atoms/tooltip' },
     { label: 'Dropdown', route: '/atoms/dropdown' },
