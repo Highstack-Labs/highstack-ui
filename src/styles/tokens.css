@@ -22,7 +22,7 @@
   --color-input: oklch(0.922 0.005 285.82);
   --color-ring: oklch(0.705 0.015 285.82);
 
-  --radius: 0.8rem; /* Redondez suavizada de 12px para estilo premium */
+  --radius: 0.75rem; /* Redondez suavizada de 12px para estilo premium */
 }
 
 /* Modo oscuro: mismos tokens, paleta invertida. Se activa con la clase .dark

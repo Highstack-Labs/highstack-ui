@@ -31,6 +31,9 @@ export type PopoverAlign = 'start' | 'center' | 'end';
  * </ui-popover>
  * ```
  */
+/** Margen mínimo al borde del viewport (px). */
+const MARGIN = 8;
+
 @Component({
   selector: 'ui-popover',
   template: `
@@ -51,12 +54,18 @@ export class PopoverComponent {
 
   private readonly el = inject(ElementRef<HTMLElement>);
 
+  /** Lado/alineación efectivos tras medir el viewport (pueden voltear los inputs). */
+  protected readonly resolvedSide = signal<PopoverSide>('bottom');
+  protected readonly resolvedAlign = signal<PopoverAlign>('center');
+  /** Oculta el panel un frame hasta posicionarlo, para que el flip no se vea saltar. */
+  protected readonly ready = signal(false);
+
   protected readonly panelClasses = computed(() => {
     const base =
-      'absolute z-50 w-72 max-w-[calc(100vw-2rem)] rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-4 shadow-md text-[var(--color-foreground)]';
+      'absolute z-50 w-72 max-w-[calc(100vw-2rem)] rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-4 shadow-md text-[var(--color-foreground)] transition-opacity duration-100';
 
-    const side = this.side();
-    const align = this.align();
+    const side = this.resolvedSide();
+    const align = this.resolvedAlign();
 
     // Eje principal: a qué lado del disparador aparece.
     const sideMap: Record<PopoverSide, string> = {
@@ -77,15 +86,91 @@ export class PopoverComponent {
         align === 'start' ? 'left-0' : align === 'end' ? 'right-0' : 'left-1/2 -translate-x-1/2';
     }
 
-    return [base, sideMap[side], alignClass].join(' ');
+    const visibility = this.ready() ? 'opacity-100' : 'opacity-0';
+    return [base, sideMap[side], alignClass, visibility].join(' ');
   });
 
   toggle() {
-    this.open.update((o) => !o);
+    if (this.open()) this.close();
+    else this.openPopover();
+  }
+
+  private openPopover() {
+    this.resolvedSide.set(this.side());
+    this.resolvedAlign.set(this.align());
+    this.ready.set(false);
+    this.open.set(true);
+    // Tras renderizar el panel, medirlo y ajustar la posición al viewport.
+    requestAnimationFrame(() => this.updatePosition());
   }
 
   close() {
     this.open.set(false);
+    this.ready.set(false);
+  }
+
+  /** Mide el panel y voltea lado/alineación si se sale del viewport. */
+  private updatePosition() {
+    const panel = this.el.nativeElement.querySelector('[role="dialog"]') as HTMLElement | null;
+    if (!panel || !this.open()) return;
+
+    const host = this.el.nativeElement.getBoundingClientRect();
+    const rect = panel.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    const reqSide = this.side();
+    const reqAlign = this.align();
+
+    // --- Eje principal: voltear al lado opuesto si no cabe y el opuesto sí. ---
+    const need = (axis: 'v' | 'h') => (axis === 'v' ? rect.height : rect.width) + MARGIN;
+    const space = {
+      top: host.top,
+      bottom: vh - host.bottom,
+      left: host.left,
+      right: vw - host.right,
+    };
+    const opposite: Record<PopoverSide, PopoverSide> = {
+      top: 'bottom',
+      bottom: 'top',
+      left: 'right',
+      right: 'left',
+    };
+    let side = reqSide;
+    const axisOfSide = side === 'left' || side === 'right' ? 'h' : 'v';
+    if (space[side] < need(axisOfSide) && space[opposite[side]] >= space[side]) {
+      side = opposite[side];
+    }
+
+    // --- Eje transversal: elegir la alineación que mantiene el panel dentro. ---
+    let align = reqAlign;
+    if (side === 'top' || side === 'bottom') {
+      // alineación horizontal: start ancla a la izquierda del trigger, end a la derecha.
+      const leftFor = (a: PopoverAlign) =>
+        a === 'start'
+          ? host.left
+          : a === 'end'
+            ? host.right - rect.width
+            : host.left + host.width / 2 - rect.width / 2;
+      const inView = (a: PopoverAlign) =>
+        leftFor(a) >= MARGIN && leftFor(a) + rect.width <= vw - MARGIN;
+      if (!inView(align)) align = (['center', 'start', 'end'] as PopoverAlign[]).find(inView) ?? align;
+    } else {
+      // alineación vertical.
+      const topFor = (a: PopoverAlign) =>
+        a === 'start'
+          ? host.top
+          : a === 'end'
+            ? host.bottom - rect.height
+            : host.top + host.height / 2 - rect.height / 2;
+      const inView = (a: PopoverAlign) =>
+        topFor(a) >= MARGIN && topFor(a) + rect.height <= vh - MARGIN;
+      if (!inView(align)) align = (['center', 'start', 'end'] as PopoverAlign[]).find(inView) ?? align;
+    }
+
+    this.resolvedSide.set(side);
+    this.resolvedAlign.set(align);
+    this.ready.set(true);
   }
 
   @HostListener('document:click', ['$event'])
@@ -93,6 +178,12 @@ export class PopoverComponent {
     if (this.open() && !this.el.nativeElement.contains(event.target as Node)) {
       this.close();
     }
+  }
+
+  @HostListener('window:resize')
+  @HostListener('window:scroll')
+  protected onViewportChange() {
+    if (this.open()) this.updatePosition();
   }
 
   @HostListener('document:keydown.escape')
