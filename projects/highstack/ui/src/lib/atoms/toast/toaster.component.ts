@@ -19,7 +19,7 @@ export class ToasterComponent {
   protected readonly svc = inject(ToastService);
 
   protected readonly containerClasses = computed(() => {
-    const base = 'fixed z-[100] flex flex-col gap-2 p-4 pointer-events-none [&>*]:pointer-events-auto';
+    const base = 'fixed z-[var(--z-toast)] flex flex-col gap-2 p-4 pointer-events-none [&>*]:pointer-events-auto';
     const posMap: Record<ToastPosition, string> = {
       'top-left': 'top-0 left-0 items-start',
       'top-center': 'top-0 left-1/2 -translate-x-1/2 items-center',

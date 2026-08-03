@@ -13,9 +13,12 @@ import {
   input,
   model,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { LabelComponent } from '../label/label.component';
+import { containsTarget } from '../../shared/overlay-container';
+import { OverlayPortalDirective } from '../../shared/overlay-portal.directive';
 
 export type SelectSize = 'sm' | 'md' | 'lg';
 
@@ -37,7 +40,7 @@ let nextId = 0;
 @Component({
   selector: 'ui-select',
   templateUrl: './select.component.html',
-  imports: [LabelComponent],
+  imports: [LabelComponent, OverlayPortalDirective],
   host: { class: 'block' },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectComponent), multi: true },
@@ -143,8 +146,19 @@ export class SelectComponent implements ControlValueAccessor {
     this.ready.set(false);
   }
 
+  /**
+   * El panel está portalizado a nivel de <body>, así que ya no se puede buscar
+   * con un querySelector desde el host: hay que quedarse con la referencia de la
+   * plantilla.
+   */
+  private readonly panelRef = viewChild<ElementRef<HTMLElement>>('panel');
+
   private panel(): HTMLElement | null {
-    return this.el.nativeElement.querySelector('[role="listbox"]');
+    return this.panelRef()?.nativeElement ?? null;
+  }
+
+  private triggerEl(): HTMLElement | null {
+    return this.el.nativeElement.querySelector('[data-trigger]');
   }
 
   /**
@@ -154,7 +168,7 @@ export class SelectComponent implements ControlValueAccessor {
    */
   private updatePosition() {
     const panel = this.panel();
-    const trigger = this.el.nativeElement.querySelector('[data-trigger]') as HTMLElement | null;
+    const trigger = this.triggerEl();
     if (!panel || !trigger || !this.open()) return;
 
     const host = trigger.getBoundingClientRect();
@@ -185,13 +199,15 @@ export class SelectComponent implements ControlValueAccessor {
     this.onChange(v);
     this.onTouched();
     this.close();
-    const trigger = this.el.nativeElement.querySelector('[data-trigger]') as HTMLElement | null;
-    trigger?.focus();
+    this.triggerEl()?.focus();
   }
 
   @HostListener('document:click', ['$event'])
   protected onDocClick(event: MouseEvent) {
-    if (this.open() && !this.el.nativeElement.contains(event.target as Node)) this.close();
+    if (!this.open()) return;
+    // El panel vive fuera del host (portalizado): hay que preguntar por los dos,
+    // o elegir una opción cerraría el panel antes de registrar el clic.
+    if (!containsTarget(event.target as Node, this.el.nativeElement, this.panel())) this.close();
   }
 
   @HostListener('window:resize')
@@ -199,23 +215,37 @@ export class SelectComponent implements ControlValueAccessor {
     if (this.open()) this.updatePosition();
   }
 
+  /**
+   * Teclas con el panel CERRADO. Vive en el host porque el foco está en el
+   * trigger, que sí es descendiente suyo.
+   */
   @HostListener('keydown', ['$event'])
   protected onKeydown(event: KeyboardEvent) {
-    const enabled = this.options().filter((o) => !o.disabled());
-    if (!this.open()) {
-      if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        this.toggle();
-      }
-      return;
+    if (this.open()) return;
+    if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.toggle();
     }
+  }
+
+  /**
+   * Teclas con el panel ABIERTO. Va colgado del propio panel en la plantilla: al
+   * estar portalizado fuera del host, un @HostListener ya no vería las teclas
+   * pulsadas con el foco dentro del panel.
+   */
+  protected onPanelKeydown(event: KeyboardEvent) {
+    if (!this.open()) return;
+
     if (event.key === 'Escape') {
       event.preventDefault();
       this.close();
+      // El foco estaba dentro del panel, que se va: hay que devolverlo al trigger.
+      this.triggerEl()?.focus();
       return;
     }
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
+      const enabled = this.options().filter((o) => !o.disabled());
       if (!enabled.length) return;
       const active = document.activeElement;
       const idx = enabled.findIndex((o) => o.isActive(active));

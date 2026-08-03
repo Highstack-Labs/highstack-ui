@@ -32,6 +32,8 @@
 
 @if (open()) {
   <div
+    #panel
+    uiOverlayPortal
     role="dialog"
     tabindex="-1"
     [attr.aria-label]="'Calendario'"
@@ -40,8 +42,8 @@
     [style.top.px]="panelTop()"
     [style.left.px]="panelLeft()"
     [class.opacity-0]="!ready()"
-    [class.pointer-events-none]="!ready()"
-    class="fixed z-50 outline-none shadow-lg rounded-[var(--radius)]"
+    [style.pointerEvents]="ready() ? 'auto' : 'none'"
+    class="fixed outline-none shadow-lg rounded-[var(--radius)]"
   >
     <ui-calendar
       [value]="value()"

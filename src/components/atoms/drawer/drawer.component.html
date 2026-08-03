@@ -1,6 +1,6 @@
 @if (visible()) {
   <!-- Contenedor a pantalla completa; el panel se ancla al borde elegido. -->
-  <div class="fixed inset-0 z-50 flex" (click)="onBackdropClick()">
+  <div class="fixed inset-0 z-[var(--z-modal)] flex" (click)="onBackdropClick()">
     <!-- Backdrop oscuro con transición de opacidad. -->
     <div
       class="absolute inset-0 bg-black/50 transition-opacity duration-300"

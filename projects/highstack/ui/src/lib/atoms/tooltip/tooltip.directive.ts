@@ -8,7 +8,9 @@ import {
   Renderer2,
   booleanAttribute,
   numberAttribute,
+  DOCUMENT,
 } from '@angular/core';
+import { overlayContainer } from '../../shared/overlay-container';
 
 export type TooltipPlacement = 'top' | 'bottom' | 'left' | 'right';
 
@@ -27,6 +29,7 @@ const MARGIN = 8; // margen mínimo al borde del viewport (px)
 export class TooltipDirective implements OnDestroy {
   private readonly host = inject(ElementRef<HTMLElement>);
   private readonly renderer = inject(Renderer2);
+  private readonly doc = inject(DOCUMENT);
 
   readonly text = input<string>('', { alias: 'uiTooltip' });
   readonly placement = input<TooltipPlacement>('top', { alias: 'tooltipPlacement' });
@@ -68,14 +71,19 @@ export class TooltipDirective implements OnDestroy {
     tip.id = this.tipId;
     tip.setAttribute('role', 'tooltip');
     tip.className =
-      'fixed z-50 px-2 py-1 rounded-md text-xs font-medium shadow-md max-w-xs whitespace-normal pointer-events-none opacity-0 transition-opacity duration-150 bg-[var(--color-foreground)] text-[var(--color-background)]';
+      'fixed px-2 py-1 rounded-md text-xs font-medium shadow-md max-w-xs whitespace-normal pointer-events-none opacity-0 transition-opacity duration-150 bg-[var(--color-foreground)] text-[var(--color-background)]';
     tip.textContent = this.text();
 
     const arrow = this.renderer.createElement('div') as HTMLElement;
-    arrow.className = 'fixed z-50 size-2 rotate-45 pointer-events-none bg-[var(--color-foreground)]';
+    arrow.className = 'fixed size-2 rotate-45 pointer-events-none bg-[var(--color-foreground)]';
 
-    this.renderer.appendChild(document.body, tip);
-    this.renderer.appendChild(document.body, arrow);
+    // Al contenedor de overlays y no directamente al <body>: así el tooltip
+    // comparte la misma capa que el resto de paneles flotantes y queda por
+    // encima de modales y drawers. Los dos nodos llevan ya
+    // `pointer-events-none`, así que no hace falta reactivarlos.
+    const container = overlayContainer(this.doc);
+    this.renderer.appendChild(container, tip);
+    this.renderer.appendChild(container, arrow);
     this.tooltipEl = tip;
     this.arrowEl = arrow;
     this.host.nativeElement.setAttribute('aria-describedby', this.tipId);
@@ -142,11 +150,11 @@ export class TooltipDirective implements OnDestroy {
   private hide() {
     this.clearTimer();
     if (this.tooltipEl) {
-      this.renderer.removeChild(document.body, this.tooltipEl);
+      this.renderer.removeChild(this.tooltipEl.parentNode, this.tooltipEl);
       this.tooltipEl = null;
     }
     if (this.arrowEl) {
-      this.renderer.removeChild(document.body, this.arrowEl);
+      this.renderer.removeChild(this.arrowEl.parentNode, this.arrowEl);
       this.arrowEl = null;
     }
     this.host.nativeElement.removeAttribute('aria-describedby');

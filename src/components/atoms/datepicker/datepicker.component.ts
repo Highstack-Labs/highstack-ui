@@ -13,12 +13,15 @@ import {
   input,
   model,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { InputComponent } from '../input/input.component';
 import { formatForDisplay, isValidIso, parseLocalized } from '../calendar/date-utils';
 import { positionOverlay } from '../../shared/overlay-position';
+import { containsTarget } from '../../shared/overlay-container';
+import { OverlayPortalDirective } from '../../shared/overlay-portal.directive';
 
 export type DatepickerSize = 'sm' | 'md' | 'lg';
 
@@ -41,7 +44,7 @@ let nextId = 0;
 @Component({
   selector: 'ui-datepicker',
   templateUrl: './datepicker.component.html',
-  imports: [InputComponent, CalendarComponent],
+  imports: [InputComponent, CalendarComponent, OverlayPortalDirective],
   host: { class: 'block' },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => DatepickerComponent), multi: true },
@@ -247,8 +250,15 @@ export class DatepickerComponent implements ControlValueAccessor {
     if (returnFocus) this.textInputEl()?.focus();
   }
 
+  /**
+   * El panel está portalizado a nivel de <body>, así que ya NO se puede buscar
+   * con un querySelector desde el host: hay que quedarse con la referencia de la
+   * plantilla.
+   */
+  private readonly panelRef = viewChild<ElementRef<HTMLElement>>('panel');
+
   private panelEl(): HTMLElement | null {
-    return this.el.nativeElement.querySelector('[role="dialog"]');
+    return this.panelRef()?.nativeElement ?? null;
   }
   private textInputEl(): HTMLElement | null {
     return this.el.nativeElement.querySelector('input');
@@ -280,7 +290,11 @@ export class DatepickerComponent implements ControlValueAccessor {
   @HostListener('document:click', ['$event'])
   protected onDocumentClick(event: MouseEvent) {
     if (!this.open()) return;
-    if (!this.el.nativeElement.contains(event.target as Node)) this.close(false);
+    // El panel vive fuera del host (portalizado), así que hay que preguntar por
+    // los dos: si no, cualquier clic dentro del calendario cerraría el panel.
+    if (!containsTarget(event.target as Node, this.el.nativeElement, this.panelEl())) {
+      this.close(false);
+    }
   }
 
   protected onPanelKeydown(event: KeyboardEvent) {
@@ -292,12 +306,13 @@ export class DatepickerComponent implements ControlValueAccessor {
 
   /**
    * El panel no es modal: no hay trampa de foco, así que tabular fuera lo
-   * cierra. `relatedTarget` es a dónde va el foco; si sigue dentro del host
-   * (por ejemplo del grid al botón de mes siguiente) no se cierra nada.
+   * cierra. `relatedTarget` es a dónde va el foco; si sigue dentro del host o
+   * del propio panel (por ejemplo del grid al botón de mes siguiente) no se
+   * cierra nada.
    */
   protected onPanelFocusout(event: FocusEvent) {
     const next = event.relatedTarget as Node | null;
-    if (next && this.el.nativeElement.contains(next)) return;
+    if (containsTarget(next, this.el.nativeElement, this.panelEl())) return;
     this.close(false);
   }
 

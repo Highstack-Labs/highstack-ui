@@ -35,13 +35,22 @@
     </svg>
   </button>
 
+  <!--
+    El panel está portalizado a nivel de <body> (uiOverlayPortal) para que no lo
+    recorte ni lo reposicione ningún ancestro con transform/overflow. Por eso el
+    (keydown) va aquí y no en el host: con el foco dentro del panel, un
+    @HostListener del host ya no recibiría las teclas.
+  -->
   <div
+    #panel
+    uiOverlayPortal
     role="listbox"
     tabindex="-1"
-    class="fixed z-50 max-h-60 overflow-y-auto rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md transition-opacity duration-100 outline-none"
+    (keydown)="onPanelKeydown($event)"
+    class="fixed max-h-60 overflow-y-auto rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md transition-opacity duration-100 outline-none"
     [class.hidden]="!open()"
     [class.opacity-0]="!ready()"
-    [class.pointer-events-none]="!ready()"
+    [style.pointerEvents]="ready() ? 'auto' : 'none'"
   >
     <ng-content />
   </div>

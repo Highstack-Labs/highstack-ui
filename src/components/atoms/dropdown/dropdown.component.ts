@@ -13,7 +13,10 @@ import {
   input,
   output,
   signal,
+  viewChild,
 } from '@angular/core';
+import { containsTarget } from '../../shared/overlay-container';
+import { OverlayPortalDirective } from '../../shared/overlay-portal.directive';
 
 export type DropdownSide = 'bottom' | 'top';
 export type DropdownAlign = 'start' | 'end';
@@ -28,6 +31,7 @@ const MARGIN = 8;
 @Component({
   selector: 'ui-dropdown',
   templateUrl: './dropdown.component.html',
+  imports: [OverlayPortalDirective],
   host: { class: 'relative inline-block' },
 })
 export class DropdownComponent {
@@ -58,8 +62,10 @@ export class DropdownComponent {
 
   protected readonly panelClasses = computed(() => {
     const base =
-      'fixed z-50 min-w-48 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md text-[var(--color-foreground)] outline-none transition-opacity duration-100';
-    const visibility = this.ready() ? 'opacity-100' : 'opacity-0 pointer-events-none';
+      'fixed min-w-48 rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md text-[var(--color-foreground)] outline-none transition-opacity duration-100';
+    // `pointer-events-auto` reactiva los eventos que el contenedor de overlays
+    // desactiva para no tapar la app entera.
+    const visibility = this.ready() ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none';
     return [base, visibility].join(' ');
   });
 
@@ -90,8 +96,15 @@ export class DropdownComponent {
     this.ready.set(false);
   }
 
+  /**
+   * El panel está portalizado a nivel de <body>, así que ya no se puede buscar
+   * con un querySelector desde el host: hay que quedarse con la referencia de la
+   * plantilla.
+   */
+  private readonly panelRef = viewChild<ElementRef<HTMLElement>>('panel');
+
   private panel(): HTMLElement | null {
-    return this.el.nativeElement.querySelector('[role="menu"]');
+    return this.panelRef()?.nativeElement ?? null;
   }
 
   /**
@@ -138,7 +151,10 @@ export class DropdownComponent {
 
   @HostListener('document:click', ['$event'])
   protected onDocClick(event: MouseEvent) {
-    if (this.open() && !this.el.nativeElement.contains(event.target as Node)) {
+    if (!this.open()) return;
+    // El panel vive fuera del host (portalizado): hay que preguntar por los dos,
+    // o cualquier clic dentro del menú lo cerraría antes de registrarse.
+    if (!containsTarget(event.target as Node, this.el.nativeElement, this.panel())) {
       this.close();
     }
   }
@@ -148,17 +164,30 @@ export class DropdownComponent {
     if (this.open()) this.updatePosition();
   }
 
-  @HostListener('keydown', ['$event'])
-  protected onKeydown(event: KeyboardEvent) {
+  /**
+   * Va colgado del propio panel en la plantilla: al estar portalizado fuera del
+   * host, un @HostListener ya no vería las teclas pulsadas con el foco dentro
+   * del menú.
+   */
+  protected onPanelKeydown(event: KeyboardEvent) {
     if (!this.open()) return;
-    const enabled = this.items().filter((i) => !i.disabled());
-    if (!enabled.length) return;
 
+    // Escape se atiende antes de mirar los ítems: un menú sin ítems habilitados
+    // también tiene que poder cerrarse.
     if (event.key === 'Escape') {
       event.preventDefault();
       this.close();
+      // El foco estaba dentro del panel, que se va: devolverlo al disparador.
+      const trigger = this.el.nativeElement.querySelector('[uiDropdownTrigger]') as
+        | HTMLElement
+        | null;
+      trigger?.focus();
       return;
     }
+
+    const enabled = this.items().filter((i) => !i.disabled());
+    if (!enabled.length) return;
+
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
       const active = document.activeElement;

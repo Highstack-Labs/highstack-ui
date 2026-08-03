@@ -189,13 +189,21 @@ describe('DatepickerComponent — panel', () => {
   function trigger(fixture: ReturnType<typeof create>): HTMLButtonElement {
     return fixture.nativeElement.querySelector('[data-trigger]');
   }
-  function panel(fixture: ReturnType<typeof create>): HTMLElement | null {
-    return fixture.nativeElement.querySelector('[role="dialog"]');
+  /**
+   * El panel está portalizado al contenedor de overlays a nivel de <body>, así
+   * que NO se busca desde el host del fixture sino desde el documento.
+   */
+  function panel(): HTMLElement | null {
+    return document.querySelector('[role="dialog"]');
   }
+
+  afterEach(() => {
+    document.querySelector('[data-ui-overlay-root]')?.remove();
+  });
 
   it('arranca cerrado', () => {
     const fixture = create({});
-    expect(panel(fixture)).toBeNull();
+    expect(panel()).toBeNull();
     expect(trigger(fixture).getAttribute('aria-expanded')).toBe('false');
   });
 
@@ -203,24 +211,24 @@ describe('DatepickerComponent — panel', () => {
     const fixture = create({});
     trigger(fixture).click();
     fixture.detectChanges();
-    expect(panel(fixture)).not.toBeNull();
+    expect(panel()).not.toBeNull();
     expect(trigger(fixture).getAttribute('aria-expanded')).toBe('true');
 
     trigger(fixture).click();
     fixture.detectChanges();
-    expect(panel(fixture)).toBeNull();
+    expect(panel()).toBeNull();
   });
 
   it('no abre si está deshabilitado o en readonly', () => {
     const deshabilitado = create({ disabled: true });
     trigger(deshabilitado).click();
     deshabilitado.detectChanges();
-    expect(panel(deshabilitado)).toBeNull();
+    expect(panel()).toBeNull();
 
     const soloLectura = create({ readonly: true });
     trigger(soloLectura).click();
     soloLectura.detectChanges();
-    expect(panel(soloLectura)).toBeNull();
+    expect(panel()).toBeNull();
   });
 
   it('Escape cierra el panel y devuelve el foco al campo', () => {
@@ -228,10 +236,10 @@ describe('DatepickerComponent — panel', () => {
     trigger(fixture).click();
     fixture.detectChanges();
 
-    panel(fixture)!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    panel()!.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     fixture.detectChanges();
 
-    expect(panel(fixture)).toBeNull();
+    expect(panel()).toBeNull();
     expect(document.activeElement).toBe(textbox(fixture));
   });
 
@@ -240,13 +248,13 @@ describe('DatepickerComponent — panel', () => {
     trigger(fixture).click();
     fixture.detectChanges();
 
-    const day = panel(fixture)!.querySelector('[data-date="2026-07-15"]') as HTMLButtonElement;
+    const day = panel()!.querySelector('[data-date="2026-07-15"]') as HTMLButtonElement;
     day.click();
     fixture.detectChanges();
 
     expect(fixture.componentInstance.value()).toBe('2026-07-15');
     expect(textbox(fixture).value).toBe('15/07/2026');
-    expect(panel(fixture)).toBeNull();
+    expect(panel()).toBeNull();
   });
 
   it('reenvía las restricciones al calendario', () => {
@@ -254,7 +262,7 @@ describe('DatepickerComponent — panel', () => {
     trigger(fixture).click();
     fixture.detectChanges();
 
-    const day = panel(fixture)!.querySelector('[data-date="2026-07-15"]') as HTMLButtonElement;
+    const day = panel()!.querySelector('[data-date="2026-07-15"]') as HTMLButtonElement;
     expect(day.getAttribute('aria-disabled')).toBe('true');
   });
 
@@ -265,7 +273,33 @@ describe('DatepickerComponent — panel', () => {
 
     document.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     fixture.detectChanges();
-    expect(panel(fixture)).toBeNull();
+    expect(panel()).toBeNull();
+  });
+
+  it('el panel se monta en el contenedor de overlays, fuera del host', () => {
+    // Es lo que lo salva del `transform` y el `overflow` de un modal o un drawer.
+    const fixture = create({});
+    trigger(fixture).click();
+    fixture.detectChanges();
+
+    const root = document.querySelector('[data-ui-overlay-root]');
+    expect(root).not.toBeNull();
+    expect(panel()!.parentElement).toBe(root);
+    expect(fixture.nativeElement.querySelector('[role="dialog"]')).toBeNull();
+  });
+
+  it('un clic dentro del panel portalizado no lo cierra', () => {
+    // Regresión: al salir el panel del host, el `host.contains(target)` del
+    // detector de clic-afuera daba false y el panel se cerraba al usarlo.
+    const fixture = create({ value: '2026-07-15' });
+    trigger(fixture).click();
+    fixture.detectChanges();
+
+    const inside = panel()!.querySelector('[data-nav="next"]') as HTMLElement;
+    inside.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    fixture.detectChanges();
+
+    expect(panel()).not.toBeNull();
   });
 
   it('salir del panel con Tab lo cierra', () => {
@@ -276,12 +310,12 @@ describe('DatepickerComponent — panel', () => {
 
     const outside = document.createElement('button');
     document.body.appendChild(outside);
-    panel(fixture)!.dispatchEvent(
+    panel()!.dispatchEvent(
       new FocusEvent('focusout', { bubbles: true, relatedTarget: outside }),
     );
     fixture.detectChanges();
 
-    expect(panel(fixture)).toBeNull();
+    expect(panel()).toBeNull();
     outside.remove();
   });
 
@@ -290,12 +324,12 @@ describe('DatepickerComponent — panel', () => {
     trigger(fixture).click();
     fixture.detectChanges();
 
-    const inside = panel(fixture)!.querySelector('[data-nav="next"]') as HTMLElement;
-    panel(fixture)!.dispatchEvent(
+    const inside = panel()!.querySelector('[data-nav="next"]') as HTMLElement;
+    panel()!.dispatchEvent(
       new FocusEvent('focusout', { bubbles: true, relatedTarget: inside }),
     );
     fixture.detectChanges();
 
-    expect(panel(fixture)).not.toBeNull();
+    expect(panel()).not.toBeNull();
   });
 });

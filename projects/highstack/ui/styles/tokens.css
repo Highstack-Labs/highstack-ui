@@ -23,6 +23,26 @@
   --color-ring: oklch(0.705 0.015 285.82);
 
   --radius: 0.75rem; /* Redondez suavizada de 12px para estilo premium */
+
+  /*
+   * Capas de apilamiento. Tres bandas separadas, no valores sueltos por
+   * componente, para que el orden entre familias de overlays sea explícito:
+   *
+   *   modal   < overlay < toast
+   *
+   * `--z-overlay` es el contenedor único a nivel de <body> donde se portalizan
+   * los paneles flotantes (select, datepicker, timepicker, dropdown, popover,
+   * tooltip). Al estar por encima de `--z-modal`, un panel abierto dentro de un
+   * modal o un drawer siempre se dibuja encima de él. Dentro de ese contenedor
+   * el apilado lo resuelve el orden del DOM (= orden de apertura), así que los
+   * paneles no necesitan z-index propio.
+   *
+   * Los toasts van arriba de todo: son notificaciones, nunca deben quedar
+   * tapadas por lo que el usuario está manipulando.
+   */
+  --z-modal: 1000;
+  --z-overlay: 1100;
+  --z-toast: 1200;
 }
 
 /* Modo oscuro: mismos tokens, paleta invertida. Se activa con la clase .dark
