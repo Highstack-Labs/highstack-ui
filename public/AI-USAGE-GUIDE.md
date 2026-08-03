@@ -243,6 +243,24 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 <ui-datepicker label="Entrega" [disabledDates]="feriados" [formControl]="ctrl" />
 ```
 
+### Timepicker
+`TimepickerComponent` · `<ui-timepicker>`
+- Campo de hora: compone `ui-input` (campo, label y mensaje) con un panel de columnas (horas | minutos | [segundos] | AM·PM).
+- **El valor es un string en 24h `'HH:mm'` (o `'HH:mm:ss'` con `showSeconds`), o `''` si no hay hora. NUNCA un `Date`.** El formato de 12 horas con AM/PM es solo presentación: lo que ve el formulario no cambia.
+- Se puede **teclear o elegir**. Al teclear acepta `9`, `930`, `9:30`, `9:30 pm`, `9 PM`, `21:30`, `9:30:15`.
+- `value` (model), `label`, `hint`, `error`, `placeholder`, `name`, `id`, `size` (`'sm'|'md'|'lg'`), `disabled`, `readonly`, `required`, `invalid`, `touched`, `errors`, `locale` (def. `'es-MX'`), `hourFormat` (`12 | 24 | 'auto'`, def. `'auto'`), `showSeconds`, `minuteStep` (def. `5`), `min`, `max` (`'HH:mm[:ss]'`), `disabledTimes` (`readonly string[]`), `timeDisabled` (`(iso: string) => boolean`).
+- `hourFormat: 'auto'` deriva el formato del locale (es-MX → 12h, es-ES → 24h). El texto de AM/PM sale de `Intl`: no hay nada hardcodeado.
+- Forms: `[(value)]`, `[formField]`, `formControlName`, `ngModel`.
+- Los errores de formato aparecen solo al salir del campo, nunca mientras se escribe.
+- **Elegir en una columna NO cierra el panel** (a diferencia del datepicker): faltan los minutos. Se cierra con Escape, clic afuera, Tab afuera o el botón "Listo". El pie tiene también "Ahora".
+
+```html
+<ui-timepicker label="Hora de la cita" [(value)]="hora" hint="Puedes escribirla o elegirla." />
+<ui-timepicker label="Turno" [hourFormat]="24" [minuteStep]="15" [(value)]="hora" />
+<ui-timepicker label="Cita" min="09:00" max="18:00" [formField]="form.cita" />
+<ui-timepicker label="Marca" [showSeconds]="true" [formControl]="ctrl" />
+```
+
 ### Badge
 `BadgeComponent` · `<ui-badge>`
 - `variant`: `'solid' | 'soft' | 'outline' | 'glass'` (def. `'soft'`)
@@ -586,6 +604,8 @@ cols: TableColumn[] = [
 - **Signal Forms** (`[formField]`) es API **experimental** de Angular 22 (`@angular/forms/signals`). Si no quieres experimental, usa `[formControl]`/`formControlName` (estable) — todos los componentes de formulario lo soportan vía ControlValueAccessor.
 - **El autofill del navegador se ve con fondo azul** → falta `@import '@highstacklabs2026/ui/styles.css'`. El fix vive en esa hoja, no en las clases del componente.
 - **Calendar/Datepicker: el valor es un string `'YYYY-MM-DD'`, no un `Date`.** Si le pasas un `Date` o un ISO con hora (`'2026-08-01T00:00:00Z'`) el componente lo normaliza a `''` y el campo sale vacío. Convierte antes de enlazar, y espera un string de vuelta.
+- **Timepicker: el valor es un string 24h `'HH:mm'`/`'HH:mm:ss'`, no un `Date`.** `hourFormat` solo cambia lo que se ve; el valor sigue siendo de 24 horas. Si le pasas basura (`'25:00'`, un `Date`) lo normaliza a `''`.
+- **Un select / datepicker / timepicker / dropdown / popover dentro de un modal o un drawer se ve correctamente por encima, sin recortes.** No hay que hacer nada: sus paneles se montan en un contenedor `[data-ui-overlay-root]` a nivel de `<body>`. Si necesitas cambiar las capas, redefine los tokens `--z-modal` (1000), `--z-overlay` (1100) y `--z-toast` (1200) — no pongas `z-index` a mano en los componentes.
 - **Radio/Select/Tabs/Dropdown/Accordion/Breadcrumb** son **compositional**: el contenedor (`ui-*-group`/`ui-*`) y los items deben importarse AMBOS y usarse juntos (los items se inyectan del padre por DI).
 
 ---
@@ -595,7 +615,7 @@ cols: TableColumn[] = [
 ```
 ButtonComponent, InputComponent, TextareaComponent, LabelComponent, CheckboxComponent, SwitchComponent,
 RadioGroupComponent, RadioComponent, SegmentedComponent, SelectComponent, OptionComponent,
-CalendarComponent, DatepickerComponent,
+CalendarComponent, DatepickerComponent, TimepickerComponent,
 BadgeComponent, AvatarComponent, AvatarGroupComponent,
 CardComponent, CardHeaderComponent, CardTitleComponent, CardDescriptionComponent, CardContentComponent, CardFooterComponent,
 ModalComponent, ModalHeaderComponent, ModalTitleComponent, ModalDescriptionComponent, ModalContentComponent, ModalFooterComponent,
