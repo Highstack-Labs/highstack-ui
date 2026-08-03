@@ -32,6 +32,7 @@ export * from './lib/atoms/table/table.types';
 export * from './lib/atoms/table/table.component';
 export * from './lib/atoms/tabs/tabs.component';
 export * from './lib/atoms/textarea/textarea.component';
+export * from './lib/atoms/timepicker/timepicker.component';
 export * from './lib/atoms/toast/toast.types';
 export * from './lib/atoms/toast/toast.service';
 export * from './lib/atoms/tooltip/tooltip.directive';

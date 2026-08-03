@@ -1,0 +1,114 @@
+<ui-input
+  [id]="id()"
+  [name]="name()"
+  [label]="label()"
+  [hint]="hint()"
+  [error]="resolvedError()"
+  [placeholder]="placeholder()"
+  [size]="size()"
+  [disabled]="isDisabled()"
+  [readonly]="readonly()"
+  [required]="required()"
+  [value]="text()"
+  (valueChange)="onTextInput($event)"
+  (focusin)="onFocus()"
+  (focusout)="onBlur()"
+>
+  <button
+    slot="suffix"
+    type="button"
+    data-trigger
+    tabindex="-1"
+    [disabled]="isDisabled() || readonly()"
+    [attr.aria-haspopup]="'dialog'"
+    [attr.aria-expanded]="open()"
+    [attr.aria-label]="'Abrir selector de hora'"
+    (click)="toggle()"
+    class="shrink-0 inline-flex items-center text-[var(--color-muted-foreground)] transition-colors hover:text-[var(--color-foreground)] cursor-pointer disabled:cursor-not-allowed"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+  </button>
+</ui-input>
+
+<!--
+  El panel está portalizado a nivel de <body> (uiOverlayPortal) para que no lo
+  recorte ni lo reposicione ningún ancestro con transform/overflow. Por eso el
+  (keydown) va aquí y no en el host: con el foco dentro de una columna, un
+  @HostListener del host ya no recibiría las teclas.
+-->
+@if (open()) {
+  <div
+    #panel
+    uiOverlayPortal
+    role="dialog"
+    tabindex="-1"
+    [attr.aria-label]="'Selector de hora'"
+    (keydown)="onPanelKeydown($event)"
+    (focusout)="onPanelFocusout($event)"
+    [style.top.px]="panelTop()"
+    [style.left.px]="panelLeft()"
+    [class.opacity-0]="!ready()"
+    [style.pointerEvents]="ready() ? 'auto' : 'none'"
+    class="fixed outline-none shadow-lg rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)]"
+  >
+    <div class="flex divide-x divide-[var(--color-border)]">
+      @for (col of columns(); track col.kind) {
+        <div
+          data-column
+          role="listbox"
+          [attr.data-kind]="col.kind"
+          [attr.aria-label]="col.label"
+          class="flex max-h-56 flex-col gap-0.5 overflow-y-auto p-1"
+        >
+          @for (opt of col.options; track opt.value) {
+            <button
+              type="button"
+              role="option"
+              [attr.data-value]="opt.value"
+              [attr.aria-selected]="opt.selected"
+              [attr.aria-disabled]="opt.disabled || null"
+              [disabled]="opt.disabled"
+              [tabindex]="opt.selected ? 0 : -1"
+              (click)="pick(col.kind, opt.value)"
+              [class]="
+                'shrink-0 rounded-md px-2.5 py-1 text-sm tabular-nums transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--color-ring)]/40 ' +
+                (opt.selected
+                  ? 'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] font-medium'
+                  : opt.disabled
+                    ? 'text-[var(--color-muted-foreground)]/40 cursor-not-allowed'
+                    : 'text-[var(--color-foreground)] hover:bg-[var(--color-muted)] cursor-pointer')
+              "
+            >
+              {{ opt.label }}
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <!--
+      Pie: elegir en una columna NO cierra el panel (faltan los minutos), así que
+      hace falta una salida explícita además de Escape y el clic afuera.
+    -->
+    <div
+      class="flex items-center justify-between gap-2 border-t border-[var(--color-border)] px-2 py-1.5"
+    >
+      <button
+        type="button"
+        data-action="now"
+        (click)="pickNow()"
+        class="rounded-md px-2 py-1 text-xs font-medium text-[var(--color-muted-foreground)] transition-colors hover:bg-[var(--color-muted)] hover:text-[var(--color-foreground)] cursor-pointer"
+      >
+        Ahora
+      </button>
+      <button
+        type="button"
+        data-action="done"
+        (click)="close()"
+        class="rounded-md px-2 py-1 text-xs font-medium text-[var(--color-primary)] transition-colors hover:bg-[var(--color-muted)] cursor-pointer"
+      >
+        Listo
+      </button>
+    </div>
+  </div>
+}

@@ -30,6 +30,7 @@ import { StepperPage } from './pages/atoms/stepper/stepper.page';
 import { SegmentedPage } from './pages/atoms/segmented/segmented.page';
 import { CalendarPage } from './pages/atoms/calendar/calendar.page';
 import { DatepickerPage } from './pages/atoms/datepicker/datepicker.page';
+import { TimepickerPage } from './pages/atoms/timepicker/timepicker.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 import { AiGuidePage } from './pages/ai-guide/ai-guide.page';
@@ -58,6 +59,7 @@ export const routes: Routes = [
       { path: 'atoms/segmented', component: SegmentedPage },
       { path: 'atoms/calendar', component: CalendarPage },
       { path: 'atoms/datepicker', component: DatepickerPage },
+      { path: 'atoms/timepicker', component: TimepickerPage },
       { path: 'atoms/avatar', component: AvatarPage },
       { path: 'atoms/tooltip', component: TooltipPage },
       { path: 'atoms/dropdown', component: DropdownPage },
