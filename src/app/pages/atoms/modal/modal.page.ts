@@ -10,6 +10,12 @@ import {
 } from '../../../../components/atoms/modal/modal.component';
 import { ButtonComponent } from '../../../../components/atoms/button/button.component';
 import { InputComponent } from '../../../../components/atoms/input/input.component';
+import { DatepickerComponent } from '../../../../components/atoms/datepicker/datepicker.component';
+import { TimepickerComponent } from '../../../../components/atoms/timepicker/timepicker.component';
+import {
+  SelectComponent,
+  OptionComponent,
+} from '../../../../components/atoms/select/select.component';
 import { DemoBlockComponent } from '../../../shared/demo-block/demo-block.component';
 import { CodeBlockComponent } from '../../../shared/code-block/code-block.component';
 import { PageNavService, PageSection } from '../../../shared/page-nav.service';
@@ -27,6 +33,10 @@ import { PageHeaderComponent } from '../../../shared/page-header/page-header.com
     ModalFooterComponent,
     ButtonComponent,
     InputComponent,
+    DatepickerComponent,
+    TimepickerComponent,
+    SelectComponent,
+    OptionComponent,
     DemoBlockComponent,
     CodeBlockComponent,
   ],
@@ -40,6 +50,12 @@ export class ModalPage implements AfterViewInit {
   protected readonly basicOpen = signal(false);
   protected readonly formOpen = signal(false);
   protected readonly sizeOpen = signal(false);
+  protected readonly overlaysOpen = signal(false);
+
+  // Demo de layering: paneles flotantes dentro del modal.
+  protected readonly overlayHora = signal('');
+  protected readonly overlayFecha = signal('');
+  protected readonly overlaySala = signal('');
   protected readonly currentSize = signal<ModalSize>('md');
 
   protected openWithSize(size: ModalSize) {
@@ -52,6 +68,7 @@ export class ModalPage implements AfterViewInit {
     { id: 'basic', label: 'Básico' },
     { id: 'sizes', label: 'Tamaños' },
     { id: 'form', label: 'Con formulario' },
+    { id: 'overlays', label: 'Con paneles flotantes' },
     { id: 'api', label: 'API' },
   ];
 
@@ -110,5 +127,22 @@ open = signal(false);`;
     <ui-button variant="ghost" (click)="open.set(false)">Cancelar</ui-button>
     <ui-button (click)="open.set(false)">Crear</ui-button>
   </ui-modal-footer>
+</ui-modal>`;
+
+  readonly overlaysCode = `<!-- No hace falta nada especial: los paneles del select, el datepicker y el
+     timepicker se montan en un contenedor a nivel de <body>, así que se dibujan
+     por encima del modal y no los recorta su overflow ni los descoloca el
+     transform de su animación. -->
+<ui-modal [(open)]="overlaysOpen" size="md">
+  <ui-modal-header>
+    <ui-modal-title>Agendar reunión</ui-modal-title>
+  </ui-modal-header>
+  <ui-modal-content>
+    <ui-timepicker label="Hora" [(value)]="hora" [minuteStep]="15" />
+    <ui-datepicker label="Fecha" [(value)]="fecha" />
+    <ui-select label="Sala" [(value)]="sala">
+      <ui-option value="a">Sala A</ui-option>
+    </ui-select>
+  </ui-modal-content>
 </ui-modal>`;
 }

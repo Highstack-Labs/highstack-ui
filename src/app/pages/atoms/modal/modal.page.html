@@ -80,6 +80,45 @@
           </ui-modal>
         </app-demo-block>
 
+        <!-- Con paneles flotantes -->
+        <app-demo-block id="overlays" title="Con paneles flotantes" [code]="overlaysCode" class="block scroll-mt-28">
+          <div class="space-y-3">
+            <p class="text-sm text-[var(--color-muted-foreground)]">
+              El cuerpo del modal tiene <code class="font-mono text-xs">overflow-y-auto</code> y su
+              panel se anima con <code class="font-mono text-xs">scale</code>. Cualquiera de las dos
+              cosas rompe un panel <code class="font-mono text-xs">fixed</code> renderizado en su
+              sitio, así que los paneles del select, el datepicker y el timepicker se montan en un
+              contenedor a nivel de <code class="font-mono text-xs">&lt;body&gt;</code>. Ábrelos y
+              haz scroll: quedan por encima y siguen al campo.
+            </p>
+            <ui-button variant="outline" (click)="overlaysOpen.set(true)">Abrir modal</ui-button>
+
+            <ui-modal [(open)]="overlaysOpen" size="md">
+              <ui-modal-header>
+                <ui-modal-title>Agendar reunión</ui-modal-title>
+                <ui-modal-description>Los tres paneles deben quedar por encima del modal.</ui-modal-description>
+              </ui-modal-header>
+              <ui-modal-content>
+                <div class="space-y-4">
+                  <ui-timepicker label="Hora" [(value)]="overlayHora" [minuteStep]="15" />
+                  <ui-datepicker label="Fecha" [(value)]="overlayFecha" />
+                  <ui-select label="Sala" [(value)]="overlaySala">
+                    <ui-option value="a">Sala A</ui-option>
+                    <ui-option value="b">Sala B</ui-option>
+                    <ui-option value="c">Sala C</ui-option>
+                  </ui-select>
+                  <!-- Relleno para forzar scroll: es donde antes se recortaba el panel. -->
+                  <div class="h-48 rounded-[var(--radius)] bg-[var(--color-muted)]/40"></div>
+                </div>
+              </ui-modal-content>
+              <ui-modal-footer>
+                <ui-button variant="ghost" (click)="overlaysOpen.set(false)">Cancelar</ui-button>
+                <ui-button (click)="overlaysOpen.set(false)">Agendar</ui-button>
+              </ui-modal-footer>
+            </ui-modal>
+          </div>
+        </app-demo-block>
+
         <!-- API Reference -->
         <section id="api" class="space-y-3 scroll-mt-28">
           <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>

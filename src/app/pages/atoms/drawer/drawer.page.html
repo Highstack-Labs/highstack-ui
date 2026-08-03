@@ -62,6 +62,46 @@
           </ui-drawer>
         </app-demo-block>
 
+        <!-- Con paneles flotantes -->
+        <app-demo-block id="overlays" title="Con paneles flotantes" [code]="overlaysCode" class="block scroll-mt-28">
+          <div class="space-y-3">
+            <p class="text-sm text-[var(--color-muted-foreground)]">
+              El drawer es el caso peor: su panel lleva
+              <code class="font-mono text-xs">translate-*</code> de forma permanente, lo que lo
+              convierte en el bloque contenedor de cualquier descendiente
+              <code class="font-mono text-xs">fixed</code>. Los paneles del select, el datepicker y
+              el timepicker se montan en un contenedor a nivel de
+              <code class="font-mono text-xs">&lt;body&gt;</code>, así que se dibujan por encima y
+              siguen alineados con su campo aunque haya scroll.
+            </p>
+            <ui-button variant="outline" (click)="overlaysOpen.set(true)">Abrir drawer</ui-button>
+
+            <ui-drawer [(open)]="overlaysOpen" side="right">
+              <ui-drawer-header>
+                <ui-drawer-title>Nuevo evento</ui-drawer-title>
+                <ui-drawer-description>Los tres paneles deben quedar por encima del drawer.</ui-drawer-description>
+              </ui-drawer-header>
+              <ui-drawer-content>
+                <div class="space-y-4">
+                  <ui-timepicker label="Hora" [(value)]="overlayHora" [minuteStep]="15" />
+                  <ui-datepicker label="Fecha" [(value)]="overlayFecha" />
+                  <ui-select label="Sala" [(value)]="overlaySala">
+                    <ui-option value="a">Sala A</ui-option>
+                    <ui-option value="b">Sala B</ui-option>
+                    <ui-option value="c">Sala C</ui-option>
+                  </ui-select>
+                  <!-- Relleno para forzar scroll: es donde antes se recortaba el panel. -->
+                  <div class="h-64 rounded-[var(--radius)] bg-[var(--color-muted)]/40"></div>
+                </div>
+              </ui-drawer-content>
+              <ui-drawer-footer>
+                <ui-button variant="ghost" (click)="overlaysOpen.set(false)">Cancelar</ui-button>
+                <ui-button (click)="overlaysOpen.set(false)">Guardar</ui-button>
+              </ui-drawer-footer>
+            </ui-drawer>
+          </div>
+        </app-demo-block>
+
         <!-- API Reference -->
         <section id="api" class="space-y-3 scroll-mt-28">
           <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
