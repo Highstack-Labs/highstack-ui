@@ -24,6 +24,7 @@ export * from './lib/atoms/separator/separator.component';
 export * from './lib/atoms/loading/loading.component';
 export * from './lib/atoms/modal/modal.component';
 export * from './lib/atoms/pagination/pagination.component';
+export * from './lib/atoms/phone-input/phone-input.component';
 export * from './lib/atoms/radio/radio.component';
 export * from './lib/atoms/segmented/segmented.component';
 export * from './lib/atoms/select/select.component';

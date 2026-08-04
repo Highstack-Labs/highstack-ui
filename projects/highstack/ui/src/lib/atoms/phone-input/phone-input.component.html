@@ -1,0 +1,134 @@
+<ui-input
+  [id]="id()"
+  [name]="name()"
+  type="tel"
+  [label]="label()"
+  [hint]="hint()"
+  [error]="resolvedError()"
+  [placeholder]="placeholder()"
+  [size]="size()"
+  [disabled]="isDisabled()"
+  [readonly]="readonly()"
+  [required]="required()"
+  [value]="nationalText()"
+  (valueChange)="onTextInput($event)"
+  (focusin)="onFocus()"
+  (focusout)="onBlur()"
+>
+  <button
+    slot="prefix"
+    type="button"
+    data-trigger
+    [disabled]="isDisabled() || readonly()"
+    [attr.aria-haspopup]="'dialog'"
+    [attr.aria-expanded]="open()"
+    [attr.aria-label]="triggerLabel()"
+    (click)="toggle()"
+    class="shrink-0 inline-flex items-center gap-1 rounded-md py-0.5 pe-1 text-[var(--color-foreground)] transition-colors hover:bg-[var(--color-muted)] cursor-pointer outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--color-ring)]/40 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+  >
+    @if (selected()) {
+      <!--
+        La bandera lleva su propio tamaño: heredar el del campo la deja
+        ilegible en size="sm". aria-hidden porque un lector de pantalla leería
+        los dos indicadores regionales, no el país (eso ya va en aria-label).
+      -->
+      <span aria-hidden="true" class="text-base leading-none">{{ selected()!.flag }}</span>
+      <span class="text-[var(--color-muted-foreground)] tabular-nums">+{{ selected()!.dial }}</span>
+    } @else {
+      <span class="text-[var(--color-muted-foreground)]">País</span>
+    }
+    <svg
+      aria-hidden="true"
+      xmlns="http://www.w3.org/2000/svg"
+      width="12"
+      height="12"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="text-[var(--color-muted-foreground)]"
+    ><polyline points="6 9 12 15 18 9" /></svg>
+  </button>
+</ui-input>
+
+<!--
+  El panel está portalizado a nivel de <body> (uiOverlayPortal) para que no lo
+  recorte ni lo reposicione ningún ancestro con transform/overflow. Por eso el
+  (keydown) va aquí y no en el host: con el foco en el buscador, un
+  @HostListener del host ya no recibiría las teclas.
+-->
+@if (open()) {
+  <div
+    #panel
+    uiOverlayPortal
+    role="dialog"
+    tabindex="-1"
+    aria-label="Selector de país"
+    (keydown)="onPanelKeydown($event)"
+    (focusout)="onPanelFocusout($event)"
+    [style.top.px]="panelTop()"
+    [style.left.px]="panelLeft()"
+    [class.opacity-0]="!ready()"
+    [style.pointerEvents]="ready() ? 'auto' : 'none'"
+    class="fixed w-72 max-w-[calc(100vw-2rem)] outline-none shadow-lg rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)]"
+  >
+    @if (showSearch()) {
+      <div class="border-b border-[var(--color-border)] p-1.5">
+        <input
+          #searchBox
+          type="text"
+          role="combobox"
+          aria-expanded="true"
+          aria-autocomplete="list"
+          aria-label="Buscar país"
+          [attr.aria-controls]="listboxId()"
+          [attr.aria-activedescendant]="activeId()"
+          [placeholder]="searchPlaceholder()"
+          [value]="search()"
+          (input)="onSearch($any($event.target).value)"
+          class="w-full rounded-md bg-transparent px-2 py-1 text-sm text-[var(--color-foreground)] outline-none placeholder:text-[var(--color-muted-foreground)]"
+        />
+      </div>
+    }
+
+    <div
+      data-list
+      [id]="listboxId()"
+      role="listbox"
+      aria-label="Países"
+      class="max-h-72 overflow-y-auto p-1"
+    >
+      @for (country of filtered(); track country.iso2; let i = $index) {
+        <div
+          role="option"
+          [id]="optionId(i)"
+          [attr.data-iso2]="country.iso2"
+          [attr.data-active]="i === activeIndex()"
+          [attr.aria-selected]="country.iso2 === effectiveCountry()"
+          (mousedown)="$event.preventDefault()"
+          (click)="pickCountry(country.iso2)"
+          [class]="
+            'flex cursor-pointer items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors ' +
+            (i === activeIndex()
+              ? 'bg-[var(--color-muted)] text-[var(--color-foreground)]'
+              : 'text-[var(--color-foreground)] hover:bg-[var(--color-muted)]/60')
+          "
+        >
+          <span aria-hidden="true" class="text-base leading-none">{{ country.flag }}</span>
+          <span class="flex-1 truncate">{{ country.name }}</span>
+          <span class="tabular-nums text-[var(--color-muted-foreground)]">+{{ country.dial }}</span>
+        </div>
+
+        @if (i === separatorAfter()) {
+          <div class="my-1 border-t border-[var(--color-border)]"></div>
+        }
+      } @empty {
+        <p role="status" class="px-2 py-3 text-center text-sm text-[var(--color-muted-foreground)]">
+          Sin resultados
+        </p>
+      }
+    </div>
+  </div>
+}
