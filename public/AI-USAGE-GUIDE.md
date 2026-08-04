@@ -157,6 +157,23 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 <ui-textarea label="Biografía" [rows]="5" [autoGrow]="true" [(value)]="bio" />
 ```
 
+### Phone Input
+`PhoneInputComponent` · `<ui-phone-input>`
+- Campo de teléfono: compone `ui-input` con un botón de bandera + prefijo en el slot `prefix` y un panel buscable con los ~240 países.
+- **El valor es un string en E.164: `'+593987654321'`, o `''` si está vacío. NUNCA un objeto, ni el país y el número en campos separados.** El país se deriva del prefijo al leer.
+- El país inicial sale de la región del `locale` (`'es-EC'` → 🇪🇨; `'es'` sin región → sin país), y `defaultCountry` gana si se pasa. Los nombres de país salen de `Intl`: no hay nada hardcodeado.
+- `value` (model), `label`, `hint`, `error`, `placeholder`, `name`, `id`, `size` (`'sm'|'md'|'lg'`), `disabled`, `readonly`, `required`, `invalid`, `touched`, `errors`, `locale` (def. `'es-MX'`), `defaultCountry` (ISO2), `countries` (`readonly string[]`, lista blanca), `preferredCountries` (`readonly string[]`, fijados arriba), `searchPlaceholder` (def. `'Buscar país'`). Output: `countryChange` (ISO2).
+- Forms: `[(value)]`, `[formField]`, `formControlName`, `ngModel`.
+- Se puede **teclear el número nacional o pegar uno internacional** (`+34600111222`, `0034600111222`): al pegar, el país se re-detecta. Cambiar de país conserva los dígitos ya tecleados.
+- **La validación es de longitud y dígitos, no de reglas de operadora**: `+593000000000` pasa. Para más rigor, valida en el servidor. El agrupado visual (`98 765 4321`) y los errores de longitud aparecen al salir del campo, nunca mientras se escribe.
+
+```html
+<ui-phone-input label="Teléfono" locale="es-EC" [(value)]="telefono" hint="Elige el país o pega el número." />
+<ui-phone-input label="Teléfono" defaultCountry="MX" [preferredCountries]="['MX','US','EC']" [(value)]="telefono" />
+<ui-phone-input label="Teléfono" [countries]="['EC','CO','PE']" (countryChange)="pais.set($event)" [(value)]="telefono" />
+<ui-phone-input label="Teléfono" [formField]="form.telefono" />
+```
+
 ### Checkbox
 `CheckboxComponent` · `<ui-checkbox>`
 - `checked` (model, boolean), `label`, `description`, `hint`, `error`, `size` (`'sm'|'md'`), `disabled`, `required`, `indeterminate`.
@@ -605,7 +622,9 @@ cols: TableColumn[] = [
 - **El autofill del navegador se ve con fondo azul** → falta `@import '@highstacklabs2026/ui/styles.css'`. El fix vive en esa hoja, no en las clases del componente.
 - **Calendar/Datepicker: el valor es un string `'YYYY-MM-DD'`, no un `Date`.** Si le pasas un `Date` o un ISO con hora (`'2026-08-01T00:00:00Z'`) el componente lo normaliza a `''` y el campo sale vacío. Convierte antes de enlazar, y espera un string de vuelta.
 - **Timepicker: el valor es un string 24h `'HH:mm'`/`'HH:mm:ss'`, no un `Date`.** `hourFormat` solo cambia lo que se ve; el valor sigue siendo de 24 horas. Si le pasas basura (`'25:00'`, un `Date`) lo normaliza a `''`.
-- **Un select / datepicker / timepicker / dropdown / popover dentro de un modal o un drawer se ve correctamente por encima, sin recortes.** No hay que hacer nada: sus paneles se montan en un contenedor `[data-ui-overlay-root]` a nivel de `<body>`. Si necesitas cambiar las capas, redefine los tokens `--z-modal` (1000), `--z-overlay` (1100) y `--z-toast` (1200) — no pongas `z-index` a mano en los componentes.
+- **Phone Input: el valor es un string E.164 (`'+593987654321'`), no un objeto ni dos campos.** Si necesitas el país aparte, escucha `countryChange` (te da el ISO2); no partas el string a mano. Si le pasas basura (`'+'`, un número) lo normaliza a `''`, y un número sin `+` se toma como número **nacional** del país actual.
+- **Phone Input: con prefijos compartidos (`+1` → US/CA/PR, `+7` → RU/KZ) el valor siempre es correcto, pero la bandera puede no serlo.** Si el usuario eligió el país, su elección se respeta; un número que llega de fuera sin elección previa se muestra con el país principal (Estados Unidos, Rusia). Distinguirlos exige la metadata de operadoras que este componente evita a propósito.
+- **Un select / datepicker / timepicker / phone input / dropdown / popover dentro de un modal o un drawer se ve correctamente por encima, sin recortes.** No hay que hacer nada: sus paneles se montan en un contenedor `[data-ui-overlay-root]` a nivel de `<body>`. Si necesitas cambiar las capas, redefine los tokens `--z-modal` (1000), `--z-overlay` (1100) y `--z-toast` (1200) — no pongas `z-index` a mano en los componentes.
 - **Radio/Select/Tabs/Dropdown/Accordion/Breadcrumb** son **compositional**: el contenedor (`ui-*-group`/`ui-*`) y los items deben importarse AMBOS y usarse juntos (los items se inyectan del padre por DI).
 
 ---
@@ -613,7 +632,7 @@ cols: TableColumn[] = [
 ## 6. Lista rápida de imports (todos desde `@highstacklabs2026/ui`)
 
 ```
-ButtonComponent, InputComponent, TextareaComponent, LabelComponent, CheckboxComponent, SwitchComponent,
+ButtonComponent, InputComponent, TextareaComponent, PhoneInputComponent, LabelComponent, CheckboxComponent, SwitchComponent,
 RadioGroupComponent, RadioComponent, SegmentedComponent, SelectComponent, OptionComponent,
 CalendarComponent, DatepickerComponent, TimepickerComponent,
 BadgeComponent, AvatarComponent, AvatarGroupComponent,
