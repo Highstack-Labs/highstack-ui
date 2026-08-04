@@ -54,6 +54,7 @@ export class Shell {
     { label: 'Toast', route: '/atoms/toast' },
     { label: 'Loading', route: '/atoms/loading' },
     { label: 'Textarea', route: '/atoms/textarea' },
+    { label: 'Phone Input', route: '/atoms/phone-input' },
     { label: 'Accordion', route: '/atoms/accordion' },
     { label: 'Breadcrumb', route: '/atoms/breadcrumb' },
     { label: 'Table', route: '/atoms/table' },

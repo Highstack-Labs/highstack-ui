@@ -21,6 +21,7 @@ import { AlertPage } from './pages/atoms/alert/alert.page';
 import { ToastPage } from './pages/atoms/toast/toast.page';
 import { LoadingPage } from './pages/atoms/loading/loading.page';
 import { TextareaPage } from './pages/atoms/textarea/textarea.page';
+import { PhoneInputPage } from './pages/atoms/phone-input/phone-input.page';
 import { AccordionPage } from './pages/atoms/accordion/accordion.page';
 import { BreadcrumbPage } from './pages/atoms/breadcrumb/breadcrumb.page';
 import { TablePage } from './pages/atoms/table/table.page';
@@ -69,6 +70,7 @@ export const routes: Routes = [
       { path: 'atoms/toast',  component: ToastPage },
       { path: 'atoms/loading', component: LoadingPage },
       { path: 'atoms/textarea', component: TextareaPage },
+      { path: 'atoms/phone-input', component: PhoneInputPage },
       { path: 'atoms/accordion', component: AccordionPage },
       { path: 'atoms/breadcrumb', component: BreadcrumbPage },
       { path: 'atoms/table',  component: TablePage },
