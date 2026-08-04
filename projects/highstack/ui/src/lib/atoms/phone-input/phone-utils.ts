@@ -221,6 +221,32 @@ export function checkNational(national: string, iso2: Iso2 | null): PhoneProblem
 }
 
 /**
+ * Lo mismo que `checkNational`, pero partiendo del E.164 completo y resolviendo
+ * el país desde su prefijo.
+ *
+ * Existe para quien está **fuera** del componente: un formulario solo tiene el
+ * valor que `ui-phone-input` publica (`'+34600111222'`), no el país por
+ * separado, y el componente valida la longitud para *mostrar* el mensaje al
+ * salir del campo pero no bloquea nada. Sin esto, el formulario que quiera
+ * cerrar el botón de envío no tiene más opción que copiarse la tabla de países.
+ *
+ * `prefer` desempata los prefijos compartidos igual que `parseE164`; solo
+ * cambia el veredicto si los países que comparten prefijo admiten longitudes
+ * distintas (`+1` no: todo el NANP son 10 dígitos).
+ */
+export function checkE164(
+  value: E164,
+  prefer: readonly (Iso2 | null | undefined)[] = [],
+): PhoneProblem {
+  if (!digitsOnly(value)) return 'empty';
+
+  const parsed = parseE164(value, prefer);
+  if (!parsed) return 'no-country';
+
+  return checkNational(parsed.national, parsed.iso2);
+}
+
+/**
  * Región del locale, si es un país de la tabla: `'es-EC'` → `'EC'`.
  * `'es'` (sin región) y `'es-419'` (Latinoamérica, que no es un país) → `''`.
  */
