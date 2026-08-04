@@ -25,6 +25,13 @@ export * from './lib/atoms/loading/loading.component';
 export * from './lib/atoms/modal/modal.component';
 export * from './lib/atoms/pagination/pagination.component';
 export * from './lib/atoms/phone-input/phone-input.component';
+/**
+ * Nombrado a propósito, no `export *`: `phone-utils` tiene una docena de
+ * helpers internos (parseo, formateo, la tabla de países) y abrirlos todos los
+ * volvería API pública para siempre. `checkE164` es lo único que un formulario
+ * necesita de ahí: cerrar el botón de envío mientras el número esté incompleto.
+ */
+export { checkE164 } from './lib/atoms/phone-input/phone-utils';
 export * from './lib/atoms/radio/radio.component';
 export * from './lib/atoms/segmented/segmented.component';
 export * from './lib/atoms/select/select.component';

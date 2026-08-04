@@ -166,6 +166,14 @@ Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Selec
 - Forms: `[(value)]`, `[formField]`, `formControlName`, `ngModel`.
 - Se puede **teclear el número nacional o pegar uno internacional** (`+34600111222`, `0034600111222`): al pegar, el país se re-detecta. Cambiar de país conserva los dígitos ya tecleados.
 - **La validación es de longitud y dígitos, no de reglas de operadora**: `+593000000000` pasa. Para más rigor, valida en el servidor. El agrupado visual (`98 765 4321`) y los errores de longitud aparecen al salir del campo, nunca mientras se escribe.
+- **El campo muestra el error de longitud, pero no bloquea nada: cerrar el botón de envío es del formulario.** Para eso está `checkE164(value)`, que resuelve el país desde el prefijo y devuelve `PhoneProblem` (`'ok' | 'empty' | 'no-country' | 'too-short' | 'too-long'`) para los ~240 países. No te copies la tabla de longitudes.
+
+```ts
+import { checkE164 } from '@highstacklabs2026/ui';
+
+readonly telefono = signal('');
+protected readonly puedeEnviar = computed(() => checkE164(this.telefono()) === 'ok');
+```
 
 ```html
 <ui-phone-input label="Teléfono" locale="es-EC" [(value)]="telefono" hint="Elige el país o pega el número." />
@@ -623,6 +631,7 @@ cols: TableColumn[] = [
 - **Calendar/Datepicker: el valor es un string `'YYYY-MM-DD'`, no un `Date`.** Si le pasas un `Date` o un ISO con hora (`'2026-08-01T00:00:00Z'`) el componente lo normaliza a `''` y el campo sale vacío. Convierte antes de enlazar, y espera un string de vuelta.
 - **Timepicker: el valor es un string 24h `'HH:mm'`/`'HH:mm:ss'`, no un `Date`.** `hourFormat` solo cambia lo que se ve; el valor sigue siendo de 24 horas. Si le pasas basura (`'25:00'`, un `Date`) lo normaliza a `''`.
 - **Phone Input: el valor es un string E.164 (`'+593987654321'`), no un objeto ni dos campos.** Si necesitas el país aparte, escucha `countryChange` (te da el ISO2); no partas el string a mano. Si le pasas basura (`'+'`, un número) lo normaliza a `''`, y un número sin `+` se toma como número **nacional** del país actual.
+- **Phone Input: un número incompleto o demasiado largo llega igual a tu `value`.** El campo pinta el error al salir del foco, pero sigue publicando el E.164, así que si tu botón de envío solo comprueba "no está vacío", `+3499388394824` acaba en el back-end. Cierra el botón con `checkE164(value) === 'ok'`.
 - **Phone Input: con prefijos compartidos (`+1` → US/CA/PR, `+7` → RU/KZ) el valor siempre es correcto, pero la bandera puede no serlo.** Si el usuario eligió el país, su elección se respeta; un número que llega de fuera sin elección previa se muestra con el país principal (Estados Unidos, Rusia). Distinguirlos exige la metadata de operadoras que este componente evita a propósito.
 - **Un select / datepicker / timepicker / phone input / dropdown / popover dentro de un modal o un drawer se ve correctamente por encima, sin recortes.** No hay que hacer nada: sus paneles se montan en un contenedor `[data-ui-overlay-root]` a nivel de `<body>`. Si necesitas cambiar las capas, redefine los tokens `--z-modal` (1000), `--z-overlay` (1100) y `--z-toast` (1200) — no pongas `z-index` a mano en los componentes.
 - **Radio/Select/Tabs/Dropdown/Accordion/Breadcrumb** son **compositional**: el contenedor (`ui-*-group`/`ui-*`) y los items deben importarse AMBOS y usarse juntos (los items se inyectan del padre por DI).
@@ -649,5 +658,6 @@ AccordionComponent, AccordionItemComponent, BreadcrumbComponent, BreadcrumbItemC
 SpinnerComponent, SkeletonComponent, ProgressComponent,
 TableComponent, TableCellDirective, TableColumn (tipo),
 PaginationComponent,
+checkE164 (función), PhoneProblem (tipo),
 provideHighstack
 ```

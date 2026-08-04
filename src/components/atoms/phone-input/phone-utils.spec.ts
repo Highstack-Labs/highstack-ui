@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { BY_ISO2, COUNTRY_CODES, PRIMARY_BY_DIAL } from './country-codes';
 import {
+  checkE164,
   checkNational,
   countryList,
   digitsOnly,
@@ -248,6 +249,44 @@ describe('checkNational', () => {
   it('avisa cuando falta el país', () => {
     expect(checkNational('987654321', null)).toBe('no-country');
     expect(checkNational('987654321', 'XX')).toBe('no-country');
+  });
+});
+
+describe('checkE164', () => {
+  it('valida contra la longitud del país que dice el prefijo', () => {
+    expect(checkE164('+593987654321')).toBe('ok');
+    expect(checkE164('+34600111222')).toBe('ok');
+    expect(checkE164('+525512345678')).toBe('ok');
+  });
+
+  /** El caso que motivó el helper: un número que se pasó de largo para España. */
+  it('detecta corto y largo sin que le digan el país', () => {
+    expect(checkE164('+3499388394824')).toBe('too-long');
+    expect(checkE164('+34600')).toBe('too-short');
+  });
+
+  it('tolera el formato con el que se escribe un teléfono', () => {
+    expect(checkE164('+34 600 111 222')).toBe('ok');
+  });
+
+  it('sin dígitos es vacío, y solo el prefijo también', () => {
+    expect(checkE164('')).toBe('empty');
+    expect(checkE164('+')).toBe('empty');
+    expect(checkE164('+34')).toBe('empty');
+  });
+
+  it('avisa cuando el prefijo no es de ningún país', () => {
+    expect(checkE164('+9999999999')).toBe('no-country');
+  });
+
+  /**
+   * Todo el NANP son 10 dígitos, así que la preferencia mueve la bandera pero
+   * no el veredicto. Se comprueba para que siga siendo así si alguien toca la
+   * tabla.
+   */
+  it('acepta un número del NANP con o sin preferencia de país', () => {
+    expect(checkE164('+14155552671')).toBe('ok');
+    expect(checkE164('+14155552671', ['CA'])).toBe('ok');
   });
 });
 
