@@ -45,6 +45,7 @@ export class Shell {
     { label: 'Calendar', route: '/atoms/calendar' },
     { label: 'Datepicker', route: '/atoms/datepicker' },
     { label: 'Timepicker', route: '/atoms/timepicker' },
+    { label: 'Timezone Select', route: '/atoms/timezone-select' },
     { label: 'Avatar', route: '/atoms/avatar' },
     { label: 'Tooltip', route: '/atoms/tooltip' },
     { label: 'Dropdown', route: '/atoms/dropdown' },

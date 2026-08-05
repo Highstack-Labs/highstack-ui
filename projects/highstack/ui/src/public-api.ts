@@ -41,6 +41,24 @@ export * from './lib/atoms/table/table.component';
 export * from './lib/atoms/tabs/tabs.component';
 export * from './lib/atoms/textarea/textarea.component';
 export * from './lib/atoms/timepicker/timepicker.component';
+export * from './lib/atoms/timezone-select/timezone-select.component';
+/**
+ * Nombrado a propósito, igual que en `phone-utils`: `cityFromId` es un detalle
+ * de cómo se arman las etiquetas y no debería quedar congelado como API
+ * pública. Lo de aquí es lo que un formulario sí necesita: preseleccionar la
+ * zona del dispositivo y poder pintar un id guardado sin abrir el modal.
+ */
+export {
+  type TimezoneOption,
+  type TimezoneGroup,
+  getLocalTimezone,
+  getTimezoneOffsetMinutes,
+  formatOffset,
+  toTimezoneOption,
+  listTimezones,
+  filterTimezones,
+  groupByRegion,
+} from './lib/atoms/timezone-select/timezone-utils';
 export * from './lib/atoms/toast/toast.types';
 export * from './lib/atoms/toast/toast.service';
 export * from './lib/atoms/tooltip/tooltip.directive';

@@ -56,3 +56,14 @@ ui-textarea textarea:autofill {
   background-color: transparent;
   color: var(--color-foreground);
 }
+
+/*
+ * Datepicker y timepicker en modo solo-selección (`typeable` apagado, que es lo
+ * de fábrica): toda la caja abre el panel, así que el cursor tiene que decirlo.
+ *
+ * No se puede resolver con una utilidad de Tailwind en el componente: el
+ * `<input>` lo pinta `ui-input` por dentro y no expone su clase.
+ */
+ui-input[data-picker-only] input {
+  cursor: pointer;
+}

@@ -75,7 +75,7 @@ O manual:
 
 ## 3. Cómo funcionan los FORMULARIOS (importante)
 
-Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Select, Segmented, Datepicker**) soportan **3 formas** de enlace, todas sobre la misma fuente de verdad:
+Los componentes de formulario (**Input, Textarea, Checkbox, Switch, Radio, Select, Segmented, Datepicker, Timepicker, Timezone Select**) soportan **3 formas** de enlace, todas sobre la misma fuente de verdad:
 
 ```html
 <!-- a) Two-way simple -->
@@ -284,6 +284,29 @@ protected readonly puedeEnviar = computed(() => checkE164(this.telefono()) === '
 <ui-timepicker label="Turno" [hourFormat]="24" [minuteStep]="15" [(value)]="hora" />
 <ui-timepicker label="Cita" min="09:00" max="18:00" [formField]="form.cita" />
 <ui-timepicker label="Marca" [showSeconds]="true" [formControl]="ctrl" />
+```
+
+### Timezone Select
+`TimezoneSelectComponent` · `<ui-timezone-select>`
+- Selector de zona horaria: un trigger como el del `ui-select` que abre un **modal** con buscador y la lista completa de zonas, agrupada por región.
+- **El valor es el identificador IANA (`'America/Bogota'`), o `''` si no hay zona. NUNCA un offset ni un `Date`.**
+- La lista sale del runtime (`Intl.supportedValuesOf('timeZone')`): ~420 zonas, cero peso en el bundle y siempre al día. El desfase se calcula en vivo, con el horario de verano ya aplicado.
+- **Las etiquetas se derivan del id: sin tilde y sin país** (`Bogota`, no `Bogotá, Colombia`). Se busca por ciudad, por región (en inglés o español) y por desfase (`gmt-5` o `gmt-05:00`); por país NO.
+- `value` (model), `label`, `hint`, `error`, `placeholder`, `id`, `size` (`'sm'|'md'|'lg'`), `modalTitle` (def. `'Zona horaria'`), `searchPlaceholder`, `grouped` (def. `true`), `disabled`, `required`, `invalid`, `touched`, `errors`.
+- Forms: `[(value)]`, `[formField]`, `formControlName`, `ngModel`.
+- Teclado: el foco se queda en el buscador y la opción activa se señala con `aria-activedescendant`. ↑/↓, PageUp/PageDown, Home/End mueven; Enter elige; Escape cierra.
+- Utilidades exportadas: `getLocalTimezone()`, `toTimezoneOption(id)`, `listTimezones()`, `filterTimezones()`, `groupByRegion()`, `getTimezoneOffsetMinutes(id, date)`, `formatOffset(min)`.
+
+```html
+<ui-timezone-select label="Zona horaria" [(value)]="zona" />
+<ui-timezone-select label="Zona horaria" [grouped]="false" [formField]="form.zona" />
+<ui-timezone-select label="¿Dónde estás?" modalTitle="Elige tu zona" [formControl]="ctrl" />
+```
+
+```ts
+// Arrancar en la zona del propio dispositivo:
+import { getLocalTimezone } from '@highstacklabs2026/ui';
+zona = signal(getLocalTimezone());
 ```
 
 ### Badge
@@ -630,6 +653,7 @@ cols: TableColumn[] = [
 - **El autofill del navegador se ve con fondo azul** → falta `@import '@highstacklabs2026/ui/styles.css'`. El fix vive en esa hoja, no en las clases del componente.
 - **Calendar/Datepicker: el valor es un string `'YYYY-MM-DD'`, no un `Date`.** Si le pasas un `Date` o un ISO con hora (`'2026-08-01T00:00:00Z'`) el componente lo normaliza a `''` y el campo sale vacío. Convierte antes de enlazar, y espera un string de vuelta.
 - **Timepicker: el valor es un string 24h `'HH:mm'`/`'HH:mm:ss'`, no un `Date`.** `hourFormat` solo cambia lo que se ve; el valor sigue siendo de 24 horas. Si le pasas basura (`'25:00'`, un `Date`) lo normaliza a `''`.
+- **Timezone Select: el valor es el id IANA (`'America/Bogota'`), no el desfase.** El `GMT-05:00` que se ve es presentación calculada al vuelo, y cambia con el horario de verano: guardar el offset en vez del id te deja con una hora mal medio año. Buscar por país no funciona (las etiquetas salen del id, sin país).
 - **Phone Input: el valor es un string E.164 (`'+593987654321'`), no un objeto ni dos campos.** Si necesitas el país aparte, escucha `countryChange` (te da el ISO2); no partas el string a mano. Si le pasas basura (`'+'`, un número) lo normaliza a `''`, y un número sin `+` se toma como número **nacional** del país actual.
 - **Phone Input: un número incompleto o demasiado largo llega igual a tu `value`.** El campo pinta el error al salir del foco, pero sigue publicando el E.164, así que si tu botón de envío solo comprueba "no está vacío", `+3499388394824` acaba en el back-end. Cierra el botón con `checkE164(value) === 'ok'`.
 - **Phone Input: con prefijos compartidos (`+1` → US/CA/PR, `+7` → RU/KZ) el valor siempre es correcto, pero la bandera puede no serlo.** Si el usuario eligió el país, su elección se respeta; un número que llega de fuera sin elección previa se muestra con el país principal (Estados Unidos, Rusia). Distinguirlos exige la metadata de operadoras que este componente evita a propósito.
@@ -643,7 +667,7 @@ cols: TableColumn[] = [
 ```
 ButtonComponent, InputComponent, TextareaComponent, PhoneInputComponent, LabelComponent, CheckboxComponent, SwitchComponent,
 RadioGroupComponent, RadioComponent, SegmentedComponent, SelectComponent, OptionComponent,
-CalendarComponent, DatepickerComponent, TimepickerComponent,
+CalendarComponent, DatepickerComponent, TimepickerComponent, TimezoneSelectComponent,
 BadgeComponent, AvatarComponent, AvatarGroupComponent,
 CardComponent, CardHeaderComponent, CardTitleComponent, CardDescriptionComponent, CardContentComponent, CardFooterComponent,
 ModalComponent, ModalHeaderComponent, ModalTitleComponent, ModalDescriptionComponent, ModalContentComponent, ModalFooterComponent,
@@ -659,5 +683,6 @@ SpinnerComponent, SkeletonComponent, ProgressComponent,
 TableComponent, TableCellDirective, TableColumn (tipo),
 PaginationComponent,
 checkE164 (función), PhoneProblem (tipo),
+getLocalTimezone, toTimezoneOption, listTimezones, filterTimezones, groupByRegion, getTimezoneOffsetMinutes, formatOffset (funciones), TimezoneOption, TimezoneGroup (tipos),
 provideHighstack
 ```
