@@ -129,6 +129,10 @@ export class SelectComponent implements ControlValueAccessor {
     }
     this.ready.set(false);
     this.open.set(true);
+    // El panel no se crea al abrir (vive siempre en el DOM), así que hay que
+    // reinsertarlo al final del contenedor de overlays o quedaría por debajo de
+    // los que se abrieron después — el popover o el drawer que lo contiene.
+    this.portal()?.bringToFront();
     // `afterNextRender` garantiza que el panel ya esté visible en el DOM (sin
     // depender del timing del ciclo de detección de cambios) antes de medirlo y
     // posicionarlo; de lo contrario podía quedar invisible hasta un resize.
@@ -152,6 +156,7 @@ export class SelectComponent implements ControlValueAccessor {
    * plantilla.
    */
   private readonly panelRef = viewChild<ElementRef<HTMLElement>>('panel');
+  private readonly portal = viewChild('panel', { read: OverlayPortalDirective });
 
   private panel(): HTMLElement | null {
     return this.panelRef()?.nativeElement ?? null;

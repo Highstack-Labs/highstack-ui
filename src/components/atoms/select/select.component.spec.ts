@@ -1,6 +1,7 @@
 import { Component, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { OptionComponent, SelectComponent } from './select.component';
+import { PopoverComponent, PopoverTriggerDirective } from '../popover/popover.component';
 
 describe('SelectComponent', () => {
   it('no renderiza un párrafo de error vacío cuando invalid+touched sin mensaje', () => {
@@ -129,5 +130,70 @@ describe('SelectComponent — panel portalizado', () => {
     fixture.detectChanges();
 
     expect(document.activeElement).toBe(opciones[0]); // vuelve a Manzana
+  });
+});
+
+@Component({
+  selector: 'app-select-en-popover',
+  imports: [PopoverComponent, PopoverTriggerDirective, SelectComponent, OptionComponent],
+  template: `
+    <ui-popover>
+      <button uiPopoverTrigger>Abrir popover</button>
+      <ui-select label="Fruta">
+        <ui-option value="manzana">Manzana</ui-option>
+      </ui-select>
+    </ui-popover>
+  `,
+})
+class SelectEnPopover {}
+
+describe('SelectComponent — apilado dentro de otro overlay', () => {
+  afterEach(() => {
+    document.querySelector('[data-ui-overlay-root]')?.remove();
+  });
+
+  /**
+   * Dentro del contenedor de overlays el apilado lo decide el orden del DOM. El
+   * panel del select se monta al inicializarse el componente (no al abrirse,
+   * porque necesita sus <ui-option> montadas para resolver la etiqueta), así que
+   * sin traerlo al frente quedaba por debajo del panel del popover que lo
+   * contiene: se abría detrás y no se veía.
+   */
+  it('trae su panel al frente al abrirse, por encima del popover que lo contiene', () => {
+    const fixture = TestBed.createComponent(SelectEnPopover);
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector('[uiPopoverTrigger]').click();
+    fixture.detectChanges();
+
+    // El select viaja con el panel del popover al contenedor de overlays, así
+    // que su trigger ya no cuelga del fixture.
+    document.querySelector<HTMLElement>('[data-trigger]')!.click();
+    fixture.detectChanges();
+
+    const root = document.querySelector('[data-ui-overlay-root]')!;
+    const roles = Array.from(root.children).map((c) => c.getAttribute('role'));
+    expect(roles).toEqual(['dialog', 'listbox']);
+  });
+});
+
+describe('SelectComponent — elegir opción dentro de un popover', () => {
+  afterEach(() => {
+    document.querySelector('[data-ui-overlay-root]')?.remove();
+  });
+
+  it('no cierra el popover que lo contiene al elegir una opción', () => {
+    const fixture = TestBed.createComponent(SelectEnPopover);
+    fixture.detectChanges();
+
+    fixture.nativeElement.querySelector('[uiPopoverTrigger]').click();
+    fixture.detectChanges();
+    document.querySelector<HTMLElement>('[data-trigger]')!.click();
+    fixture.detectChanges();
+
+    document.querySelector<HTMLElement>('[role="option"]')!.click();
+    fixture.detectChanges();
+
+    expect(document.querySelector('[role="dialog"]')).not.toBeNull();
   });
 });

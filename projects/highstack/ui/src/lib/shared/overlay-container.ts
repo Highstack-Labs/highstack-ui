@@ -43,15 +43,41 @@ export function overlayContainer(doc: Document): HTMLElement {
   return root;
 }
 
+/** Dónde se declaró un panel antes de portalizarlo. La pone el uiOverlayPortal. */
+const ORIGIN = Symbol('ui-portal-origin');
+
+interface PortaledNode extends Node {
+  [ORIGIN]?: HTMLElement | null;
+}
+
 /**
- * ¿`target` está dentro de alguno de estos elementos?
+ * Recuerda el elemento que contenía al panel antes de moverlo, para que
+ * `containsTarget` pueda reconstruir el anidamiento original.
+ */
+export function setPortalOrigin(panel: HTMLElement, origin: HTMLElement | null): void {
+  (panel as PortaledNode)[ORIGIN] = origin;
+}
+
+/**
+ * ¿`target` está dentro de alguno de estos elementos, contando el anidamiento
+ * lógico de los paneles portalizados?
  *
- * Al portalizar el panel deja de ser descendiente del host, así que el
- * `host.contains(event.target)` que usaban los detectores de click-afuera
- * empezaba a dar `false` para clicks DENTRO del propio panel — y el panel se
- * cerraba al usarlo. Hay que preguntar por los dos nodos.
+ * Al portalizar, un panel deja de ser descendiente del host, así que el
+ * `host.contains(event.target)` que usaban los detectores de click-afuera daba
+ * `false` para clics DENTRO del propio panel — y se cerraba al usarlo. Pasar el
+ * panel como segunda raíz resuelve ese caso, pero no el de overlays anidados:
+ * un select dentro de un popover manda su listbox al contenedor, fuera del
+ * panel del popover, así que elegir una opción se leía como un clic afuera y
+ * cerraba el popover.
+ *
+ * Por eso no se usa `contains` sino un ascenso manual que, al llegar a un panel
+ * portalizado, salta a donde estaba declarado y sigue subiendo desde ahí.
  */
 export function containsTarget(target: Node | null, ...roots: (HTMLElement | null)[]): boolean {
-  if (!target) return false;
-  return roots.some((root) => !!root && root.contains(target));
+  let node: PortaledNode | null = target;
+  while (node) {
+    if (roots.some((root) => root === node)) return true;
+    node = node[ORIGIN] ?? node.parentNode;
+  }
+  return false;
 }

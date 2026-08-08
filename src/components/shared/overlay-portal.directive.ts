@@ -1,5 +1,5 @@
 import { DOCUMENT, Directive, ElementRef, OnDestroy, OnInit, inject } from '@angular/core';
-import { overlayContainer } from './overlay-container';
+import { overlayContainer, setPortalOrigin } from './overlay-container';
 
 /**
  * Mueve el elemento al que se aplica al contenedor de overlays (último hijo de
@@ -38,6 +38,26 @@ export class OverlayPortalDirective implements OnInit, OnDestroy {
    * nada — la inserción posterior lo devuelve a su sitio original.
    */
   ngOnInit(): void {
+    // Antes de mover el nodo hay que anotar dónde estaba: es lo único que queda
+    // del anidamiento original, y `containsTarget` lo necesita para que un
+    // overlay siga reconociendo como «dentro» los paneles que se abren desde su
+    // contenido (un select dentro de un popover, p. ej.).
+    setPortalOrigin(this.el.nativeElement, this.el.nativeElement.parentElement);
+    this.bringToFront();
+  }
+
+  /**
+   * Mueve el panel al final del contenedor de overlays.
+   *
+   * Dentro del contenedor no hay z-index por panel: el apilado lo resuelve el
+   * orden del DOM, así que el último insertado gana. Los paneles declarados bajo
+   * `@if (open())` se insertan al abrirse y eso basta, pero el del select vive
+   * siempre en el DOM (necesita sus `<ui-option>` montadas para resolver la
+   * etiqueta seleccionada aunque esté cerrado), así que se insertó al arrancar el
+   * componente y quedaba por debajo de cualquier overlay abierto después — por
+   * ejemplo el popover que lo contiene. Llamar aquí al abrir lo devuelve arriba.
+   */
+  bringToFront(): void {
     overlayContainer(this.doc).appendChild(this.el.nativeElement);
   }
 
@@ -46,5 +66,7 @@ export class OverlayPortalDirective implements OnInit, OnDestroy {
     // sitio del DOM. Hay que retirarlo a mano o el nodo queda huérfano dentro
     // del contenedor.
     this.el.nativeElement.remove();
+    // No retener el nodo donde se declaró, que ya no existe.
+    setPortalOrigin(this.el.nativeElement, null);
   }
 }
