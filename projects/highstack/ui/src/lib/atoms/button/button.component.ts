@@ -13,6 +13,20 @@ export type ButtonVariant =
   | 'warning';
 export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'icon';
 
+/**
+ * Botón con variantes de estilo, tamaños, estado de carga y modos pill/full.
+ *
+ * Proyecta el texto (y opcionalmente íconos) por contenido. Mientras `loading`
+ * está activo, el botón se deshabilita y muestra un spinner.
+ *
+ * @example
+ * ```html
+ * <ui-button (click)="guardar()">Guardar</ui-button>
+ * <ui-button variant="destructive" size="sm">Eliminar</ui-button>
+ * <ui-button variant="outline" [loading]="enviando()">Enviar</ui-button>
+ * <ui-button variant="ghost" size="icon" aria-label="Cerrar">✕</ui-button>
+ * ```
+ */
 @Component({
   selector: 'ui-button',
   templateUrl: './button.component.html',

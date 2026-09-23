@@ -11,6 +11,7 @@ import {
   signal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LabelComponent } from '../label/label.component';
 
 interface TextareaValidationError {
   kind?: string;
@@ -26,6 +27,7 @@ let nextId = 0;
 @Component({
   selector: 'ui-textarea',
   templateUrl: './textarea.component.html',
+  imports: [LabelComponent],
   host: { class: 'block' },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => TextareaComponent), multi: true },
@@ -65,11 +67,12 @@ export class TextareaComponent implements ControlValueAccessor {
     return '';
   });
   protected readonly hasError = computed(
-    () => !!this.error() || !!this.errorMessage() || (this.invalid() && this.touched()),
+    () => !!this.errorMessage() || (this.invalid() && this.touched()),
   );
 
+  /** Solo apunta a un `<p>` que realmente se renderiza (error con texto o hint). */
   protected readonly describedById = computed(() =>
-    this.hasError() || this.hint() ? `${this.id()}-desc` : null,
+    this.errorMessage() || this.hint() ? `${this.id()}-desc` : null,
   );
 
   protected readonly fieldClasses = computed(() => {

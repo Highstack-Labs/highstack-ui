@@ -1,5 +1,6 @@
 import { Component, booleanAttribute, computed, forwardRef, input, model, signal } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LabelComponent } from '../label/label.component';
 
 export type InputSize = 'sm' | 'md' | 'lg';
 export type InputType = 'text' | 'email' | 'password' | 'number' | 'search' | 'tel' | 'url';
@@ -22,6 +23,7 @@ let nextId = 0;
 @Component({
   selector: 'ui-input',
   templateUrl: './input.component.html',
+  imports: [LabelComponent],
   host: { class: 'block' },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => InputComponent), multi: true },
@@ -75,11 +77,12 @@ export class InputComponent implements ControlValueAccessor {
     return '';
   });
   protected readonly hasError = computed(
-    () => !!this.error() || !!this.errorMessage() || (this.invalid() && this.touched()),
+    () => !!this.errorMessage() || (this.invalid() && this.touched()),
   );
 
+  /** Solo apunta a un `<p>` que realmente se renderiza (error con texto o hint). */
   protected readonly describedById = computed(() =>
-    this.hasError() || this.hint() ? `${this.id()}-desc` : null,
+    this.errorMessage() || this.hint() ? `${this.id()}-desc` : null,
   );
 
   protected readonly wrapperClasses = computed(() => {

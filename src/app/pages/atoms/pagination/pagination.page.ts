@@ -41,7 +41,8 @@ export class PaginationPage implements AfterViewInit {
   readonly compactCode = `<ui-pagination [(page)]="page" [totalPages]="20" variant="compact" />`;
 
   readonly sizesCode = `<ui-pagination [(page)]="page" [totalPages]="10" size="sm" />
-<ui-pagination [(page)]="page" [totalPages]="10" size="md" />`;
+<ui-pagination [(page)]="page" [totalPages]="10" size="md" />
+<ui-pagination [(page)]="page" [totalPages]="10" size="lg" />`;
 
   readonly pageSizeCode = `<ui-pagination
   [(page)]="page"

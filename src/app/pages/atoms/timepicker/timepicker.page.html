@@ -1,0 +1,243 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Timepicker" subtitle="Campo de hora que se puede teclear o elegir por columnas, con AM/PM, formato de 24 horas, segundos y soporte para Signal Forms y Reactive Forms." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el timepicker:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+          <p class="text-sm text-[var(--color-muted-foreground)]">
+            El valor es siempre un string en 24 horas —
+            <code class="font-mono text-xs">'HH:mm'</code>, o
+            <code class="font-mono text-xs">'HH:mm:ss'</code> con
+            <code class="font-mono text-xs">showSeconds</code> — o
+            <code class="font-mono text-xs">''</code> si no hay hora. Nunca un
+            <code class="font-mono text-xs">Date</code>. El formato de 12 horas con AM/PM es solo
+            presentación: lo que ve el formulario no cambia.
+          </p>
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs">
+            <ui-timepicker label="Hora de la cita" [(value)]="hora" hint="Puedes escribirla o elegirla." />
+            <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+              Valor: <span class="font-mono">{{ hora() || '—' }}</span>
+            </p>
+          </div>
+        </app-demo-block>
+
+        <!-- Formatos -->
+        <app-demo-block id="formatos" title="Formatos" [code]="formatosCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs space-y-4">
+            <ui-timepicker label="12 horas (AM/PM)" [hourFormat]="12" [(value)]="hora" />
+            <ui-timepicker label="24 horas" [hourFormat]="24" [(value)]="hora24" />
+            <ui-timepicker label="Con segundos" [showSeconds]="true" [(value)]="conSegundos" hint="El valor pasa a 'HH:mm:ss'." />
+            <ui-timepicker label="Paso de 15 minutos" [minuteStep]="15" [(value)]="hora" />
+            <ui-timepicker label="Automático (locale es-ES)" locale="es-ES" [(value)]="hora24" hint="Sin hourFormat, el formato sale del locale." />
+          </div>
+        </app-demo-block>
+
+        <!-- Restricciones -->
+        <app-demo-block id="restricciones" title="Restricciones" [code]="restriccionesCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs space-y-4">
+            <ui-timepicker label="Cita" min="09:00" max="18:00" [(value)]="cita" hint="Solo en horario de oficina." />
+            <ui-timepicker label="Turno" [disabledTimes]="comida" [minuteStep]="30" [(value)]="turno" hint="De 13:00 a 14:00 es la comida." />
+          </div>
+        </app-demo-block>
+
+        <!-- Estados -->
+        <app-demo-block id="estados" title="Estados" [code]="estadosCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs space-y-4">
+            <ui-timepicker label="Deshabilitado" [disabled]="true" value="09:30" />
+            <ui-timepicker label="Solo lectura" [readonly]="true" value="09:30" />
+            <ui-timepicker label="Con error" error="Selecciona una hora válida" />
+          </div>
+        </app-demo-block>
+
+        <!-- Dentro de paneles -->
+        <app-demo-block id="dentro-de-paneles" title="Dentro de paneles" [code]="dentroDePanelesCode" class="block scroll-mt-28">
+          <div class="space-y-3">
+            <p class="text-sm text-[var(--color-muted-foreground)]">
+              Los paneles flotantes se montan en un contenedor a nivel de
+              <code class="font-mono text-xs">&lt;body&gt;</code>, así que se dibujan
+              <strong>por encima</strong> del modal (o del drawer) y no los recorta su
+              <code class="font-mono text-xs">overflow</code>. Abre el modal y despliega los tres.
+            </p>
+            <ui-button variant="outline" (click)="modalAbierto.set(true)">Abrir modal</ui-button>
+
+            <ui-modal [(open)]="modalAbierto" size="md">
+              <ui-modal-header>
+                <ui-modal-title>Agendar reunión</ui-modal-title>
+                <ui-modal-description>Los tres paneles deben quedar por encima del modal.</ui-modal-description>
+              </ui-modal-header>
+              <ui-modal-content>
+                <div class="space-y-4">
+                  <ui-timepicker label="Hora" [(value)]="modalHora" [minuteStep]="15" />
+                  <ui-datepicker label="Fecha" [(value)]="modalFecha" />
+                  <ui-select label="Sala" [(value)]="modalSala">
+                    <ui-option value="a">Sala A</ui-option>
+                    <ui-option value="b">Sala B</ui-option>
+                    <ui-option value="c">Sala C</ui-option>
+                  </ui-select>
+                  <!-- Relleno para que el cuerpo tenga scroll: es donde antes se recortaba. -->
+                  <p class="text-sm text-[var(--color-muted-foreground)]">
+                    El cuerpo del modal tiene <code class="font-mono text-xs">overflow-y-auto</code> y
+                    su panel se anima con <code class="font-mono text-xs">scale</code>. Cualquiera de
+                    las dos cosas bastaba para romper un panel <code class="font-mono text-xs">fixed</code>
+                    renderizado en su sitio: el <code class="font-mono text-xs">transform</code> lo
+                    convierte en su bloque contenedor y el <code class="font-mono text-xs">overflow</code>
+                    lo recorta.
+                  </p>
+                  <div class="h-32 rounded-[var(--radius)] bg-[var(--color-muted)]/40"></div>
+                </div>
+              </ui-modal-content>
+              <ui-modal-footer>
+                <ui-button variant="outline" (click)="modalAbierto.set(false)">Cancelar</ui-button>
+                <ui-button (click)="modalAbierto.set(false)">Agendar</ui-button>
+              </ui-modal-footer>
+            </ui-modal>
+
+            <p class="text-xs text-[var(--color-muted-foreground)]">
+              Elegido: <span class="font-mono">{{ modalHora() || '—' }}</span> ·
+              <span class="font-mono">{{ modalFecha() || '—' }}</span> ·
+              <span class="font-mono">{{ modalSala() || '—' }}</span>
+            </p>
+          </div>
+        </app-demo-block>
+
+        <!-- Signal Forms -->
+        <section id="signal-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Signal Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Vincula con <code class="font-mono text-xs">[formField]</code> de Angular 22.
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <div class="w-full max-w-xs">
+              <ui-timepicker [formField]="signalForm.entrada" label="Hora de entrada" />
+              <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+                Form válido: <span class="font-mono">{{ signalForm().valid() }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="signalFormsCode" lang="typescript" />
+            <app-code-block [code]="signalFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- Reactive Forms -->
+        <section id="reactive-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Reactive Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Funciona con <code class="font-mono text-xs">[formControl]</code> /
+              <code class="font-mono text-xs">[(ngModel)]</code> vía ControlValueAccessor.
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <div class="w-full max-w-xs">
+              <ui-timepicker [formControl]="reactiveCtrl" label="Hora de salida" />
+              <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+                Valor: <span class="font-mono">{{ reactiveCtrl.value || '—' }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="reactiveFormsCode" lang="typescript" />
+            <app-code-block [code]="reactiveFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string 'HH:mm' | 'HH:mm:ss' (model)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">label / hint / error / placeholder</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md' | 'lg'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">disabled / readonly / required</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">hourFormat</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">12 | 24 | 'auto'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'auto'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">showSeconds</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">minuteStep</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">number (se clampea a 1-60)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">5</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">locale</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'es-MX'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">min / max</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string 'HH:mm[:ss]'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">disabledTimes</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">readonly string[]</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">[]</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">timeDisabled</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">(iso: string) =&gt; boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">—</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-[var(--color-muted-foreground)]">
+            Al teclear se acepta <code class="font-mono text-xs">9</code>,
+            <code class="font-mono text-xs">930</code>, <code class="font-mono text-xs">9:30</code>,
+            <code class="font-mono text-xs">9:30 pm</code> o <code class="font-mono text-xs">21:30</code>.
+            Los errores de formato solo aparecen al salir del campo, nunca mientras se escribe.
+            Elegir en una columna no cierra el panel: faltan los minutos.
+          </p>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

@@ -28,8 +28,27 @@ let nextId = 0;
  */
 @Component({
   selector: 'ui-radio-group',
-  template: `<ng-content />`,
-  host: { role: 'radiogroup', '[class]': 'hostClasses()' },
+  // Las opciones van en un contenedor propio para que el mensaje de error/hint
+  // quede debajo del grupo y no como un item más del flex (roto en horizontal).
+  template: `
+    <div [class]="listClasses()"><ng-content /></div>
+    @if (errorMessage()) {
+      <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-destructive)]">
+        {{ errorMessage() }}
+      </p>
+    } @else if (hint()) {
+      <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-muted-foreground)]">
+        {{ hint() }}
+      </p>
+    }
+  `,
+  host: {
+    role: 'radiogroup',
+    class: 'block',
+    '[attr.aria-required]': 'required() || null',
+    '[attr.aria-invalid]': 'hasError() || null',
+    '[attr.aria-describedby]': 'describedById()',
+  },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => RadioGroupComponent), multi: true },
   ],
@@ -41,9 +60,13 @@ export class RadioGroupComponent implements ControlValueAccessor {
   readonly orientation = input<RadioOrientation>('vertical');
   readonly appearance = input<RadioAppearance>('default');
   readonly name = input<string>(`ui-radio-group-${nextId++}`);
+  readonly id = input<string>(`ui-radio-group-field-${nextId++}`);
+  readonly hint = input<string>('');
 
   readonly disabled = input(false, { transform: booleanAttribute });
   readonly required = input(false, { transform: booleanAttribute });
+  /** Mensaje de error manual (tiene prioridad sobre los errors de Signal Forms). */
+  readonly error = input<string>('');
   readonly invalid = input(false, { transform: booleanAttribute });
   readonly touched = input(false, { transform: booleanAttribute });
   readonly errors = input<readonly RadioValidationError[]>([]);
@@ -52,6 +75,8 @@ export class RadioGroupComponent implements ControlValueAccessor {
   readonly isDisabled = computed(() => this.disabled() || this.cvaDisabled());
 
   readonly errorMessage = computed(() => {
+    if (this.error()) return this.error();
+    // Los errores de validación (Signal Forms) solo se muestran tras interactuar.
     if (this.touched()) {
       const first = this.errors()[0];
       if (first) return first.message ?? first.kind ?? 'Campo inválido';
@@ -60,11 +85,14 @@ export class RadioGroupComponent implements ControlValueAccessor {
   });
   readonly hasError = computed(() => !!this.errorMessage() || (this.invalid() && this.touched()));
 
-  protected readonly hostClasses = computed(() => {
-    const dir =
-      this.orientation() === 'horizontal' ? 'flex flex-row flex-wrap gap-3' : 'flex flex-col gap-3';
-    return dir;
-  });
+  /** Solo apunta a un `<p>` que realmente se renderiza (error con texto o hint). */
+  protected readonly describedById = computed(() =>
+    this.errorMessage() || this.hint() ? `${this.id()}-desc` : null,
+  );
+
+  protected readonly listClasses = computed(() =>
+    this.orientation() === 'horizontal' ? 'flex flex-row flex-wrap gap-3' : 'flex flex-col gap-3',
+  );
 
   // --- ControlValueAccessor ---
   private onChange: (value: string) => void = () => {};

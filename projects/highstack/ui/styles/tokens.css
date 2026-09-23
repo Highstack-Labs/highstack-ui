@@ -23,6 +23,26 @@
   --color-ring: oklch(0.705 0.015 285.82);
 
   --radius: 0.75rem; /* Redondez suavizada de 12px para estilo premium */
+
+  /*
+   * Capas de apilamiento. Tres bandas separadas, no valores sueltos por
+   * componente, para que el orden entre familias de overlays sea explícito:
+   *
+   *   modal   < overlay < toast
+   *
+   * `--z-overlay` es el contenedor único a nivel de <body> donde se portalizan
+   * los paneles flotantes (select, datepicker, timepicker, dropdown, popover,
+   * tooltip). Al estar por encima de `--z-modal`, un panel abierto dentro de un
+   * modal o un drawer siempre se dibuja encima de él. Dentro de ese contenedor
+   * el apilado lo resuelve el orden del DOM (= orden de apertura), así que los
+   * paneles no necesitan z-index propio.
+   *
+   * Los toasts van arriba de todo: son notificaciones, nunca deben quedar
+   * tapadas por lo que el usuario está manipulando.
+   */
+  --z-modal: 1000;
+  --z-overlay: 1100;
+  --z-toast: 1200;
 }
 
 /* Modo oscuro: mismos tokens, paleta invertida. Se activa con la clase .dark
@@ -83,6 +103,16 @@
   --color-primary-gradient: oklch(0.69 0.15 45); /* → ámbar */
   --color-primary-foreground: var(--color-white);
   --color-ring: oklch(0.70 0.13 14);
+}
+
+/* El gradiente sube de tono (48 → 78) a propósito: rose ya recorre 18 → 45, y
+   bajar hacia el rojo dejaría los dos swatches como espejos casi idénticos.
+   La luminosidad se queda en 0.58 para que el blanco siga legible encima. */
+.theme-orange {
+  --color-primary: oklch(0.58 0.16 48);
+  --color-primary-gradient: oklch(0.72 0.14 78); /* → dorado */
+  --color-primary-foreground: var(--color-white);
+  --color-ring: oklch(0.70 0.13 48);
 }
 
 /* Barra de progreso indeterminada */

@@ -1,0 +1,9 @@
+<label
+  [attr.for]="htmlFor() || null"
+  class="block mb-1.5 text-sm font-medium text-[var(--color-foreground)]"
+>
+  <ng-content />
+  @if (required()) {
+    <span class="text-[var(--color-destructive)]">*</span>
+  }
+</label>

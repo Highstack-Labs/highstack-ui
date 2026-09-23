@@ -2,7 +2,7 @@ import { Component, booleanAttribute, computed, input, model, numberAttribute } 
 import { SelectComponent, OptionComponent } from '../select/select.component';
 
 export type PaginationVariant = 'numbers' | 'compact';
-export type PaginationSize = 'sm' | 'md';
+export type PaginationSize = 'sm' | 'md' | 'lg';
 
 /** Token de elipsis en la lista de páginas. */
 const GAP = '…' as const;
@@ -50,7 +50,24 @@ export class PaginationComponent {
     return result;
   });
 
-  protected readonly btnSize = computed(() => (this.size() === 'sm' ? 'size-8 text-xs' : 'size-9 text-sm'));
+  /** Dimensión + fuente de los botones de página según `size`. */
+  protected readonly btnSize = computed(
+    () => ({ sm: 'size-7 text-xs', md: 'size-9 text-sm', lg: 'size-11 text-base' })[this.size()],
+  );
+  /** Fuente de la etiqueta compacta y del selector de items por página. */
+  protected readonly labelText = computed(
+    () => ({ sm: 'text-xs', md: 'text-sm', lg: 'text-base' })[this.size()],
+  );
+  /** Padding horizontal de la etiqueta compacta. */
+  protected readonly labelPad = computed(
+    () => ({ sm: 'px-2', md: 'px-3', lg: 'px-4' })[this.size()],
+  );
+  /** Tamaño de los íconos (px) de prev/next. */
+  protected readonly iconPx = computed(() => ({ sm: 14, md: 16, lg: 18 })[this.size()]);
+  /** Tamaño del ui-select de items por página. */
+  protected readonly selectSize = computed<PaginationSize>(
+    () => (this.size() === 'lg' ? 'md' : 'sm'),
+  );
 
   // pageSize como string para el ui-select (que usa value:string)
   protected readonly pageSizeStr = computed(() => String(this.pageSize()));

@@ -1,0 +1,66 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Separator" subtitle="Línea divisoria fina para separar contenido o grupos." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">Importa el separador:</p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+        </section>
+
+        <!-- Horizontal -->
+        <app-demo-block id="basic" title="Horizontal" [code]="basicCode" class="block scroll-mt-28">
+          <div class="w-80 space-y-4">
+            <p class="text-sm text-[var(--color-muted-foreground)]">Sección superior</p>
+            <ui-separator />
+            <p class="text-sm text-[var(--color-muted-foreground)]">Sección inferior</p>
+          </div>
+        </app-demo-block>
+
+        <!-- Vertical -->
+        <app-demo-block id="vertical" title="Vertical" [code]="verticalCode" class="block scroll-mt-28">
+          <div class="flex items-center gap-3 h-5 text-sm text-[var(--color-foreground)]">
+            <span>Inicio</span>
+            <ui-separator orientation="vertical" />
+            <span>Perfil</span>
+            <ui-separator orientation="vertical" />
+            <span>Ajustes</span>
+          </div>
+        </app-demo-block>
+
+        <!-- API Reference -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">orientation</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'horizontal' | 'vertical'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'horizontal'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">decorative</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">true</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

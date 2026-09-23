@@ -1,13 +1,5 @@
 @if (label()) {
-  <label
-    [for]="id()"
-    class="block mb-1.5 text-sm font-medium text-[var(--color-foreground)]"
-  >
-    {{ label() }}
-    @if (required()) {
-      <span class="text-[var(--color-destructive)]">*</span>
-    }
-  </label>
+  <ui-label [for]="id()" [required]="required()">{{ label() }}</ui-label>
 }
 
 <div class="relative">
@@ -43,16 +35,28 @@
     </svg>
   </button>
 
+  <!--
+    El panel está portalizado a nivel de <body> (uiOverlayPortal) para que no lo
+    recorte ni lo reposicione ningún ancestro con transform/overflow. Por eso el
+    (keydown) va aquí y no en el host: con el foco dentro del panel, un
+    @HostListener del host ya no recibiría las teclas.
+  -->
   <div
+    #panel
+    uiOverlayPortal
     role="listbox"
-    class="absolute z-50 left-0 right-0 mt-1.5 max-h-60 overflow-y-auto rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md"
+    tabindex="-1"
+    (keydown)="onPanelKeydown($event)"
+    class="fixed max-h-60 overflow-y-auto rounded-[var(--radius)] border border-[var(--color-border)] bg-[var(--color-background)] p-1 shadow-md transition-opacity duration-100 outline-none"
     [class.hidden]="!open()"
+    [class.opacity-0]="!ready()"
+    [style.pointerEvents]="ready() ? 'auto' : 'none'"
   >
     <ng-content />
   </div>
 </div>
 
-@if (hasError()) {
+@if (errorMessage()) {
   <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-destructive)]">{{ errorMessage() }}</p>
 } @else if (hint()) {
   <p [id]="describedById()" class="mt-1.5 text-xs text-[var(--color-muted-foreground)]">{{ hint() }}</p>

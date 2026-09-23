@@ -1,7 +1,10 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
   HostListener,
+  Injector,
+  afterNextRender,
   booleanAttribute,
   computed,
   contentChildren,
@@ -10,10 +13,17 @@ import {
   input,
   model,
   signal,
+  viewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LabelComponent } from '../label/label.component';
+import { containsTarget } from '../../shared/overlay-container';
+import { OverlayPortalDirective } from '../../shared/overlay-portal.directive';
 
 export type SelectSize = 'sm' | 'md' | 'lg';
+
+/** Margen mínimo al borde del viewport (px). */
+const MARGIN = 8;
 
 interface SelectValidationError {
   kind?: string;
@@ -30,6 +40,7 @@ let nextId = 0;
 @Component({
   selector: 'ui-select',
   templateUrl: './select.component.html',
+  imports: [LabelComponent, OverlayPortalDirective],
   host: { class: 'block' },
   providers: [
     { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SelectComponent), multi: true },
@@ -52,8 +63,20 @@ export class SelectComponent implements ControlValueAccessor {
   readonly errors = input<readonly SelectValidationError[]>([]);
 
   readonly open = signal(false);
+  /** Oculta el panel un frame hasta posicionarlo, para que no salte. */
+  protected readonly ready = signal(false);
   private readonly el = inject(ElementRef<HTMLElement>);
+  private readonly injector = inject(Injector);
   private readonly options = contentChildren(OptionComponent);
+
+  constructor() {
+    // Capture=true reposiciona también con scroll de contenedores internos.
+    const onScroll = () => {
+      if (this.open()) this.updatePosition();
+    };
+    window.addEventListener('scroll', onScroll, true);
+    inject(DestroyRef).onDestroy(() => window.removeEventListener('scroll', onScroll, true));
+  }
 
   private readonly cvaDisabled = signal(false);
   protected readonly isDisabled = computed(() => this.disabled() || this.cvaDisabled());
@@ -67,7 +90,7 @@ export class SelectComponent implements ControlValueAccessor {
     return '';
   });
   protected readonly hasError = computed(
-    () => !!this.error() || !!this.errorMessage() || (this.invalid() && this.touched()),
+    () => !!this.errorMessage() || (this.invalid() && this.touched()),
   );
 
   protected readonly selectedLabel = computed(() => {
@@ -93,18 +116,86 @@ export class SelectComponent implements ControlValueAccessor {
     return [base, sizeMap[this.size()], state, disabled].join(' ');
   });
 
+  /** Solo apunta a un `<p>` que realmente se renderiza (error con texto o hint). */
   protected readonly describedById = computed(() =>
-    this.hasError() || this.hint() ? `${this.id()}-desc` : null,
+    this.errorMessage() || this.hint() ? `${this.id()}-desc` : null,
   );
 
   toggle() {
     if (this.isDisabled()) return;
-    this.open.update((o) => !o);
-    if (this.open()) this.focusActive();
+    if (this.open()) {
+      this.close();
+      return;
+    }
+    this.ready.set(false);
+    this.open.set(true);
+    // El panel no se crea al abrir (vive siempre en el DOM), así que hay que
+    // reinsertarlo al final del contenedor de overlays o quedaría por debajo de
+    // los que se abrieron después — el popover o el drawer que lo contiene.
+    this.portal()?.bringToFront();
+    // `afterNextRender` garantiza que el panel ya esté visible en el DOM (sin
+    // depender del timing del ciclo de detección de cambios) antes de medirlo y
+    // posicionarlo; de lo contrario podía quedar invisible hasta un resize.
+    afterNextRender(
+      () => {
+        this.updatePosition();
+        this.focusActive();
+      },
+      { injector: this.injector },
+    );
   }
 
   close() {
     this.open.set(false);
+    this.ready.set(false);
+  }
+
+  /**
+   * El panel está portalizado a nivel de <body>, así que ya no se puede buscar
+   * con un querySelector desde el host: hay que quedarse con la referencia de la
+   * plantilla.
+   */
+  private readonly panelRef = viewChild<ElementRef<HTMLElement>>('panel');
+  private readonly portal = viewChild('panel', { read: OverlayPortalDirective });
+
+  private panel(): HTMLElement | null {
+    return this.panelRef()?.nativeElement ?? null;
+  }
+
+  private triggerEl(): HTMLElement | null {
+    return this.el.nativeElement.querySelector('[data-trigger]');
+  }
+
+  /**
+   * Posiciona el panel `fixed` bajo el trigger (o encima si no cabe), del ancho
+   * del trigger, y lo fija a los bordes del viewport. Escapa cualquier ancestro
+   * con overflow para que se sobreponga a todo.
+   */
+  private updatePosition() {
+    const panel = this.panel();
+    const trigger = this.triggerEl();
+    if (!panel || !trigger || !this.open()) return;
+
+    const host = trigger.getBoundingClientRect();
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const GAP = 6;
+
+    // Fijar el ancho al del trigger ANTES de medir la altura (evita medir mal).
+    panel.style.width = `${host.width}px`;
+    const rect = panel.getBoundingClientRect();
+
+    const spaceBelow = vh - host.bottom;
+    const spaceAbove = host.top;
+    const openUp = spaceBelow < rect.height + GAP + MARGIN && spaceAbove > spaceBelow;
+
+    let top = openUp ? host.top - rect.height - GAP : host.bottom + GAP;
+    let left = Math.max(MARGIN, Math.min(host.left, vw - host.width - MARGIN));
+    top = Math.max(MARGIN, Math.min(top, vh - rect.height - MARGIN));
+
+    panel.style.left = `${left}px`;
+    panel.style.top = `${top}px`;
+    this.ready.set(true);
   }
 
   /** Llamado por una ui-option al elegirse. */
@@ -113,32 +204,53 @@ export class SelectComponent implements ControlValueAccessor {
     this.onChange(v);
     this.onTouched();
     this.close();
-    const trigger = this.el.nativeElement.querySelector('[data-trigger]') as HTMLElement | null;
-    trigger?.focus();
+    this.triggerEl()?.focus();
   }
 
   @HostListener('document:click', ['$event'])
   protected onDocClick(event: MouseEvent) {
-    if (this.open() && !this.el.nativeElement.contains(event.target as Node)) this.close();
+    if (!this.open()) return;
+    // El panel vive fuera del host (portalizado): hay que preguntar por los dos,
+    // o elegir una opción cerraría el panel antes de registrar el clic.
+    if (!containsTarget(event.target as Node, this.el.nativeElement, this.panel())) this.close();
   }
 
+  @HostListener('window:resize')
+  protected onViewportChange() {
+    if (this.open()) this.updatePosition();
+  }
+
+  /**
+   * Teclas con el panel CERRADO. Vive en el host porque el foco está en el
+   * trigger, que sí es descendiente suyo.
+   */
   @HostListener('keydown', ['$event'])
   protected onKeydown(event: KeyboardEvent) {
-    const enabled = this.options().filter((o) => !o.disabled());
-    if (!this.open()) {
-      if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
-        event.preventDefault();
-        this.toggle();
-      }
-      return;
+    if (this.open()) return;
+    if (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      this.toggle();
     }
+  }
+
+  /**
+   * Teclas con el panel ABIERTO. Va colgado del propio panel en la plantilla: al
+   * estar portalizado fuera del host, un @HostListener ya no vería las teclas
+   * pulsadas con el foco dentro del panel.
+   */
+  protected onPanelKeydown(event: KeyboardEvent) {
+    if (!this.open()) return;
+
     if (event.key === 'Escape') {
       event.preventDefault();
       this.close();
+      // El foco estaba dentro del panel, que se va: hay que devolverlo al trigger.
+      this.triggerEl()?.focus();
       return;
     }
     if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
       event.preventDefault();
+      const enabled = this.options().filter((o) => !o.disabled());
       if (!enabled.length) return;
       const active = document.activeElement;
       const idx = enabled.findIndex((o) => o.isActive(active));
@@ -154,7 +266,10 @@ export class SelectComponent implements ControlValueAccessor {
     setTimeout(() => {
       const opts = this.options().filter((o) => !o.disabled());
       const sel = opts.find((o) => o.value() === this.value());
-      (sel ?? opts[0])?.focus();
+      // Solo se enfoca (resalta) la opción ya elegida. Si no hay ninguna, se
+      // enfoca el panel para no marcar la primera opción por defecto.
+      if (sel) sel.focus();
+      else this.panel()?.focus();
     });
   }
 
@@ -208,7 +323,7 @@ export class OptionComponent {
       'flex items-center gap-2 rounded-md px-2 py-1.5 text-sm cursor-pointer select-none outline-none transition-colors text-[var(--color-foreground)]';
     const state = this.disabled()
       ? 'opacity-50 pointer-events-none'
-      : 'hover:bg-[var(--color-accent)] focus:bg-[var(--color-accent)]';
+      : 'hover:bg-[var(--color-accent)] focus-visible:bg-[var(--color-accent)] focus-visible:ring-1 focus-visible:ring-[var(--color-ring)]';
     return [base, state].join(' ');
   });
 

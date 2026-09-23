@@ -1,0 +1,227 @@
+<div class="text-[var(--color-foreground)] font-sans antialiased">
+  <app-page-header section="Timezone Select" subtitle="Selector de zona horaria: un trigger que abre un modal con buscador y las zonas IANA del runtime, agrupadas por región y navegables con el teclado." />
+
+  <div class="px-8 py-10">
+    <div class="mx-auto max-w-5xl">
+      <main class="space-y-24">
+        <!-- Instalación -->
+        <section id="instalacion" class="space-y-4 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Instalación</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Importa el selector de zona horaria:
+            </p>
+          </div>
+          <app-code-block [code]="importExample" lang="typescript" />
+          <p class="text-sm text-[var(--color-muted-foreground)]">
+            El valor es siempre el identificador IANA —
+            <code class="font-mono text-xs">'America/Bogota'</code> — o
+            <code class="font-mono text-xs">''</code> si no hay zona. La lista sale del propio
+            navegador (<code class="font-mono text-xs">Intl.supportedValuesOf('timeZone')</code>),
+            así que no pesa nada en el bundle y no se queda desactualizada. El desfase se calcula
+            en vivo, con el horario de verano ya aplicado.
+          </p>
+          <p class="text-sm text-[var(--color-muted-foreground)]">
+            A cambio, las etiquetas se derivan del identificador: salen sin tilde y sin país
+            (<code class="font-mono text-xs">Bogota</code>, no
+            <code class="font-mono text-xs">Bogotá, Colombia</code>), y buscar «colombia» no
+            encuentra nada. Buscar por ciudad, por región o por desfase sí funciona.
+          </p>
+        </section>
+
+        <!-- Básico -->
+        <app-demo-block id="basic" title="Básico" [code]="basicCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs">
+            <ui-timezone-select
+              label="Zona horaria"
+              [(value)]="zona"
+              hint="Busca por ciudad, región o desfase (por ejemplo «gmt-5»)."
+            />
+            <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+              Valor: <span class="font-mono">{{ zona() || '—' }}</span>
+              @if (horaEnZona()) {
+                · allí son las <span class="font-mono">{{ horaEnZona() }}</span>
+              }
+            </p>
+          </div>
+        </app-demo-block>
+
+        <!-- Zona local -->
+        <app-demo-block id="zona-local" title="Zona local" [code]="zonaLocalCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs">
+            <ui-timezone-select
+              label="Zona horaria"
+              [(value)]="zonaLocal"
+              hint="Preseleccionada con getLocalTimezone()."
+            />
+          </div>
+        </app-demo-block>
+
+        <!-- Agrupación -->
+        <app-demo-block id="agrupacion" title="Agrupación" [code]="agrupacionCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs space-y-4">
+            <ui-timezone-select label="Agrupada por región" [(value)]="zona" />
+            <ui-timezone-select
+              label="Lista plana"
+              [grouped]="false"
+              [(value)]="zonaPlana"
+              hint="Ordenada solo por desfase."
+            />
+          </div>
+        </app-demo-block>
+
+        <!-- Estados -->
+        <app-demo-block id="estados" title="Estados" [code]="estadosCode" class="block scroll-mt-28">
+          <div class="w-full max-w-xs space-y-4">
+            <ui-timezone-select label="Deshabilitado" [disabled]="true" value="America/Bogota" />
+            <ui-timezone-select label="Con error" error="Selecciona una zona horaria" />
+            <ui-timezone-select
+              label="Textos propios"
+              modalTitle="¿Dónde estás?"
+              searchPlaceholder="Escribe tu ciudad…"
+              placeholder="Sin definir"
+            />
+          </div>
+        </app-demo-block>
+
+        <!-- Signal Forms -->
+        <section id="signal-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Signal Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Vincula con <code class="font-mono text-xs">[formField]</code> de Angular 22.
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <div class="w-full max-w-xs">
+              <ui-timezone-select [formField]="signalForm.zona" label="Zona horaria" />
+              <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+                Form válido: <span class="font-mono">{{ signalForm().valid() }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="signalFormsCode" lang="typescript" />
+            <app-code-block [code]="signalFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- Reactive Forms -->
+        <section id="reactive-forms" class="space-y-6 scroll-mt-28">
+          <div>
+            <h2 class="text-lg font-medium text-[var(--color-foreground)]">Reactive Forms</h2>
+            <p class="mt-1 text-sm text-[var(--color-muted-foreground)]">
+              Funciona con <code class="font-mono text-xs">[formControl]</code> /
+              <code class="font-mono text-xs">[(ngModel)]</code> vía ControlValueAccessor.
+            </p>
+          </div>
+          <div class="rounded-[var(--radius)] bg-[var(--color-muted)]/40 p-6">
+            <div class="w-full max-w-xs">
+              <ui-timezone-select [formControl]="reactiveCtrl" label="Zona horaria" />
+              <p class="mt-3 text-xs text-[var(--color-muted-foreground)]">
+                Valor: <span class="font-mono">{{ reactiveCtrl.value || '—' }}</span>
+              </p>
+            </div>
+          </div>
+          <div class="flex flex-col gap-y-4">
+            <app-code-block [code]="reactiveFormsCode" lang="typescript" />
+            <app-code-block [code]="reactiveFormsTemplate" lang="html" />
+          </div>
+        </section>
+
+        <!-- API -->
+        <section id="api" class="space-y-3 scroll-mt-28">
+          <h2 class="text-lg font-medium text-[var(--color-foreground)]">Propiedades (API Reference)</h2>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Prop</th>
+                  <th class="px-4 py-2.5 font-medium">Tipo</th>
+                  <th class="px-4 py-2.5 font-medium">Default</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">value</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string (id IANA, model)</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">label / hint / error</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">''</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">placeholder</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'Selecciona una zona horaria…'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">modalTitle</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'Zona horaria'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">searchPlaceholder</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'Buscar ciudad, región o GMT…'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">grouped</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">true</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">size</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">'sm' | 'md' | 'lg'</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">'md'</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">disabled / required</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">boolean</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">false</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">id</td>
+                  <td class="px-4 py-2.5 font-mono text-xs text-[var(--color-muted-foreground)]">string</td>
+                  <td class="px-4 py-2.5 font-mono text-xs">autogenerado</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="pt-4 text-base font-medium text-[var(--color-foreground)]">Utilidades exportadas</h3>
+          <div class="overflow-x-auto rounded-[var(--radius)] border border-[var(--color-border)]">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[var(--color-muted)] text-[var(--color-muted-foreground)]">
+                <tr>
+                  <th class="px-4 py-2.5 font-medium">Función</th>
+                  <th class="px-4 py-2.5 font-medium">Para qué</th>
+                </tr>
+              </thead>
+              <tbody class="text-[var(--color-foreground)]">
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">getLocalTimezone()</td>
+                  <td class="px-4 py-2.5 text-xs text-[var(--color-muted-foreground)]">La zona del dispositivo, para preseleccionar.</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">toTimezoneOption(id)</td>
+                  <td class="px-4 py-2.5 text-xs text-[var(--color-muted-foreground)]">Pinta un id guardado (ciudad, desfase, etiqueta) sin abrir el modal.</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">listTimezones() / filterTimezones() / groupByRegion()</td>
+                  <td class="px-4 py-2.5 text-xs text-[var(--color-muted-foreground)]">La lista, el filtro y la agrupación, por si montas tu propia UI.</td>
+                </tr>
+                <tr class="border-t border-[var(--color-border)]">
+                  <td class="px-4 py-2.5 font-mono text-xs">getTimezoneOffsetMinutes(id, date) / formatOffset(min)</td>
+                  <td class="px-4 py-2.5 text-xs text-[var(--color-muted-foreground)]">Desfase con horario de verano aplicado, y su formato <code class="font-mono">GMT±HH:mm</code>.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+</div>

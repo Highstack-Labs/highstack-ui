@@ -8,18 +8,57 @@ export * from './lib/atoms/avatar/avatar.component';
 export * from './lib/atoms/badge/badge.component';
 export * from './lib/atoms/breadcrumb/breadcrumb.component';
 export * from './lib/atoms/button/button.component';
+export * from './lib/atoms/calendar/calendar.component';
 export * from './lib/atoms/card/card.component';
 export * from './lib/atoms/checkbox/checkbox.component';
+export * from './lib/atoms/datepicker/datepicker.component';
+export * from './lib/atoms/dialog/dialog.types';
+export * from './lib/atoms/dialog/dialog.service';
+export * from './lib/atoms/dialog/dialog-outlet.component';
+export * from './lib/atoms/drawer/drawer.component';
 export * from './lib/atoms/dropdown/dropdown.component';
 export * from './lib/atoms/input/input.component';
+export * from './lib/atoms/label/label.component';
+export * from './lib/atoms/popover/popover.component';
+export * from './lib/atoms/separator/separator.component';
 export * from './lib/atoms/loading/loading.component';
+export * from './lib/atoms/modal/modal.component';
 export * from './lib/atoms/pagination/pagination.component';
+export * from './lib/atoms/phone-input/phone-input.component';
+/**
+ * Nombrado a propósito, no `export *`: `phone-utils` tiene una docena de
+ * helpers internos (parseo, formateo, la tabla de países) y abrirlos todos los
+ * volvería API pública para siempre. `checkE164` es lo único que un formulario
+ * necesita de ahí: cerrar el botón de envío mientras el número esté incompleto.
+ */
+export { checkE164 } from './lib/atoms/phone-input/phone-utils';
 export * from './lib/atoms/radio/radio.component';
+export * from './lib/atoms/segmented/segmented.component';
 export * from './lib/atoms/select/select.component';
+export * from './lib/atoms/stepper/stepper.component';
 export * from './lib/atoms/table/table.types';
 export * from './lib/atoms/table/table.component';
 export * from './lib/atoms/tabs/tabs.component';
 export * from './lib/atoms/textarea/textarea.component';
+export * from './lib/atoms/timepicker/timepicker.component';
+export * from './lib/atoms/timezone-select/timezone-select.component';
+/**
+ * Nombrado a propósito, igual que en `phone-utils`: `cityFromId` es un detalle
+ * de cómo se arman las etiquetas y no debería quedar congelado como API
+ * pública. Lo de aquí es lo que un formulario sí necesita: preseleccionar la
+ * zona del dispositivo y poder pintar un id guardado sin abrir el modal.
+ */
+export {
+  type TimezoneOption,
+  type TimezoneGroup,
+  getLocalTimezone,
+  getTimezoneOffsetMinutes,
+  formatOffset,
+  toTimezoneOption,
+  listTimezones,
+  filterTimezones,
+  groupByRegion,
+} from './lib/atoms/timezone-select/timezone-utils';
 export * from './lib/atoms/toast/toast.types';
 export * from './lib/atoms/toast/toast.service';
 export * from './lib/atoms/tooltip/tooltip.directive';

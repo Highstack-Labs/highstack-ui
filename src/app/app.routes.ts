@@ -2,8 +2,13 @@ import { Routes } from '@angular/router';
 import { Shell } from './shell/shell';
 import { ButtonPage } from './pages/atoms/button/button.page';
 import { InputPage } from './pages/atoms/input/input.page';
+import { LabelPage } from './pages/atoms/label/label.page';
 import { BadgePage } from './pages/atoms/badge/badge.page';
 import { CardPage } from './pages/atoms/card/card.page';
+import { ModalPage } from './pages/atoms/modal/modal.page';
+import { DrawerPage } from './pages/atoms/drawer/drawer.page';
+import { PopoverPage } from './pages/atoms/popover/popover.page';
+import { SeparatorPage } from './pages/atoms/separator/separator.page';
 import { CheckboxPage } from './pages/atoms/checkbox/checkbox.page';
 import { SwitchPage } from './pages/atoms/switch/switch.page';
 import { RadioPage } from './pages/atoms/radio/radio.page';
@@ -16,10 +21,18 @@ import { AlertPage } from './pages/atoms/alert/alert.page';
 import { ToastPage } from './pages/atoms/toast/toast.page';
 import { LoadingPage } from './pages/atoms/loading/loading.page';
 import { TextareaPage } from './pages/atoms/textarea/textarea.page';
+import { PhoneInputPage } from './pages/atoms/phone-input/phone-input.page';
 import { AccordionPage } from './pages/atoms/accordion/accordion.page';
 import { BreadcrumbPage } from './pages/atoms/breadcrumb/breadcrumb.page';
 import { TablePage } from './pages/atoms/table/table.page';
 import { PaginationPage } from './pages/atoms/pagination/pagination.page';
+import { DialogPage } from './pages/atoms/dialog/dialog.page';
+import { StepperPage } from './pages/atoms/stepper/stepper.page';
+import { SegmentedPage } from './pages/atoms/segmented/segmented.page';
+import { CalendarPage } from './pages/atoms/calendar/calendar.page';
+import { DatepickerPage } from './pages/atoms/datepicker/datepicker.page';
+import { TimepickerPage } from './pages/atoms/timepicker/timepicker.page';
+import { TimezoneSelectPage } from './pages/atoms/timezone-select/timezone-select.page';
 import { InstallationPage } from './pages/installation/installation.page';
 import { ThemesPage } from './pages/themes/themes.page';
 import { AiGuidePage } from './pages/ai-guide/ai-guide.page';
@@ -35,11 +48,21 @@ export const routes: Routes = [
       { path: 'ai-guide',     component: AiGuidePage },
       { path: 'atoms/button', component: ButtonPage },
       { path: 'atoms/input',  component: InputPage },
+      { path: 'atoms/label',  component: LabelPage },
       { path: 'atoms/badge',  component: BadgePage },
       { path: 'atoms/card',   component: CardPage },
+      { path: 'atoms/modal',  component: ModalPage },
+      { path: 'atoms/drawer', component: DrawerPage },
+      { path: 'atoms/popover', component: PopoverPage },
+      { path: 'atoms/separator', component: SeparatorPage },
       { path: 'atoms/checkbox', component: CheckboxPage },
       { path: 'atoms/switch', component: SwitchPage },
       { path: 'atoms/radio',  component: RadioPage },
+      { path: 'atoms/segmented', component: SegmentedPage },
+      { path: 'atoms/calendar', component: CalendarPage },
+      { path: 'atoms/datepicker', component: DatepickerPage },
+      { path: 'atoms/timepicker', component: TimepickerPage },
+      { path: 'atoms/timezone-select', component: TimezoneSelectPage },
       { path: 'atoms/avatar', component: AvatarPage },
       { path: 'atoms/tooltip', component: TooltipPage },
       { path: 'atoms/dropdown', component: DropdownPage },
@@ -49,10 +72,13 @@ export const routes: Routes = [
       { path: 'atoms/toast',  component: ToastPage },
       { path: 'atoms/loading', component: LoadingPage },
       { path: 'atoms/textarea', component: TextareaPage },
+      { path: 'atoms/phone-input', component: PhoneInputPage },
       { path: 'atoms/accordion', component: AccordionPage },
       { path: 'atoms/breadcrumb', component: BreadcrumbPage },
       { path: 'atoms/table',  component: TablePage },
       { path: 'atoms/pagination', component: PaginationPage },
+      { path: 'atoms/dialog', component: DialogPage },
+      { path: 'atoms/stepper', component: StepperPage },
     ],
   },
 ];

@@ -1,5 +1,6 @@
 export type TableAlign = 'left' | 'center' | 'right';
 export type SortDirection = 'asc' | 'desc' | null;
+export type TableSize = 'sm' | 'md' | 'lg';
 
 export interface TableColumn {
   /** Path al valor (soporta anidado "a.b.c"). Omitir para columnas solo-template (acciones). */
