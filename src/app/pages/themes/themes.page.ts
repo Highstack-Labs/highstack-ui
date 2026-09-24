@@ -40,6 +40,6 @@ document.body.classList.toggle('dark');`;
   ...
 </body>
 
-<!-- Temas disponibles: theme-indigo | theme-teal | theme-violet | theme-rose | theme-orange -->
+<!-- Temas disponibles: theme-indigo | theme-teal | theme-violet | theme-rose | theme-orange | theme-cyan -->
 <!-- (sin clase = tema por defecto / Zinc) -->`;
 }

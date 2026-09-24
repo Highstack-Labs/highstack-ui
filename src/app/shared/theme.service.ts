@@ -1,6 +1,6 @@
 import { Injectable, computed, signal } from '@angular/core';
 
-export type ThemeId = 'default' | 'indigo' | 'teal' | 'violet' | 'rose' | 'orange';
+export type ThemeId = 'default' | 'indigo' | 'teal' | 'violet' | 'rose' | 'orange' | 'cyan';
 
 export interface ThemeOption {
   id: ThemeId;
@@ -37,6 +37,11 @@ export class ThemeService {
       id: 'orange',
       label: 'Orange',
       swatch: 'linear-gradient(135deg, oklch(0.58 0.16 48), oklch(0.72 0.14 78))',
+    },
+    {
+      id: 'cyan',
+      label: 'Cyan',
+      swatch: 'linear-gradient(135deg, oklch(0.60 0.12 222), oklch(0.74 0.13 205))',
     },
   ];
 
