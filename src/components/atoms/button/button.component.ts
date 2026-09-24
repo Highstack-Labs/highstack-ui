@@ -30,6 +30,7 @@ export type ButtonSize = 'xs' | 'sm' | 'md' | 'lg' | 'icon';
 @Component({
   selector: 'ui-button',
   templateUrl: './button.component.html',
+  styleUrl: './button.component.css',
 })
 export class ButtonComponent {
   readonly variant = input<ButtonVariant>('default');
@@ -43,42 +44,25 @@ export class ButtonComponent {
   protected readonly isDisabled = computed(() => this.disabled() || this.loading());
 
   protected readonly hostClasses = computed(() => {
+    // Layout y tipografía en Tailwind; relleno, relieve y estados en button.component.css.
     const base = [
-      'inline-flex items-center justify-center gap-2 whitespace-nowrap',
+      'ui-btn inline-flex items-center justify-center gap-2 whitespace-nowrap',
       this.pill() ? 'rounded-full' : '',
       this.full() ? 'w-full' : '',
-      'font-medium transition-all duration-150',
-      'outline-none focus-visible:ring-[3px] focus-visible:ring-[var(--color-ring)]/50',
-      'disabled:pointer-events-none disabled:opacity-50 disabled:transform-none disabled:shadow-none',
-      'cursor-pointer',
+      'font-medium',
     ].filter(Boolean).join(' ');
 
     const variantMap: Record<ButtonVariant, string> = {
-      default:
-        'bg-[var(--color-primary)] text-[var(--color-primary-foreground)] shadow-sm hover:bg-[var(--color-primary)]/95 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
-      destructive:
-        'bg-[var(--color-destructive)] text-[var(--color-destructive-foreground)] shadow-sm hover:bg-[var(--color-destructive)]/95 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-[var(--color-destructive)]/20',
-      outline:
-        'border border-[var(--color-input)] bg-[var(--color-background)] shadow-sm hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)] active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
-      secondary:
-        'bg-[var(--color-secondary)] text-[var(--color-secondary-foreground)] shadow-sm hover:bg-[var(--color-secondary)]/90 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
-      ghost:
-        'hover:bg-[var(--color-accent)] hover:text-[var(--color-accent-foreground)] active:scale-[0.98]',
-      link: 'text-[var(--color-primary)] underline-offset-4 hover:underline',
-      gradient:
-        'text-[var(--color-primary-foreground)] ' +
-        'bg-[linear-gradient(135deg,var(--color-primary)_0%,var(--color-primary-gradient)_50%,var(--color-primary)_100%)] ' +
-        'bg-[length:200%_100%] bg-left ' +
-        'shadow-[0_1px_2px_0_rgb(0_0_0/0.10),inset_0_1px_0_0_rgb(255_255_255/0.22)] ' +
-        'transition-[background-position,transform,box-shadow] duration-300 ease-out ' +
-        'hover:bg-right ' +
-        'active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
-      glass:
-        'backdrop-blur-2xl bg-white/10 border border-white/15 text-white/90 shadow-sm hover:bg-white/[0.18] active:translate-y-[1px] active:scale-[0.98] active:shadow-sm',
-      success:
-        'bg-emerald-500 text-white shadow-sm hover:bg-emerald-600 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-emerald-500/20',
-      warning:
-        'bg-amber-500 text-white shadow-sm hover:bg-amber-600 active:translate-y-[1px] active:scale-[0.98] active:shadow-sm focus-visible:ring-amber-500/20',
+      default: 'ui-btn-raised ui-btn-solid ui-btn-default',
+      destructive: 'ui-btn-raised ui-btn-solid ui-btn-destructive',
+      success: 'ui-btn-raised ui-btn-solid ui-btn-success',
+      warning: 'ui-btn-raised ui-btn-solid ui-btn-warning',
+      gradient: 'ui-btn-raised ui-btn-gradient',
+      secondary: 'ui-btn-raised ui-btn-secondary',
+      outline: 'ui-btn-raised ui-btn-outline',
+      glass: 'ui-btn-raised ui-btn-glass',
+      ghost: 'ui-btn-ghost',
+      link: 'ui-btn-link',
     };
 
     // Radio ligado al tamaño: menos alto → menos redondez (estilo shadcn).

@@ -31,7 +31,7 @@ No necesitas Tailwind en tu app, ni añadir `@source` apuntando a `node_modules`
 
 ## Temas y modo oscuro
 
-Hay **6 paletas** (`default`/zinc, `indigo`, `teal`, `violet`, `rose`, `orange`) y **modo oscuro**, combinables entre sí. Se activan con el provider:
+Hay **7 paletas** (`default`/zinc, `indigo`, `teal`, `violet`, `rose`, `orange`, `cyan`) y **modo oscuro**, combinables entre sí. Se activan con el provider:
 
 ```ts
 // app.config.ts
@@ -50,7 +50,7 @@ O directamente con clases en el `<body>`:
 </body>
 ```
 
-- Clases de tema: `theme-indigo | theme-teal | theme-violet | theme-rose | theme-orange`. Sin clase = paleta por defecto (zinc).
+- Clases de tema: `theme-indigo | theme-teal | theme-violet | theme-rose | theme-orange | theme-cyan`. Sin clase = paleta por defecto (zinc).
 - Modo oscuro: clase `dark`.
 - `provideHighstack(config)` acepta `{ theme?: HighstackTheme; dark?: boolean }` y aplica las clases al `<body>` al arrancar.
 
